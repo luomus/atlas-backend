@@ -1,5 +1,8 @@
 # Atlas
 
+Tässä projektissa kehitetään Kasvi- ja Lintuatlasta.
+
+
 
 ### Dokumentaatio
 
