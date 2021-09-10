@@ -1,6 +1,6 @@
 # Atlas
 
-Tässä projektissa kehitetään Kasvi- ja Lintuatlasta.
+Tässä projektissa kehitetään Luomuksen Kasvi- ja Lintuatlasta.
 
 
 
