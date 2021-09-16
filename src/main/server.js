@@ -11,6 +11,10 @@ app.get('/', root)
 
 app.get('/api/get-birds', getBirds)
 
+app.get('/api/map', function (req, res) {
+  res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
