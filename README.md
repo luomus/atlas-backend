@@ -1,6 +1,6 @@
 # Atlas
 
-![actions badge](https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/Node.js%20CI/badge.svg)
+![actions badge](https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/node.js.yml/badge.svg)
 
 
 Tässä projektissa kehitetään Luomuksen Kasvi- ja Lintuatlasta.
