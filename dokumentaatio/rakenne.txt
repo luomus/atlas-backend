@@ -1,0 +1,36 @@
+title ATLAS
+
+
+frontend->API: http-pyyntö
+
+API->reititin: http-pyyntö
+
+note over reititin: käsittelee pyynnön ja välittää sen eteenpäin
+
+reititin->DAO: pyyntö
+
+note over DAO: DAO hakee raakadatan tietokannasta
+
+DAO->tietokanta: tietokantahaku
+
+tietokanta->DAO: raakadata
+
+note over DAO: DAO välittää datan eteenpäin
+
+DAO->reititin: data
+
+note over reititin: ottaa vastaan datan ja välittää sen karttapalveluun
+
+reititin->karttapalvelu: data
+
+note over karttapalvelu: karttapalvelu luo datasta SVG-kartan
+
+karttapalvelu->reititin: kartta
+
+note over reititin: ottaa vastaan kartan ja välittää sen eteenpäin
+
+reititin->API: kartta
+
+note over API: API välittää tiedoston käyttäjälle
+
+API->frontend: kartta
