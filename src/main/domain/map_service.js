@@ -2,4 +2,4 @@ function MapService () {
     this.getBaseMap = () => {}
 }
 
-module.exports = new MapSerive()
+module.exports = new MapService()
