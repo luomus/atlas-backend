@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const birdDao = require(__rootdir + "/dao/bird_dao.js")
 const bird_table = require(__rootdir + '/dao/species_table.js')
 
