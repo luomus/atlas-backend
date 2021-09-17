@@ -5,7 +5,7 @@ const bird_table = require(__rootdir + '/dao/species_table.js')
 async function getBirds (req, res) {
     const dao = new birdDao(__rootdir + '/birds.db')
     const table = new bird_table(dao)
-    table.getById(1).then(function(fromResolve) {
+    table.getAll().then(function(fromResolve) {
         res.send(fromResolve)
     }, function(fromReject) {
         res.send(null)
