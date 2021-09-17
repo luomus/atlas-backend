@@ -1,7 +1,7 @@
 global.__rootdir = __dirname
 const express = require('express')
 const root = require('./domain/routes/root.js')
-const getBirds = require('./domain/routes/get_birds')
+const getBirds = require('./domain/routes/get_birds.js')
 const app = express()
 const port = 3000
 
