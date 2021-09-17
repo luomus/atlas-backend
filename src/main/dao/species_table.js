@@ -28,7 +28,7 @@ class species_table {
 
     update(species) {
         const { id, nameFI, nameEN, nameSCI, abbr } = species
-        const sql = `UPDATE tasks
+        const sql = `UPDATE species
             SET speciesFI = ?,
             speciesEN = ?,
             speciesSCI = ?,
