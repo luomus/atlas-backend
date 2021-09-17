@@ -11,13 +11,20 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
     <script src="ui.js" async></script>
     <style>
-        #bird-table tr {
+        #atlas-table tbody tr:hover {
+            background-color: rgb(236, 236, 236);
             cursor: pointer;
         }
-        #bird-rows tr:hover {
-            background-color: lightgray;
+        #atlas-map {
+            height: 600px;
         }
     </style>
 </head>
@@ -42,23 +49,13 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col">
-                <table id="bird-table" class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Laji</th>
-                            <th scope="col">Yleisyys</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bird-rows">
-                    </tbody>
+                <table id="atlas-table" class="table">
                 </table>
             </div>
             <div class="col-xl-4">
-                <div id="bird-card" class="card">
-                    <div id="species-name" class="card-header">
-                    </div>
+                <div class="card">
                     <div class="card-body">
-                        <object id="map-of-finland" type="image/svg+xml" data="/bird_atlas/map_of_finland.svg"></object>
+                        <div id="atlas-map"></div>
                     </div>
                 </div>
             </div>

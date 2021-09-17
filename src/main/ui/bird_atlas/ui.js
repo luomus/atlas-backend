@@ -1,52 +1,77 @@
-/*
-DOM-manipulaatio tehty näillä ohjeilla: 
-https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Manipulating_documents
-https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
-HTTP-pyynnöt näillä ohjeilla:
-https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest
-*/
+(function () {
+    var svgLayer
 
-
-//Kun selain on ladannut, niin tallennetaan SVG-kartta selaimen globaaliin muuttujaan svgMap
-//ja tehdään HTTP GET pyyntö lintujen lataamiseksi APIsta
-window.onload = function () {
-    window.svgMap = document.getElementById("map-of-finland").getSVGDocument()
-    makeGetRequest("/api/get-birds", loadBirds)
-}
-
-function loadBirds(responseText) {
-    const birds = JSON.parse(responseText)
-    const birdRows = birds.map(toBirdRow)
-    var fragment = document.createDocumentFragment()
-    birdRows.forEach(birdRow => fragment.appendChild(birdRow))
-    document.getElementById('bird-rows').appendChild(fragment)
-}
-
-function toBirdRow(bird) {
-    const speciesCell = document.createElement('td')
-    const prevalenceCell = document.createElement('td')
-    speciesCell.textContent = bird.species
-    prevalenceCell.textContent = bird.prevalence
-    const tableRow = document.createElement('tr')
-    tableRow.appendChild(speciesCell)
-    tableRow.appendChild(prevalenceCell)
-    tableRow.addEventListener('click', () => changeMapData(bird))
-    return tableRow
-}
-
-function changeMapData(bird) {
-    svgMap.getElementById("species-map-name").textContent = bird.species
-    svgMap.querySelectorAll(".prevalence-area[visibility='visible']")
-        .forEach(e => e.setAttribute('visibility', 'hidden'))
-    svgMap.getElementById(bird.prevalence).setAttribute('visibility', 'visible')
-}
-
-function makeGetRequest(URL, callbackFunction) {
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', URL)
-    xhr.onload = function () {
-        if (xhr.status === 200) callbackFunction(xhr.responseText)
-        else alert('Request to ' + URL + ' failed.  Returned status of ' + xhr.status)
+    window.onload = function () {
+        const atlasMap = L.map('atlas-map').setView([65.3, 27], 4.5)
+        addOpenStreetMapLayer(atlasMap)
+        addSvgLayer(atlasMap)
+        makeGetRequest("/api/get-birds", createTable)
     }
-    xhr.send()
-}
+
+    function addSvgLayer(map) {
+        makeGetRequest('/bird_atlas/grid.svg', (responseText) => {
+            svgLayer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svgLayer.setAttribute('xmlns', "http://www.w3.org/2000/svg");
+            svgLayer.innerHTML = responseText
+            svgLayer.setAttribute('viewBox', "0 0 668 1148");
+            const svgElementBounds = [[57.8, 17.5], [71, 32.1]];
+            L.svgOverlay(svgLayer, svgElementBounds).addTo(map);
+        })
+    }
+
+    function addOpenStreetMapLayer(map) {
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: ['a', 'b', 'c']
+        }).addTo(map)
+    }
+
+    function createTable(responseText) {
+        const tableContent = document.createDocumentFragment()
+        const thead = document.createElement('thead')
+        const headerRow = document.createElement('tr')
+        const headers = ["Lyhenne", "Nimi 1", "Nimi 2", "Nimi 3", "Nimi 4", "Julkisuus"]
+        headers.forEach(header => {
+            const tableData = document.createElement('td')
+            tableData.textContent = header
+            headerRow.appendChild(tableData)
+            thead.appendChild(headerRow)
+        })
+        tableContent.appendChild(thead)
+        const data = JSON.parse(responseText)
+        const rows = data.map(toRows)
+        const tbody = document.createElement('tbody')
+        rows.forEach(row => tbody.appendChild(row))
+        tableContent.appendChild(tbody)
+        document.getElementById('atlas-table').appendChild(tableContent)
+    }
+
+    function toRows(object) {
+        const tableRow = document.createElement('tr')
+        tableRow.addEventListener('click', changeMapData)
+        for (const property in object) {
+            const tableData = document.createElement('td')
+            tableData.textContent = object[property]
+            tableRow.appendChild(tableData)
+        }
+        return tableRow
+    }
+
+    function changeMapData(bird) {
+        svgLayer.querySelectorAll("circle").forEach(e => {
+                const randomColor = Math.floor(Math.random()*16777215).toString(16)
+                e.setAttribute('style', 'fill:#' + randomColor + ';fill-opacity:0.5;stroke:none')
+        })
+    }
+
+    function makeGetRequest(URL, callbackFunction) {
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', URL)
+        xhr.onload = function () {
+            if (xhr.status === 200) callbackFunction(xhr.responseText)
+            else alert('Request to ' + URL + ' failed.  Returned status of ' + xhr.status)
+        }
+        xhr.send()
+    }
+
+})();
