@@ -1,62 +1,58 @@
-const sqlite3 = require('sqlite3')
+const Dao = require(__rootdir + '/dao/dao.js')
 
-class bird_dao {
-    constructor(dbFilePath) {
-        this.db = new sqlite3.Database(dbFilePath, (err) => {
-            if (err) {
-                console.log('Could not connect to database', err)
-            } else {
-                console.log('Connected to database')
-            }
-        })
+class BirdDao extends Dao {
+
+  constructor(dbFilePath) {
+    super(dbFilePath)
+  }
+
+    createTable() {
+        const sql = `CREATE TABLE IF NOT EXISTS species (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            speciesFI VARCHAR(100),
+            speciesEN VARCHAR(100),
+            speciesSCI VARCHAR(100),
+            speciesAbbr VARCHAR(6),
+            speciesGroup_id REFERENCES speciesGroup,
+            visibility INTEGER)`
+        return super.run(sql)
     }
 
-
-    run(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.run(sql, params, function (err) {
-                if (err) {
-                    console.log('Error running sql ' + sql)
-                    console.log(err)
-                    reject(err)
-                } else {
-                    resolve({ id: this.lastID })
-                }
-            })
-        })
+    createWithName(name) {
+        const sql = 'INSERT INTO species (speciesFI) VALUES (?)'
+        return super.run(sql, [name])
     }
 
-    get(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.get(sql, params, (err, result) => {
-                if (err) {
-                    console.log('Error running sql: ' + sql)
-                    console.log(err)
-                    reject(err)
-                } else {
-                    resolve(result)
-                }
-            })
-        })
+    create(nameFI, nameEN, nameSCI) {
+        const sql = 'INSERT INTO species (speciesFI, speciesEN, speciesSCI) VALUES (?, ?, ?)'
+        return super.run(sql, [nameFI, nameEN, nameSCI])
     }
-    
-    all(sql, params = []) {
-        return new Promise((resolve, reject) => {
-            this.db.all(sql, params, (err, rows) => {
-                if (err) {
-                    console.log('Error running sql: ' + sql)
-                    console.log(err)
-                    reject(err)
-                } else {
-                    resolve(rows)
-                }
-            })
-        })
+
+    update(species) {
+        const { id, nameFI, nameEN, nameSCI, abbr } = species
+        const sql = `UPDATE species
+            SET speciesFI = ?,
+            speciesEN = ?,
+            speciesSCI = ?,
+            speciesAbbr = ?
+            WHERE id = ?`
+        return super.run(sql, [nameFI, nameEN, nameSCI, abbr, id])
+    }
+
+    delete(id) {
+        return super.run(`DELETE FROM species WHERE id = ?`, [id])
+    }
+
+    getById(id) {
+        return super.get(`SELECT * FROM species WHERE id = ?`, [id])
+    }
+
+    getAll() {
+        return super.all(`SELECT * FROM species`)
     }
 
 
 }
 
-module.exports = bird_dao
-
-
+  
+module.exports = BirdDao;
