@@ -1,4 +1,5 @@
 global.__rootdir = __dirname
+global.dbFilePath = './birds.db'
 const express = require('express')
 const root = require('./domain/routes/root.js')
 const getBirds = require('./domain/routes/get_birds.js')

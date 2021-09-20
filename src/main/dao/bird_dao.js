@@ -2,10 +2,6 @@ const Dao = require(__rootdir + '/dao/dao.js')
 
 class BirdDao extends Dao {
 
-  constructor(dbFilePath) {
-    super(dbFilePath)
-  }
-
     createTable() {
         const sql = `CREATE TABLE IF NOT EXISTS species (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,4 +51,4 @@ class BirdDao extends Dao {
 }
 
   
-module.exports = BirdDao;
+module.exports = new BirdDao();
