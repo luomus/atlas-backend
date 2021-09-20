@@ -30,7 +30,7 @@
         const tableContent = document.createDocumentFragment()
         const thead = document.createElement('thead')
         const headerRow = document.createElement('tr')
-        const headers = ["nro", "suomi", "englanti", "tieteellinen", "lyhenne", "Julkisuus"]
+        const headers = ["Nro", "Suomi", "Englanti", "Tieteellinen", "Lyhenne", "Ryhmä", "Julkisuus"]
         headers.forEach(header => {
             const tableData = document.createElement('td')
             tableData.textContent = header
