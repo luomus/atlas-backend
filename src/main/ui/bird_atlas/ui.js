@@ -5,7 +5,7 @@
         const atlasMap = L.map('atlas-map').setView([65.3, 27], 4.5)
         addOpenStreetMapLayer(atlasMap)
         addSvgLayer(atlasMap)
-        makeGetRequest("/api/get-birds", createTable)
+        makeGetRequest("/api/birds", createTable)
     }
 
     function addSvgLayer(map) {
@@ -57,7 +57,7 @@
         return tableRow
     }
 
-    function changeMapData(bird) {
+    function changeMapData() {
         svgLayer.querySelectorAll("circle").forEach(e => {
                 const randomColor = Math.floor(Math.random()*16777215).toString(16)
                 e.setAttribute('style', 'fill:#' + randomColor + ';fill-opacity:0.5;stroke:none')

@@ -1,16 +1,25 @@
 global.__rootdir = __dirname
-global.dbFilePath = './birds.db'
 const express = require('express')
+const sqlite3 = require('sqlite3')
 const root = require('./domain/routes/root.js')
-const getBirds = require('./domain/routes/get_birds.js')
+const BirdDao = require("./dao/bird_dao")
+const Birds = require('./domain/routes/birds.js')
 const app = express()
 const port = 3000
+
+db = new sqlite3.Database('./birds.db', (err) => {
+  if (err) console.log('Could not connect to database', err)
+  else console.log('Connected to database')
+})
+
+birdDao = new BirdDao(db)
+birds = new Birds(birdDao)
 
 app.use(express.static(__rootdir + '/ui'))
 
 app.get('/', root)
 
-app.get('/api/get-birds', getBirds)
+app.get('/api/birds', birds.getAll())
 
 app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
