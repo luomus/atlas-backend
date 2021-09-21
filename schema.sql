@@ -6,7 +6,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE species (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	id INTEGER AUTOINCREMENT,
+	mxCode INTEGER PRIMARY KEY,
 	speciesFI VARCHAR(100),
 	speciesEN VARCHAR(100),
 	speciesSCI VARCHAR(100),
@@ -20,26 +21,66 @@ CREATE TABLE speciesGroup (
 	name VARCHAR(100)
 );
 
+
 CREATE TABLE grid (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	coordinateN varchar(10),
-	coordinateE varchar(10),
-	municipality varchar(50),
-	regionNumber varchar(20),
-	societyNameFI varchar(50),
-	societyNameSV varchar(50),
-	gridName varchar(50),
+	coordinateN INTEGER,
+	coordinateE INTEGER,
+	regionNumber INTEGER,
+	municipality varchar(100),
+	gridName varchar(50)
+);
+
+CREATE TABLE grid_atlas3 (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	grid_id INTEGER REFERENCES grid,
+	societyNameFI varchar(100),
+	societyNameSV varchar(100),
+	level1 FLOAT,
+	level2 FLOAT,
+	level3 FLOAT,
+	level4 FLOAT,
+	level5 FLOAT,
 	activitySum INTEGER,
 	activityCategory INTEGER
 );
 
 
-CREATE TABLE datasquare_bird (
+CREATE TABLE grid_atlas12 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	speciesGroup_id INTEGER REFERENCES speciesGroup,
-	species_id INTEGER REFERENCES species,
+	grid_id INTEGER REFERENCES grid,
+	realiability_atlas1 INTEGER,
+	realiability_atlas2 INTEGER,
+	realiability_combined INTEGER
+);
+
+
+CREATE TABLE bird_data_atlas3 (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	species_code INTEGER REFERENCES species,
 	grid_id INTEGER REFERENCES grid,
 	breedingIndex INTEGER,
-	breedingCategory INTEGER,
-	year INTEGER
+	breedingCategory INTEGER
+);
+
+
+CREATE TABLE bird_data_atlas12 (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	species_code INTEGER REFERENCES species,
+	grid_id INTEGER REFERENCES grid,
+	breedingIndex_atlas1 INTEGER,
+	breedingIndex_atlas2 INTEGER,
+	breedingIndex_combined INTEGER
+);
+
+
+CREATE TABLE plant_data (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	year INTEGER,
+	species_code INTEGER REFERENCES species,
+	grid_id INTEGER REFERENCES grid,
+	prevalence FLOAT,
+	numberOfObservations INTEGER,
+	oldestObservation INTEGER,
+	newestObservation INTEGER
 );

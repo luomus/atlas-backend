@@ -1,6 +1,6 @@
 class Birds {
     #birdDao
-
+    
     constructor(birdDao) {
         this.#birdDao = birdDao
     }

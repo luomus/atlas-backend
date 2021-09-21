@@ -17,7 +17,7 @@ class BirdDao extends Dao {
             speciesAbbr VARCHAR(6),
             speciesGroup_id REFERENCES speciesGroup,
             visibility INTEGER)`
-        return super.run(sql)
+        return super.makeQuery(this.#db, 'run', sql)
     }
 
     create(nameFI, nameEN, nameSCI) {
