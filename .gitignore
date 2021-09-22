@@ -1,3 +1,6 @@
 node_modules/
 .idea
+
+# Ignore databases
 src/main/birds.db
+*.db
