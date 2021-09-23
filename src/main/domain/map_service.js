@@ -35,29 +35,30 @@ function MapService() {
         },
     }
 
-    const rectColor1 = '#66178d'
-    const rectColor2 = '#9400ff'
-
     return {
-        "getGridOverlay": () => svgService.initEmptyDocument(400, 400)
-            .setViewBox(400, 400)
-            .addRectangle(0, 0, 100, 100, rectColor1)
-            .addRectangle(100, 0, 100, 100, rectColor2)
-            .addRectangle(200, 0, 100, 100, rectColor1)
-            .addRectangle(300, 0, 100, 100, rectColor2)
-            .addRectangle(0, 100, 100, 100, rectColor2)
-            .addRectangle(100, 100, 100, 100, rectColor1)
-            .addRectangle(200, 100, 100, 100, rectColor2)
-            .addRectangle(300, 100, 100, 100, rectColor1)
-            .addRectangle(0, 200, 100, 100, rectColor1)
-            .addRectangle(100, 200, 100, 100, rectColor2)
-            .addRectangle(200, 200, 100, 100, rectColor1)
-            .addRectangle(300, 200, 100, 100, rectColor2)
-            .addRectangle(0, 300, 100, 100, rectColor2)
-            .addRectangle(100, 300, 100, 100, rectColor1)
-            .addRectangle(200, 300, 100, 100, rectColor2)
-            .addRectangle(300, 300, 100, 100, rectColor1)
-            .serializeDocument()
+        "getGridOverlay": () => {
+            const rectColor1 = '#' + Math.floor(Math.random()*16777215).toString(16)
+            const rectColor2 = '#' + Math.floor(Math.random()*16777215).toString(16)
+            return svgService.initEmptyDocument(400, 400)
+                .setViewBox(400, 400)
+                .addRectangle(0, 0, 100, 100, rectColor1)
+                .addRectangle(100, 0, 100, 100, rectColor2)
+                .addRectangle(200, 0, 100, 100, rectColor1)
+                .addRectangle(300, 0, 100, 100, rectColor2)
+                .addRectangle(0, 100, 100, 100, rectColor2)
+                .addRectangle(100, 100, 100, 100, rectColor1)
+                .addRectangle(200, 100, 100, 100, rectColor2)
+                .addRectangle(300, 100, 100, 100, rectColor1)
+                .addRectangle(0, 200, 100, 100, rectColor1)
+                .addRectangle(100, 200, 100, 100, rectColor2)
+                .addRectangle(200, 200, 100, 100, rectColor1)
+                .addRectangle(300, 200, 100, 100, rectColor2)
+                .addRectangle(0, 300, 100, 100, rectColor2)
+                .addRectangle(100, 300, 100, 100, rectColor1)
+                .addRectangle(200, 300, 100, 100, rectColor2)
+                .addRectangle(300, 300, 100, 100, rectColor1)
+                .serializeDocument()
+        }
     }
 
 }
