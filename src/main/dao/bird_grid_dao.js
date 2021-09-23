@@ -1,11 +1,8 @@
-const Dao = require(__rootdir + '/dao/dao.js')
+class BirdGridDao {
+    #querier
 
-class BirdGridDao extends Dao {
-    #db
-
-    constructor(database) {
-        super();
-        this.#db = database
+    constructor(querier) {
+        this.#querier = querier
     }
 
     createTable() {
@@ -16,7 +13,7 @@ class BirdGridDao extends Dao {
             regionNumber INTEGER,
             municipality varchar(100),
             gridName varchar(50))`
-        return super.makeQuery(this.#db, 'run', sql)
+        return this.#querier('run', sql)
     }
 
     update(grid) {
@@ -28,37 +25,37 @@ class BirdGridDao extends Dao {
             municipality = ?,
             gridName = ?
             WHERE id = ?`
-        return super.makeQuery(this.#db, 'run', sql, [coordinateN, coordinateE, regionNumber, municipality, gridName, id])
+        return this.#querier('run', sql, [coordinateN, coordinateE, regionNumber, municipality, gridName, id])
     }
 
     delete(id) {
-        return super.makeQuery(this.#db, 'run', `DELETE FROM grid WHERE id = ?`, [id])
+        return this.#querier('run', `DELETE FROM grid WHERE id = ?`, [id])
     }
 
     getById(id) {
-        return super.makeQuery(this.#db, 'get', `SELECT * FROM grid WHERE id = ?`, [id])
+        return this.#querier('get', `SELECT * FROM grid WHERE id = ?`, [id])
     }
 
     getByIdAtlas3(id) {
-        return super.makeQuery(this.#db, 'get', `SELECT * FROM grid_atlas3 WHERE id = ?`, [id])
+        return this.#querier('get', `SELECT * FROM grid_atlas3 WHERE id = ?`, [id])
     }
 
     getByIdAtlas12(id) {
-        return super.makeQuery(this.#db, 'get', `SELECT * FROM grid_atlas12 WHERE id = ?`, [id])
+        return this.#querier('get', `SELECT * FROM grid_atlas12 WHERE id = ?`, [id])
     }
 
     getAll() {
-        return super.makeQuery(this.#db, 'all', `SELECT * FROM grid`)
+        return this.#querier('all', `SELECT * FROM grid`)
     }
 
     getAllAtlas3() {
-        return super.makeQuery(this.#db, 'all', `SELECT * FROM grid_atlas3`)
+        return this.#querier('all', `SELECT * FROM grid_atlas3`)
     }
 
     getAllAtlas12() {
-        return super.makeQuery(this.#db, 'all', `SELECT * FROM grid_atlas12`)
+        return this.#querier('all', `SELECT * FROM grid_atlas12`)
     }
 
 }
-  
+
 module.exports = BirdGridDao;

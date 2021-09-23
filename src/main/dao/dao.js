@@ -1,6 +1,6 @@
-class Dao {
+function querierFactory(db) {
 
-    makeQuery(db, methodName ,query, params = []) {
+    return (methodName, query, params = []) => {
         return new Promise((resolve, reject) => {
             db[methodName](query, params, (err, data) => {
                 if (err) {
@@ -16,6 +16,6 @@ class Dao {
 
 }
 
-module.exports = Dao
+module.exports = querierFactory
 
 

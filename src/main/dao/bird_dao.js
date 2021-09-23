@@ -1,11 +1,8 @@
-const Dao = require(__rootdir + '/dao/dao.js')
+class BirdDao {
+    #querier
 
-class BirdDao extends Dao {
-    #db
-
-    constructor(database) {
-        super();
-        this.#db = database
+    constructor(querier) {
+        this.#querier = querier
     }
 
     createTable() {
@@ -17,12 +14,12 @@ class BirdDao extends Dao {
             speciesAbbr VARCHAR(6),
             speciesGroup_id REFERENCES speciesGroup,
             visibility INTEGER)`
-        return super.makeQuery(this.#db, 'run', sql)
+        return this.#querier('run', sql)
     }
 
     create(nameFI, nameEN, nameSCI) {
         const sql = 'INSERT INTO species (speciesFI, speciesEN, speciesSCI) VALUES (?, ?, ?)'
-        return super.makeQuery(this.#db, 'run', sql, [nameFI, nameEN, nameSCI])
+        return this.#querier('run', sql, [nameFI, nameEN, nameSCI])
     }
 
     update(species) {
@@ -33,19 +30,19 @@ class BirdDao extends Dao {
             speciesSCI = ?,
             speciesAbbr = ?
             WHERE id = ?`
-        return super.makeQuery(this.#db, 'run', sql, [nameFI, nameEN, nameSCI, abbr, id])
+        return this.#querier('run', sql, [nameFI, nameEN, nameSCI, abbr, id])
     }
 
     delete(id) {
-        return super.makeQuery(this.#db, 'run', `DELETE FROM species WHERE id = ?`, [id])
+        return this.#querier('run', `DELETE FROM species WHERE id = ?`, [id])
     }
 
     getById(id) {
-        return super.makeQuery(this.#db, 'get', `SELECT * FROM species WHERE id = ?`, [id])
+        return this.#querier('get', `SELECT * FROM species WHERE id = ?`, [id])
     }
 
     getAll() {
-        return super.makeQuery(this.#db, 'all', `SELECT * FROM species`)
+        return this.#querier('all', `SELECT * FROM species`)
     }
 
 }

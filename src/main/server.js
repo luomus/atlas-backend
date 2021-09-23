@@ -2,6 +2,7 @@ global.__rootdir = __dirname
 const express = require('express')
 const sqlite3 = require('sqlite3')
 const root = require('./domain/routes/root.js')
+const querierFactory = require('./dao/dao')
 const BirdDao = require("./dao/bird_dao")
 const BirdGridDao = require("./dao/bird_grid_dao")
 const Birds = require('./domain/routes/birds.js')
@@ -14,9 +15,10 @@ db = new sqlite3.Database('./birds.db', (err) => {
   else console.log('Connected to database')
 })
 
-birdDao = new BirdDao(db)
+querier = querierFactory(db)
+birdDao = new BirdDao(querier)
 birds = new Birds(birdDao)
-birdGridDao = new BirdGridDao(db)
+birdGridDao = new BirdGridDao(querier)
 grids = new Grids(birdGridDao)
 
 app.use(express.static(__rootdir + '/ui'))
