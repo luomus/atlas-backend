@@ -7,6 +7,8 @@ const BirdDao = require("./dao/bird_dao")
 const BirdGridDao = require("./dao/bird_grid_dao")
 const Birds = require('./domain/routes/birds.js')
 const Grids = require('./domain/routes/grids.js')
+const MapGrids = require('./domain/routes/map_grids')
+const MapService = require('./domain/map_service')
 const app = express()
 const port = 3000
 
@@ -21,6 +23,9 @@ birds = new Birds(birdDao)
 birdGridDao = new BirdGridDao(querier)
 grids = new Grids(birdGridDao)
 
+mapService = MapService()
+mapGrids = new MapGrids(mapService)
+
 app.use(express.static(__rootdir + '/ui'))
 
 app.get('/', root)
@@ -28,6 +33,8 @@ app.get('/', root)
 app.get('/api/birds', birds.getAll())
 
 app.get('/api/grids', grids.getAll())
+
+app.get('/api/map-grids', mapGrids.getAll())
 
 app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
