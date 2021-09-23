@@ -26,16 +26,13 @@ CREATE TABLE grid (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	coordinateN INTEGER,
 	coordinateE INTEGER,
-	regionNumber INTEGER,
-	municipality varchar(100),
+	municipality_id INTEGER REFERENCES municipality,
 	gridName varchar(50)
 );
 
 CREATE TABLE grid_atlas3 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	grid_id INTEGER REFERENCES grid,
-	societyNameFI varchar(100),
-	societyNameSV varchar(100),
 	level1 FLOAT,
 	level2 FLOAT,
 	level3 FLOAT,
@@ -52,6 +49,15 @@ CREATE TABLE grid_atlas12 (
 	realiability_atlas1 INTEGER,
 	realiability_atlas2 INTEGER,
 	realiability_combined INTEGER
+);
+
+
+CREATE TABLE municipality (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	municipality varchar(100),
+	societyNameFI varchar(100),
+	societyNameSV varchar(100),
+	regionNumber INTEGER
 );
 
 
