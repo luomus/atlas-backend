@@ -17,7 +17,7 @@ function MapService() {
             return this
         },
         setViewBox: function (width, height) {
-            this.document.documentElement.setAttribute('viewbox', `0 0 ${width} ${height}`)
+            this.document.documentElement.setAttribute('viewBox', `0 0 ${width} ${height}`)
             return this
         },
         addRectangle: function (x, y, width, height, fill) {
