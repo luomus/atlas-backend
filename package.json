@@ -1,4 +1,6 @@
 {
+  "main": "server.js",
+  
   "dependencies": {
     "bluebird": "^3.7.2",
     "express": "^4.17.1",
@@ -8,6 +10,7 @@
     "jest": "^27.2.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node server.js"
   }
 }
