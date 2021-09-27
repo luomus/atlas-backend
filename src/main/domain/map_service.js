@@ -20,7 +20,7 @@ function MapService() {
             this.document.documentElement.setAttribute('viewBox', `0 0 ${width} ${height}`)
             return this
         },
-        addRectangle: function (x, y, width, height, fill) {
+        addRectangle: function (id, x, y, width, height, fill) {
             const rect = this.document.createElementNS(this.namespace, 'rect')
             rect.setAttribute('x', x)
             rect.setAttribute('y', y)
@@ -36,28 +36,15 @@ function MapService() {
     }
 
     return {
-        "getGridOverlay": () => {
-            const rectColor1 = '#' + Math.floor(Math.random()*16777215).toString(16)
-            const rectColor2 = '#' + Math.floor(Math.random()*16777215).toString(16)
-            return svgService.initEmptyDocument(400, 400)
-                .setViewBox(400, 400)
-                .addRectangle(0, 0, 100, 100, rectColor1)
-                .addRectangle(100, 0, 100, 100, rectColor2)
-                .addRectangle(200, 0, 100, 100, rectColor1)
-                .addRectangle(300, 0, 100, 100, rectColor2)
-                .addRectangle(0, 100, 100, 100, rectColor2)
-                .addRectangle(100, 100, 100, 100, rectColor1)
-                .addRectangle(200, 100, 100, 100, rectColor2)
-                .addRectangle(300, 100, 100, 100, rectColor1)
-                .addRectangle(0, 200, 100, 100, rectColor1)
-                .addRectangle(100, 200, 100, 100, rectColor2)
-                .addRectangle(200, 200, 100, 100, rectColor1)
-                .addRectangle(300, 200, 100, 100, rectColor2)
-                .addRectangle(0, 300, 100, 100, rectColor2)
-                .addRectangle(100, 300, 100, 100, rectColor1)
-                .addRectangle(200, 300, 100, 100, rectColor2)
-                .addRectangle(300, 300, 100, 100, rectColor1)
-                .serializeDocument()
+        "getGridOverlay": (gridArray) => {
+            const minEastCoordinate = Math.min(gridArray.map(grid => grid.e))
+            const minNorthCoordinate = Math.min(gridArray.map(grid => grid.n))
+            gridArray.map(grid => ({"id": grid.id,
+                "e": grid.e - minEastCoordinate, "n": grid.n - minNorthCoordinate }))
+            svgService.initEmptyDocument(400, 400).setViewBox(400, 400)
+            gridArray.forEach(grid => svgService.addRectangle(
+                grid.id, grid.e, grid.n, 1, 1, "black"))
+            return svgService.serializeDocument()
         }
     }
 
