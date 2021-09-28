@@ -37,12 +37,12 @@ function MapService() {
 
     return {
         "getGridOverlay": (gridArray) => {
-            const minEastCoordinate = Math.min(gridArray.map(grid => grid.e))
-            const minNorthCoordinate = Math.min(gridArray.map(grid => grid.n))
-            gridArray.map(grid => ({"id": grid.id,
+            const minEastCoordinate = Math.min(...gridArray.map(grid => grid.e))
+            const minNorthCoordinate = Math.min(...gridArray.map(grid => grid.n))
+            const svgGridArray = gridArray.map(grid => ({"id": grid.id,
                 "e": grid.e - minEastCoordinate, "n": grid.n - minNorthCoordinate }))
             svgService.initEmptyDocument(400, 400).setViewBox(400, 400)
-            gridArray.forEach(grid => svgService.addRectangle(
+            svgGridArray.forEach(grid => svgService.addRectangle(
                 grid.id, grid.e, grid.n, 1, 1, "black"))
             return svgService.serializeDocument()
         }
