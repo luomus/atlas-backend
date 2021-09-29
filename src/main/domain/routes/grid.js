@@ -1,4 +1,4 @@
-class MapGrids {
+class Grid {
     #mapService
     #gridDao
 
@@ -16,4 +16,4 @@ class MapGrids {
 
 }
 
-module.exports = MapGrids
+module.exports = Grid

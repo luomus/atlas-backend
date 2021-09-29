@@ -9,13 +9,13 @@ function MapService() {
             const rotate180ccwMatrix = [[-1, 0], [0, -1]]
             const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
             const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-            const svgGridArray = gridArray.map(grid => ({"id": grid.id,
-                "e": grid.e - minMaxValues.minX, "n": grid.n - minMaxValues.minY }))
+            const svgGridArray = gridArray.map(rect => ({"id": rect.id,
+                "e": rect.e - minMaxValues.minX, "n": rect.n - minMaxValues.minY }))
             const width = Math.abs(minMaxValues.maxX - minMaxValues.minX)
             const height = Math.abs(minMaxValues.maxY - minMaxValues.minY)
             svgService.initEmptyDocument(width, height).setViewBox(width, height)
-            svgGridArray.forEach(grid => svgService.addRectangle(
-                    grid.id, grid.e, grid.n, 1, 1, "black"))
+            svgGridArray.forEach(rect => svgService.addRectangle({
+                id: rect.id, x: rect.e, y: rect.n, width: 1, height: 1, fill: "black"} ))
             return svgService.serializeDocument()
         }
     }
