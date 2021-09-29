@@ -4,7 +4,7 @@ function MapService() {
     const svgService = SvgService()
 
     return {
-        getGridOverlay: (gridArray) => {
+        createGridOverlay: (gridArray) => {
             const verticalFlipMatrix = [[-1, 0], [0, 1]]
             const rotate180ccwMatrix = [[-1, 0], [0, -1]]
             const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)

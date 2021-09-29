@@ -7,10 +7,10 @@ class Grid {
         this.#mapService = mapService
     }
 
-    getAll () {
+    createGrid () {
         return (req, res) => {
             res.setHeader('Content-Type', 'image/svg+xml');
-            res.send(this.#mapService.getGridOverlay(this.#gridDao.getAll()))
+            res.send(this.#mapService.createGridOverlay(this.#gridDao.getAll()))
         }
     }
 
