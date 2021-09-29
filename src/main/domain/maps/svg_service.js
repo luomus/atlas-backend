@@ -9,14 +9,14 @@ function SvgService() {
         initEmptyDocument: function (width, height) {
             const domImplementation = new DOMImplementation()
             const doc = domImplementation.createDocument(namespace, 'svg:svg')
-            doc.documentElement.setAttribute('width', width)
-            doc.documentElement.setAttribute('height', height)
             document = doc
             svg = doc.createElementNS(namespace, 'svg')
+            svg.setAttribute('width', width)
+            svg.setAttribute('height', height)
             return this
         },
         setViewBox: function (width, height) {
-            svg.setAttribute('viewBox', `0 -150 ${width} ${height}`)
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
             return this
         },
         addRectangle: function (id, x, y, width, height, fill) {
