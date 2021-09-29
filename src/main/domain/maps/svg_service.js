@@ -19,19 +19,20 @@ function SvgService() {
             svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
             return this
         },
-        addRectangle: function (id, x, y, width, height, fill) {
+        addRectangle: function (propertyMap) {
             const rect = document.createElementNS(namespace, 'rect')
-            rect.setAttribute('x', x)
-            rect.setAttribute('y', y)
-            rect.setAttribute('width', width)
-            rect.setAttribute('height', height)
-            rect.setAttributeNS(null, 'fill', fill)
+            mapPropertiesToAttributes(propertyMap, rect)
             svg.appendChild(rect)
             return this
         },
         serializeDocument: function () {
             return xmlSerializer.serializeToString(svg)
         },
+    }
+
+    function mapPropertiesToAttributes(propertyMap, svgElement) {
+        for (const prop in propertyMap)
+            svgElement.setAttributeNS(null, prop, propertyMap[prop])
     }
 
 }
