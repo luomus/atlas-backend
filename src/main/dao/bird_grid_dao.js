@@ -45,6 +45,15 @@ class BirdGridDao {
     getAllDataFromBirdAtlas3() {
         return this.#querier('all', `SELECT * FROM bird_data_atlas3`)
     }
+
+    getGridAndBreedingdataForBird(species_mxcode) {
+        return this.#querier('all', `SELECT species.speciesFI, grid.id, bird_data_atlas3.breedingIndex 
+            FROM bird_data_atlas3 JOIN grid 
+            ON grid.id = bird_data_atlas3.grid_id 
+            JOIN species 
+            ON species.mxCode = bird_data_atlas3.species_mxcode 
+            WHERE species.mxcode=?`, [species_mxcode])
+    }
     
 
     createTableGridAtlas12() {

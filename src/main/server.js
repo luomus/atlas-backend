@@ -6,7 +6,6 @@ const querierFactory = require('./dao/querier_factory')
 const BirdDao = require("./dao/bird_dao")
 const GridDao = require("./dao/grid_dao")
 const BirdGridDao = require("./dao/bird_grid_dao")
-const GridDao = require("./dao/grid_dao")
 const Birds = require('./domain/routes/birds.js')
 const Grids = require('./domain/routes/grids.js')
 const Grid = require('./domain/routes/grid')
@@ -40,6 +39,7 @@ app.get('/api/grid', grids.getAll())
 
 app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 
+app.get('/api/species/data', birds.getGridAndBreedingdataForBird())
 
 app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
