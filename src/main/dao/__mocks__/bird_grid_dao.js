@@ -41,7 +41,7 @@ class BirdGridDao {
         ]
     }
 
-    getAll() {
+    getAllGridsAtlas3() {
         return Promise.resolve(this.#data)
     }
 
