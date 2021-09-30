@@ -1,4 +1,5 @@
 class GridDao {
+
     #querier
 
     constructor(querier) {
