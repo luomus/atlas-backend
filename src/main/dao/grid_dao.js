@@ -8,9 +8,9 @@ class GridDao {
     createTableMunicipality() {
         const sql = `CREATE TABLE IF NOT EXISTS municipality (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            municipality varchar(100),
-            societyNameFI varchar(100),
-            societyNameSV varchar(100),
+            name varchar(100),
+            birdSocietyNameFI varchar(100),
+            birdSocietyNameSV varchar(100),
             regionNumber INTEGER)`
         return this.#querier('run', sql)
     }
@@ -26,14 +26,14 @@ class GridDao {
     }
 
     updateMunicipality(municipality) {
-        const { id, municipality, societyNameFI, societyNameSV, regionNumber } = municipality
+        const { id, name, societyNameFI, societyNameSV, regionNumber } = municipality
         const sql = `UPDATE municipality
-            SET municipality = ?,
+            SET name = ?,
             societyNameFI = ?,
             societyNameSV = ?,
             regionNumber = ?
             WHERE id = ?`
-        return this.#querier('run', sql, [municipality, societyNameFI, societyNameSV, regionNumber, id])
+        return this.#querier('run', sql, [name, societyNameFI, societyNameSV, regionNumber, id])
     }
 
     updateGrid(grid) {

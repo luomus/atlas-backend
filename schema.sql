@@ -55,9 +55,9 @@ CREATE TABLE grid_atlas12 (
 
 CREATE TABLE municipality (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	municipality varchar(100),
-	societyNameFI varchar(100),
-	societyNameSV varchar(100),
+	name varchar(100),
+	birdSocietyNameFI varchar(100),
+	birdSocietyNameSV varchar(100),
 	regionNumber INTEGER
 );
 

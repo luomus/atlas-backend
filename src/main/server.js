@@ -21,7 +21,7 @@ const birdDao = new BirdDao(querier)
 const gridDao = new GridDao(querier)
 const birdGridDao = new BirdGridDao(querier)
 const birds = new Birds(birdDao, birdGridDao)
-const grids = new Grids(GridDao)
+const grids = new Grids(gridDao)
 
 app.use(express.static(__rootdir + '/ui'))
 
@@ -31,7 +31,7 @@ app.get('/api/birds', birds.getAll())
 
 app.get('/api/grids', grids.getAll())
 
-app.get('/api/species?mxcode=code', birds.getAllAtlas3DataBySpecies())
+app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 
 app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')

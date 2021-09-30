@@ -1,12 +1,12 @@
 class Grids {
-    #birdGridDao
+    #gridDao
 
-    constructor(birdGridDao) {
-        this.#birdGridDao = birdGridDao
+    constructor(gridDao) {
+        this.#gridDao = gridDao
     }
 
     getAll () {
-        return (req, res) => this.#birdGridDao.getAll()
+        return (req, res) => this.#gridDao.getAllGrids()
             .then(data => res.send(JSON.stringify(data)), () => res.send(null))
     }
 

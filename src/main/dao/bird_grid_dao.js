@@ -39,7 +39,7 @@ class BirdGridDao {
     }
 
     getBySpeciesFromAtlas3(species_mxcode) {
-        return this.#querier('get', `SELECT * FROM bird_data_atlas3 WHERE species_mxcode = ?`, [species_mxcode])
+        return this.#querier('all', `SELECT * FROM bird_data_atlas3 WHERE species_mxcode = ?`, [species_mxcode])
     }
 
     getAllDataFromBirdAtlas3() {
@@ -78,7 +78,7 @@ class BirdGridDao {
     }
 
     getBySpeciesFromAtlas12(species_mxcode) {
-        return this.#querier('get', `SELECT * FROM bird_data_atlas12 WHERE species_mxcode = ?`, [species_mxcode])
+        return this.#querier('all', `SELECT * FROM bird_data_atlas12 WHERE species_mxcode = ?`, [species_mxcode])
     }
 
     getAllDataFromBirdAtlas12() {
