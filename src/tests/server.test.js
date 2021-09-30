@@ -1,6 +1,7 @@
 const request = require('supertest')
 const app = require('../main/server')
 jest.mock('../main/dao/bird_dao')
+jest.mock('../main/dao/bird_grid_dao')
 
 describe('Bird API', () => {
 
@@ -20,6 +21,29 @@ describe('Bird API', () => {
                 expect(response.text).toContain('Pikku-uikku')
                 expect(response.text).toContain('Härkälintu')
                 expect(response.text).toContain('Silkkiuikku')
+            })
+    })
+
+})
+
+describe('Bird atlas grid API', () => {
+
+    test('GET /api/grids responds with JSON', () => {
+        return request(app)
+            .get('/api/grids')
+            .expect(200)
+            // .expect('content-type', /application\/json/)
+    })
+
+    test('GET /api/grids responds with all grid data', () => {
+        return request(app)
+            .get('/api/grids')
+            .then((response) => {
+                expect(response.text).toContain('661312')
+                expect(response.text).toContain('663318')
+                expect(response.text).toContain('663319')
+                expect(response.text).toContain('663320')
+                expect(response.text).toContain('663321')
             })
     })
 
