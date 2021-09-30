@@ -5,55 +5,84 @@ class BirdGridDao {
         this.#querier = querier
     }
 
-    createTable() {
-        const sql = `CREATE TABLE IF NOT EXISTS grid (
+    createTableGridAtlas3() {
+        const sql = `CREATE TABLE IF NOT EXISTS grid_atlas3 (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            coordinateN INTEGER,
-            coordinateE INTEGER,
-            regionNumber INTEGER,
-            municipality varchar(100),
-            gridName varchar(50))`
+            grid_id INTEGER REFERENCES grid,
+            level1 FLOAT,
+            level2 FLOAT,
+            level3 FLOAT,
+            level4 FLOAT,
+            level5 FLOAT,
+            activitySum INTEGER,
+            activityCategory INTEGER)`
         return this.#querier('run', sql)
     }
 
-    update(grid) {
-        const { id, coordinateN, coordinateE, regionNumber, municipality, gridName } = grid
-        const sql = `UPDATE grid
-            SET coordinateN = ?,
-            coordinateE = ?,
-            regionNumber = ?,
-            municipality = ?,
-            gridName = ?
-            WHERE id = ?`
-        return this.#querier('run', sql, [coordinateN, coordinateE, regionNumber, municipality, gridName, id])
+    getGridByIdAtlas3(grid_id) {
+        return this.#querier('get', `SELECT * FROM grid_atlas3 WHERE grid_id = ?`, [grid_id])
     }
 
-    delete(id) {
-        return this.#querier('run', `DELETE FROM grid WHERE id = ?`, [id])
-    }
-
-    getById(id) {
-        return this.#querier('get', `SELECT * FROM grid WHERE id = ?`, [id])
-    }
-
-    getByIdAtlas3(id) {
-        return this.#querier('get', `SELECT * FROM grid_atlas3 WHERE id = ?`, [id])
-    }
-
-    getByIdAtlas12(id) {
-        return this.#querier('get', `SELECT * FROM grid_atlas12 WHERE id = ?`, [id])
-    }
-
-    getAll() {
-        return this.#querier('all', `SELECT * FROM grid`)
-    }
-
-    getAllAtlas3() {
+    getAllGridsAtlas3() {
         return this.#querier('all', `SELECT * FROM grid_atlas3`)
     }
 
-    getAllAtlas12() {
+
+    createTableBirdDataAtlas3() {
+        const sql = `CREATE TABLE IF NOT EXISTS bird_data_atlas3 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            species_code INTEGER REFERENCES species,
+            grid_id INTEGER REFERENCES grid,
+            breedingIndex INTEGER,
+            breedingCategory INTEGER)`
+        return this.#querier('run', sql)
+    }
+
+    getBySpeciesFromAtlas3(species_mxcode) {
+        return this.#querier('all', `SELECT * FROM bird_data_atlas3 WHERE species_mxcode = ?`, [species_mxcode])
+    }
+
+    getAllDataFromBirdAtlas3() {
+        return this.#querier('all', `SELECT * FROM bird_data_atlas3`)
+    }
+    
+
+    createTableGridAtlas12() {
+        const sql = `CREATE TABLE IF NOT EXISTS CREATE TABLE grid_atlas12 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            grid_id INTEGER REFERENCES grid,
+            realiability_atlas1 INTEGER,
+            realiability_atlas2 INTEGER,
+            realiability_combined INTEGER)`
+        return this.#querier('run', sql)
+    }
+
+    getGridByIdAtlas12(grid_id) {
+        return this.#querier('get', `SELECT * FROM grid_atlas12 WHERE grid_id = ?`, [grid_id])
+    }
+
+    getAllGridsAtlas12() {
         return this.#querier('all', `SELECT * FROM grid_atlas12`)
+    }
+
+
+    createTableBirdDataAtlas12() {
+        const sql = `CREATE TABLE IF NOT EXISTS bird_data_atlas12 (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            species_code INTEGER REFERENCES species,
+            grid_id INTEGER REFERENCES grid,
+            breedingIndex_atlas1 INTEGER,
+            breedingIndex_atlas2 INTEGER,
+            breedingIndex_combined INTEGER)`
+        return this.#querier('run', sql)
+    }
+
+    getBySpeciesFromAtlas12(species_mxcode) {
+        return this.#querier('all', `SELECT * FROM bird_data_atlas12 WHERE species_mxcode = ?`, [species_mxcode])
+    }
+
+    getAllDataFromBirdAtlas12() {
+        return this.#querier('all', `SELECT * FROM bird_data_atlas12`)
     }
 
 }

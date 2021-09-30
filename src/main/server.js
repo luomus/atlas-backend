@@ -4,6 +4,7 @@ const sqlite3 = require('sqlite3')
 const root = require('./domain/routes/root.js')
 const querierFactory = require('./dao/querier_factory')
 const BirdDao = require("./dao/bird_dao")
+const GridDao = require("./dao/grid_dao")
 const BirdGridDao = require("./dao/bird_grid_dao")
 const GridDao = require("./dao/grid_dao")
 const Birds = require('./domain/routes/birds.js')
@@ -18,12 +19,13 @@ db = new sqlite3.Database('./birds.db', (err) => {
   else console.log('Connected to database')
 })
 
-querier = querierFactory(db)
-birdDao = new BirdDao(querier)
-gridDao = new GridDao()
-birds = new Birds(birdDao)
-birdGridDao = new BirdGridDao(querier)
-grids = new Grids(birdGridDao)
+const querier = querierFactory(db)
+const birdDao = new BirdDao(querier)
+const gridDao = new GridDao(querier)
+const birdGridDao = new BirdGridDao(querier)
+const birds = new Birds(birdDao, birdGridDao)
+const grids = new Grids(gridDao)
+
 
 mapService = MapService()
 grid = new Grid(gridDao, mapService)
@@ -34,9 +36,10 @@ app.get('/', root)
 
 app.get('/api/birds', birds.getAll())
 
-app.get('/api/grids', grids.getAll())
+app.get('/api/grid', grids.getAll())
 
-app.get('/api/grid', grid.createGrid())
+app.get('/api/species', birds.getAllAtlas3DataBySpecies())
+
 
 app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')

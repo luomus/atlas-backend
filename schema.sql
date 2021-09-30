@@ -8,10 +8,11 @@ CREATE TABLE users (
 CREATE TABLE species (
 	id INTEGER AUTOINCREMENT,
 	mxCode INTEGER PRIMARY KEY,
-	speciesFI VARCHAR(100),
-	speciesEN VARCHAR(100),
-	speciesSCI VARCHAR(100),
 	speciesAbbr VARCHAR(6),
+	speciesSCI VARCHAR(100),
+	speciesFI VARCHAR(100),
+	speciesSV VARCHAR(100),
+	speciesEN VARCHAR(100),
 	speciesGroup_id REFERENCES speciesGroup,
 	visibility INTEGER
 );
@@ -54,9 +55,9 @@ CREATE TABLE grid_atlas12 (
 
 CREATE TABLE municipality (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	municipality varchar(100),
-	societyNameFI varchar(100),
-	societyNameSV varchar(100),
+	name varchar(100),
+	birdSocietyNameFI varchar(100),
+	birdSocietyNameSV varchar(100),
 	regionNumber INTEGER
 );
 
