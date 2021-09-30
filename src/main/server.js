@@ -11,7 +11,7 @@ const Grids = require('./domain/routes/grids.js')
 const Grid = require('./domain/routes/grid')
 const MapService = require('./domain/maps/map_service')
 const app = express()
-const port = 3000
+
 
 db = new sqlite3.Database('./birds.db', (err) => {
   if (err) console.log('Could not connect to database', err)
@@ -42,6 +42,4 @@ app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+module.exports = app
