@@ -20,6 +20,13 @@ class Birds {
 
     }
 
+    getGridAndBreedingdataForBird() {
+        return (req, res) => {
+            console.log(req.param("mxcode"))
+        return this.#birdGridDao.getGridAndBreedingdataForBird(req.param("mxcode"))
+            .then(data => res.send(JSON.stringify(data)), () => res.send(null))}
+    }
+
 }
 
 module.exports = Birds

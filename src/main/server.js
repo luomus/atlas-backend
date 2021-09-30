@@ -37,6 +37,7 @@ app.get('/api/grid/map', grid.createGrid())
 
 app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 
+app.get('/api/species/data', birds.getGridAndBreedingdataForBird())
 
 app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
