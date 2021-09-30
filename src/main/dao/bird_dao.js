@@ -22,14 +22,14 @@ class BirdDao {
     create(mxcode, abbr, nameSCI, nameFI, nameSV, nameEN, group_id) {
         const sql = `INSERT INTO species 
             (mxcode, speciesFI, speciesSV, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id) 
-            VALUES (?, ?, ?, ?, ?)`
+            VALUES (?, ?, ?, ?, ?, ?, ?)`
         return this.#querier('run', sql, [mxcode, abbr, nameSCI, nameFI, nameSV, nameEN, group_id])
     }
 
     update(species) {
         const { mxcode, abbr, nameSCI, nameFI, nameSV, nameEN } = species
         const sql = `UPDATE species
-            SET speciesAbbr = ?
+            SET speciesAbbr = ?,
             speciesSCI = ?,
             speciesFI = ?,
             speciesSV = ?,
