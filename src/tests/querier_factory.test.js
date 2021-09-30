@@ -1,4 +1,4 @@
-const Birds = require('../main/dao/querier_factory')
+const querierFactory = require('../main/dao/querier_factory')
 
 test('', () => {
     
