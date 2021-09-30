@@ -15,8 +15,8 @@ function SvgService() {
             svg.setAttribute('height', height)
             return this
         },
-        setViewBox: function (width, height) {
-            svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
+        setViewBox: function (minX, minY, width, height) {
+            svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
         addRectangle: function (propertyMap) {
