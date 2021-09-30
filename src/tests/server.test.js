@@ -30,14 +30,14 @@ describe('Bird atlas grid API', () => {
 
     test('GET /api/grids responds with JSON', () => {
         return request(app)
-            .get('/api/grids')
+            .get('/api/grid')
             .expect(200)
             // .expect('content-type', /application\/json/)
     })
 
     test('GET /api/grids responds with all grid data', () => {
         return request(app)
-            .get('/api/grids')
+            .get('/api/grid')
             .then((response) => {
                 expect(response.text).toContain('661312')
                 expect(response.text).toContain('663318')
