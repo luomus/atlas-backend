@@ -1,14 +1,13 @@
-const supertest = require('supertest')
-const Birds = require('../main/domain/routes/birds')
-
+const request = require('supertest')
+const response = require('supertest')
 const BirdDao = require('../main/dao/bird_dao')
+const birds = require('../main/domain/routes/birds')
 jest.mock('../main/dao/bird_dao')
 
-jest.mock('../main/dao/querier_factory')
-const querier = require('../main/dao/querier_factory')
+describe('Birds', () => {
 
-const request = supertest(Birds)
+    test('getAll', () => {
+        
+    })
 
-test('', async () => {
-    
 })
