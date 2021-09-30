@@ -23,7 +23,7 @@ const gridDao = new GridDao(querier)
 const birdGridDao = new BirdGridDao(querier)
 const birds = new Birds(birdDao, birdGridDao)
 const mapService = MapService()
-const grid = new Grid(gridDao, mapService)
+const grid = new Grid(gridDao, mapService, birdGridDao)
 
 app.use(express.static(__rootdir + '/ui'))
 
@@ -34,6 +34,8 @@ app.get('/api/birds', birds.getAll())
 app.get('/api/grid', grid.getAll())
 
 app.get('/api/grid/map', grid.createGrid())
+
+app.get('/api/grid/map/data', grid.createGridForBirdData())
 
 app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 
