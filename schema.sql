@@ -8,10 +8,11 @@ CREATE TABLE users (
 CREATE TABLE species (
 	id INTEGER AUTOINCREMENT,
 	mxCode INTEGER PRIMARY KEY,
-	speciesFI VARCHAR(100),
-	speciesEN VARCHAR(100),
-	speciesSCI VARCHAR(100),
 	speciesAbbr VARCHAR(6),
+	speciesSCI VARCHAR(100),
+	speciesFI VARCHAR(100),
+	speciesSV VARCHAR(100),
+	speciesEN VARCHAR(100),
 	speciesGroup_id REFERENCES speciesGroup,
 	visibility INTEGER
 );
