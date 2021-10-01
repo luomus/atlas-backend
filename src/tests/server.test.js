@@ -9,7 +9,7 @@ describe('Bird API', () => {
         return request(app)
             .get('/api/birds')
             .expect(200)
-            // .expect('content-type', /application\/json/)
+            .expect('content-type', /application\/json/)
     })
 
     test('GET /api/birds responds with data of all birds', () => {
@@ -32,7 +32,7 @@ describe('Bird atlas grid API', () => {
         return request(app)
             .get('/api/grid')
             .expect(200)
-            // .expect('content-type', /application\/json/)
+            .expect('content-type', /application\/json/)
     })
 
     test('GET /api/grid responds with all grid data', () => {

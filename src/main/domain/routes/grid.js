@@ -11,7 +11,7 @@ class Grid {
 
     getAll () {
         return (req, res) => this.#gridDao.getAllGrids()
-            .then(data => res.send(JSON.stringify(data)), () => res.send(null))
+            .then(data => res.json(data), () => res.send(null))
     }
 
     createGrid () {

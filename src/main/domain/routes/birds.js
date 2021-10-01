@@ -9,7 +9,7 @@ class Birds {
 
     getAll() {
         return (req, res) => this.#birdDao.getAll()
-            .then(data => res.send(JSON.stringify(data)), () => res.send(null))
+            .then(data => res.json(data), () => res.send(null))
     }
 
     getAllAtlas3DataBySpecies() {
