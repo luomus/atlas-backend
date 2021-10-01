@@ -70,7 +70,7 @@ class BirdGridDao {
     }
 
     getBySpeciesFromAtlas3(species_mxcode) {
-        return this.#data.filter(x => x.id == species_mxcode)
+        return Promise.resolve(this.#data.filter(x => x.species_mxcode == species_mxcode))
     }
     
 }
