@@ -28,14 +28,14 @@ describe('Bird API', () => {
 
 describe('Bird atlas grid API', () => {
 
-    test('GET /api/grids responds with JSON', () => {
+    test('GET /api/grid responds with JSON', () => {
         return request(app)
             .get('/api/grid')
             .expect(200)
             // .expect('content-type', /application\/json/)
     })
 
-    test('GET /api/grids responds with all grid data', () => {
+    test('GET /api/grid responds with all grid data', () => {
         return request(app)
             .get('/api/grid')
             .then((response) => {

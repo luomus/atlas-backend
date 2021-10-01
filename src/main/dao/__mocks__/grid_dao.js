@@ -41,7 +41,7 @@ class GridDao {
         ]
     }
 
-    getAllGridsAtlas3() {
+    getAllGrids() {
         return Promise.resolve(this.#data)
     }
 
