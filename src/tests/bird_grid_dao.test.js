@@ -28,3 +28,12 @@ test('getAllGridsAtlas3 calls querier correctly', () => {
     expect(querier.mock.calls[0][0]).toEqual('all')
     expect(querier.mock.calls[0][1]).toContain('atlas3')
 })
+
+test('getGridAndBreedingdataForBird calls querier correctly', () => {
+    const birdGridDao = new BirdGridDao(querier)
+    birdGridDao.getGridAndBreedingdataForBird(1)
+
+    expect(querier).toHaveBeenCalledTimes(1)
+    expect(querier.mock.calls[0][0]).toEqual('all')
+    expect(querier.mock.calls[0][1]).toContain('atlas3')
+})

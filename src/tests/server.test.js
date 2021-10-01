@@ -47,4 +47,14 @@ describe('Bird atlas grid API', () => {
             })
     })
 
+    describe('Map API', () => {
+
+        test('GET /api/grid/map responds', () => {
+            return request(app)
+                .get('/api/grid/map')
+                .expect(200)
+        })
+    
+    })
+
 })
