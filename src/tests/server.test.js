@@ -69,6 +69,24 @@ describe('Bird species API', () => {
             .get('/api/species')
             .query({ mxcode: '25836' })
             .expect(200, done)
+            .expect('content-type', /application\/json/)
+    })
+
+    test('GET /api/species responds with correct data ', async () => {
+        const res1 = await request(app).get('/api/species').query({ mxcode: '25836' })
+        const res2 = await request(app).get('/api/species').query({ mxcode: '25837' })
+
+        expect(res1.text).toContain('725693')
+        expect(res1.text).toContain('725694')
+        expect(res1.text).toContain('725695')
+        expect(res1.text).toEqual(expect.not.stringContaining('25837'))
+        expect(res1.text).toEqual(expect.not.stringContaining('25844'))
+        
+        expect(res2.text).toContain('726848')
+        expect(res2.text).toContain('726849')
+        expect(res2.text).toContain('726850')
+        expect(res2.text).toEqual(expect.not.stringContaining('25836'))
+        expect(res2.text).toEqual(expect.not.stringContaining('25844'))
     })
 
 })

@@ -16,7 +16,7 @@ class Birds {
         return (req, res) => {
             console.log(req.param("mxcode"))
         return this.#birdGridDao.getBySpeciesFromAtlas3(req.param("mxcode"))
-            .then(data => res.send(JSON.stringify(data)), () => res.send(null))}
+            .then(data => res.json(data), () => res.send(null))}
 
     }
 
