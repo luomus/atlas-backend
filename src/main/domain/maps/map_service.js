@@ -9,31 +9,35 @@ function MapService() {
             const rotate180ccwMatrix = [[-1, 0], [0, -1]]
             const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
             const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-            const svgGridArray = gridArray.map(rect => ({"id": rect.id,
-                "e": rect.e - minMaxValues.minX, "n": rect.n - minMaxValues.minY }))
-            const width = Math.abs(minMaxValues.maxX - minMaxValues.minX)
-            const height = Math.abs(minMaxValues.maxY - minMaxValues.minY)
-            svgService.initEmptyDocument(width, height).setViewBox(width, height)
-            svgGridArray.forEach(rect => svgService.addRectangle({
-                id: rect.id, x: rect.e, y: rect.n, width: 1, height: 1, fill: "black"} ))
+            const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
+                "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN })
+            const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
+            const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
+            const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
+            svgService.initEmptyDocument(500, 700)
+                .setViewBox(-10, -10, width, height + 12)
+            svgGridArray.forEach(rect => {
+                const propertyMap = {id: rect.id, x: rect.e, y: rect.n, width: 1, height: 1, fill: "black"}
+                return svgService.addRectangle(propertyMap)
+            })
             return svgService.serializeDocument()
         }
     }
 
     function transformCoordsByMatrix(coordArray, matrix) {
-        let [minX, minY] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
-        let [maxX, maxY] = [0, 0]
+        let [minE, minN] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
+        let [maxE, maxN] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
         for (let i = 0; i < coordArray.length; i++) {
             const coordMatrix = [[coordArray[i].e, coordArray[i].n]]
             const transformedCoords = multiplyMatrices(coordMatrix, matrix)
             coordArray[i].e = transformedCoords[0][0]
             coordArray[i].n = transformedCoords[0][1]
-            if (coordArray[i].e < minX) minX = coordArray[i].e
-            if (coordArray[i].n < minY) minY = coordArray[i].n
-            if (coordArray[i].e > maxX) maxX = coordArray[i].e
-            if (coordArray[i].n > maxY) maxY = coordArray[i].n
+            if (coordArray[i].e < minE) minE = coordArray[i].e
+            if (coordArray[i].n < minN) minN = coordArray[i].n
+            if (coordArray[i].e > maxE) maxE = coordArray[i].e
+            if (coordArray[i].n > maxN) maxN = coordArray[i].n
         }
-        return {minX, minY, maxX, maxY}
+        return {minE, minN, maxE, maxN}
     }
 
     function multiplyMatrices(m1, m2) {
