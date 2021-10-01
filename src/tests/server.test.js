@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require('../main/server')
 jest.mock('../main/dao/bird_dao')
-jest.mock('../main/dao/bird_grid_dao')
+jest.mock('../main/dao/grid_dao')
 
 describe('Bird API', () => {
 

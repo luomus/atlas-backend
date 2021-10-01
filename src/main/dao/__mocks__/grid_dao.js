@@ -1,4 +1,4 @@
-class BirdGridDao {
+class GridDao {
     #data
 
     constructor() {
@@ -47,4 +47,4 @@ class BirdGridDao {
 
 }
 
-module.exports = BirdGridDao
+module.exports = GridDao
