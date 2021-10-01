@@ -1,6 +1,8 @@
 const request = require('supertest')
+const { response } = require('../main/server')
 const app = require('../main/server')
 jest.mock('../main/dao/bird_dao')
+jest.mock('../main/dao/bird_grid_dao')
 jest.mock('../main/dao/grid_dao')
 
 describe('Bird API', () => {
@@ -26,7 +28,7 @@ describe('Bird API', () => {
 
 })
 
-describe('Bird atlas grid API', () => {
+describe('Grid API', () => {
 
     test('GET /api/grid responds with JSON', () => {
         return request(app)
@@ -47,14 +49,26 @@ describe('Bird atlas grid API', () => {
             })
     })
 
-    describe('Map API', () => {
+})
 
-        test('GET /api/grid/map responds', () => {
-            return request(app)
-                .get('/api/grid/map')
-                .expect(200)
-        })
-    
+describe('Map API', () => {
+
+    test('GET /api/grid/map responds with SVG', () => {
+        return request(app)
+            .get('/api/grid/map')
+            .expect(200)
+            .expect('content-type', /svg/)
+    })
+
+})
+
+describe('Bird species API', () => {
+
+    test('GET /api/species responds with JSON', (done) => {
+        request(app)
+            .get('/api/species')
+            .query({ mxcode: '25836' })
+            .expect(200, done)
     })
 
 })
