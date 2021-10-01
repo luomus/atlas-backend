@@ -4,67 +4,67 @@ class BirdGridDao {
     constructor() {
         this.#data = [
             {
-                "speciesFI":"Kaakkuri",
-                "id":664329,
-                "coordinateN":664,
-                "coordinateE":329,
-                "breedingIndex":10
+                "id":725693,
+                "species_mxcode":25836,
+                "grid_id":664329,
+                "breedingIndex":10,
+                "breedingCategory":1
             },
             {
-                "speciesFI":"Kaakkuri",
-                "id":664331,
-                "coordinateN":664,
-                "coordinateE":331,
-                "breedingIndex":10
+                "id":725694,
+                "species_mxcode":25836,
+                "grid_id":664331,
+                "breedingIndex":10,
+                "breedingCategory":1
             },
             {
-                "speciesFI":"Kaakkuri",
-                "id":666328,
-                "coordinateN":666,
-                "coordinateE":328,
-                "breedingIndex":20
+                "id":725695,
+                "species_mxcode":25836,
+                "grid_id":666328,
+                "breedingIndex":20,
+                "breedingCategory":2
             },
             {
-                "speciesFI":"Kuikka",
-                "id":664328,
-                "coordinateN":664,
-                "coordinateE":328,
-                "breedingIndex":75
+                "id":726848,
+                "species_mxcode":25837,
+                "grid_id":664328,
+                "breedingIndex":75,
+                "breedingCategory":4
             },
             {
-                "speciesFI":"Kuikka",
-                "id":664329,
-                "coordinateN":664,
-                "coordinateE":329,
-                "breedingIndex":30
+                "id":726849,
+                "species_mxcode":25837,
+                "grid_id":664329,
+                "breedingIndex":30,
+                "breedingCategory":2
             },
             {
-                "speciesFI":"Kuikka",
-                "id":664331,
-                "coordinateN":664,
-                "coordinateE":331,
-                "breedingIndex":20
+                "id":726850,
+                "species_mxcode":25837,
+                "grid_id":664331,
+                "breedingIndex":20,
+                "breedingCategory":2
             },
             {
-                "speciesFI":"Pikku-uikku",
-                "id":666324,
-                "coordinateN":666,
-                "coordinateE":324,
-                "breedingIndex":40
+                "id":729270,
+                "species_mxcode":25844,
+                "grid_id":666324,
+                "breedingIndex":40,
+                "breedingCategory":3
             },
             {
-                "speciesFI":"Pikku-uikku",
-                "id":666331,
-                "coordinateN":666,
-                "coordinateE":331,
-                "breedingIndex":40
+                "id":729271,
+                "species_mxcode":25844,
+                "grid_id":666331,
+                "breedingIndex":40,
+                "breedingCategory":3
             },
             {
-                "speciesFI":"Pikku-uikku",
-                "id":667337,
-                "coordinateN":667,
-                "coordinateE":337,
-                "breedingIndex":40
+                "id":729272,
+                "species_mxcode":25844,
+                "grid_id":667337,
+                "breedingIndex":40,
+                "breedingCategory":3
             }
         ]
     }
