@@ -6,4 +6,4 @@ RUN npm install --production --silent && mv node_modules ../
 COPY . .
 EXPOSE 3000
 USER node
-CMD ["node", "/app/src/main/server.js"]
+CMD ["node", "/app/src/main/start.js"]
