@@ -67,14 +67,14 @@ describe('Bird species API', () => {
     test('GET /api/species responds with JSON', (done) => {
         request(app)
             .get('/api/species')
-            .query({ mxcode: '25836' })
+            .query({ id: '25836' })
             .expect(200, done)
             .expect('content-type', /application\/json/)
     })
 
     test('GET /api/species responds with correct data ', async () => {
-        const res1 = await request(app).get('/api/species').query({ mxcode: '25836' })
-        const res2 = await request(app).get('/api/species').query({ mxcode: '25837' })
+        const res1 = await request(app).get('/api/species').query({ id: '25836' })
+        const res2 = await request(app).get('/api/species').query({ id: '25837' })
 
         expect(res1.text).toContain('725693')
         expect(res1.text).toContain('725694')
