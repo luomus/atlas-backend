@@ -1,4 +1,4 @@
-const BirdDao = require('../main/dao/bird_dao')
+const GridDao = require('../main/dao/grid_dao')
 
 jest.mock('../main/dao/querier_factory')
 const querier = require('../main/dao/querier_factory')
@@ -8,20 +8,17 @@ beforeEach(() => {
 })
 
 test('getById calls querier correctly', () => {
-    const birdDao = new BirdDao(querier)
-    birdDao.getById(25836)
-    birdDao.getById(25844)
+    const gridDao = new GridDao(querier)
+    gridDao.getGridById(661312)
 
-    expect(querier).toHaveBeenCalledTimes(2)
+    expect(querier).toHaveBeenCalledTimes(1)
     expect(querier.mock.calls[0][0]).toEqual('get')
-    expect(querier.mock.calls[0][2]).toEqual([25836])
-    expect(querier.mock.calls[1][0]).toEqual('get')
-    expect(querier.mock.calls[1][2]).toEqual([25844])
+    expect(querier.mock.calls[0][2]).toEqual([661312])
 })
 
 test('getAll calls querier correctly', () => {
-    const birdDao = new BirdDao(querier)
-    birdDao.getAll()
+    const gridDao = new GridDao(querier)
+    gridDao.getAllGrids()
     expect(querier).toHaveBeenCalledTimes(1)
     expect(querier.mock.calls[0][0]).toEqual('all')
     expect(querier.mock.calls[0][1]).toContain('SELECT * FROM')

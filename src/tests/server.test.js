@@ -14,7 +14,7 @@ describe('Bird API', () => {
             .expect('content-type', /application\/json/)
     })
 
-    test('GET /api/birds responds with data of all birds', () => {
+    test('GET /api/birds responds with data of all birds', async () => {
         return request(app)
             .get('/api/birds')
             .then((response) => {
@@ -37,7 +37,7 @@ describe('Grid API', () => {
             .expect('content-type', /application\/json/)
     })
 
-    test('GET /api/grid responds with all grid data', () => {
+    test('GET /api/grid responds with all grid data', async () => {
         return request(app)
             .get('/api/grid')
             .then((response) => {
@@ -67,7 +67,7 @@ describe('Bird species API', () => {
     test('GET /api/species responds with JSON', (done) => {
         request(app)
             .get('/api/species')
-            .query({ id: '25836' })
+            .query({ mxcode: '25836' })
             .expect(200, done)
             .expect('content-type', /application\/json/)
     })
