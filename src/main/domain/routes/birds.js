@@ -14,16 +14,16 @@ class Birds {
 
     getAllAtlas3DataBySpecies() {
         return (req, res) => {
-            console.log(req.param("mxcode"))
-        return this.#birdGridDao.getBySpeciesFromAtlas3(req.param("mxcode"))
+            console.log(req.param("id"))
+        return this.#birdGridDao.getBySpeciesFromAtlas3(req.param("id"))
             .then(data => res.json(data), () => res.send(null))}
 
     }
 
     getGridAndBreedingdataForBird() {
         return (req, res) => {
-            console.log(req.param("mxcode"))
-        return this.#birdGridDao.getGridAndBreedingdataForBird(req.param("mxcode"))
+            console.log(req.param("id"))
+        return this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id"))
             .then(data => res.send(JSON.stringify(data)), () => res.send(null))}
     }
 
