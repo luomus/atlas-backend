@@ -52,7 +52,8 @@ class BirdGridDao {
             ON grid.id = bird_data_atlas3.grid_id 
             JOIN species 
             ON species.mxCode = bird_data_atlas3.species_mxcode 
-            WHERE species.mxcode=?`, [species_mxcode])
+            WHERE species.mxcode=? 
+            AND species.visibility=1`, [species_mxcode])
     }
     
 
