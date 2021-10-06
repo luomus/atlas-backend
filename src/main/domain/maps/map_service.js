@@ -1,4 +1,6 @@
 const SvgService = require(__rootdir + "/domain/maps/svg_service.js")
+const fs = require('fs')
+const http = require('http')
 
 function MapService() {
     const svgService = SvgService()
@@ -14,17 +16,43 @@ function MapService() {
             const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
             const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
             const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-            svgService.initEmptyDocument(500, 700)
-                .setViewBox(-10, -10, width, height + 12)
+            svgService.initEmptyDocument(width, height)
+                .setViewBox(0, 0, width, height)
             svgGridArray.forEach(rect => {
                 // let color = "black"
                 // if (rect.breedingCategory === 2){
                 //     color = "red"
                 // }
-                const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, width: 1, height: 1, fill: "black", r: 0.5}
+                const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5}
                 return svgService.addCircle(propertyMap)
             })
             return svgService.serializeDocument()
+        },
+        setOverlay: () => {
+            console.log('setoverlay')
+            const options = {
+                hostname: 'localhost',
+                port: 3000,
+                path: '/bird_atlas/map.svg',
+                method: 'GET'
+            }
+
+            const req = http.request(options, res => {
+                res.on('data', d => {
+                    svgService.setSvg(d.toString())
+                })
+            })
+
+            req.on('error', error => {
+                console.log(error)
+            })
+
+            req.end()
+            // fs.readFile(path, (err, svgDoc) => {
+            //     if (err) throw err
+            //     svgService.setSvg(svgDoc)
+            // })
+            // return this
         }
     }
 

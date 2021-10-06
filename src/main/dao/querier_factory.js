@@ -8,7 +8,6 @@ function querierFactory(db) {
                     console.log(err)
                     reject(err)
                 } else {
-                    console.log(this)
                     resolve(data || this.lastID)
                 }
             })

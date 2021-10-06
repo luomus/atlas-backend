@@ -16,6 +16,7 @@ class Grid {
 
     createGrid () {
         return (req, res) => {
+            this.#mapService.setOverlay()
             this.#gridDao.getAllGrids().then(data => {
                 const grid = data.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
                 res.setHeader('Content-Type', 'image/svg+xml')
