@@ -1,59 +1,44 @@
 const SvgService = require(__rootdir + "/domain/maps/svg_service.js")
-const fs = require('fs')
 const http = require('http')
 
 function MapService() {
     const svgService = SvgService()
+    setOverlay()
 
     return {
-        createGridOverlay: (gridArray) => {
-            const verticalFlipMatrix = [[-1, 0], [0, 1]]
-            const rotate180ccwMatrix = [[-1, 0], [0, -1]]
-            const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
-            const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-            const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id, "breedingCategory": rect.breedingCategory,
-                "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN })
-            const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
-            const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
-            const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-            svgService.initEmptyDocument(width, height)
-                .setViewBox(0, 0, width, height)
-            svgGridArray.forEach(rect => {
-                // let color = "black"
-                // if (rect.breedingCategory === 2){
-                //     color = "red"
-                // }
-                const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5}
-                return svgService.addCircle(propertyMap)
-            })
-            return svgService.serializeDocument()
-        },
-        setOverlay: () => {
-            console.log('setoverlay')
-            const options = {
-                hostname: 'localhost',
-                port: 3000,
-                path: '/bird_atlas/map.svg',
-                method: 'GET'
-            }
+        getMap: (type) => type === "svg" ? svgService.serializeDocument() : null
+    }
 
-            const req = http.request(options, res => {
-                res.on('data', d => {
-                    svgService.setSvg(d.toString())
-                })
-            })
-
-            req.on('error', error => {
-                console.log(error)
-            })
-
-            req.end()
-            // fs.readFile(path, (err, svgDoc) => {
-            //     if (err) throw err
-            //     svgService.setSvg(svgDoc)
-            // })
-            // return this
+    function setOverlay() {
+        const options = {
+            hostname: 'localhost',
+            port: 3000,
+            path: '/bird_atlas/map.svg',
+            method: 'GET'
         }
+        const req = http.request(options, res =>
+            res.on('data', data => svgService.setSvg(data.toString())))
+        req.on('error', error => console.log(error))
+        req.end()
+    }
+
+    function createGridOverlay(gridArray) {
+        const verticalFlipMatrix = [[-1, 0], [0, 1]]
+        const rotate180ccwMatrix = [[-1, 0], [0, -1]]
+        const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
+        const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
+        const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
+            "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN })
+        const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
+        const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
+        const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
+        svgService.initEmptyDocument(width, height)
+            .setViewBox(0, 0, width, height)
+        svgGridArray.forEach(rect => {
+            const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5}
+            return svgService.addCircle(propertyMap)
+        })
+        return svgService.serializeDocument()
     }
 
     function transformCoordsByMatrix(coordArray, matrix) {

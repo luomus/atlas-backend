@@ -6,11 +6,10 @@ function SvgService() {
     const namespace = 'http://www.w3.org/2000/svg'
     let document, svg
 
-    return {    
+    return {
         initEmptyDocument: function (width, height) {
-            const doc = domImplementation.createDocument(namespace, 'svg:svg')
-            document = doc
-            svg = doc.createElementNS(namespace, 'svg')
+            document = domImplementation.createDocument(namespace, 'svg:svg')
+            svg = document.createElementNS(namespace, 'svg')
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
@@ -25,28 +24,21 @@ function SvgService() {
             svg.appendChild(circle)
             return this
         },
+        setSvg: function (svgDoc) {
+            svg = new DOMParser().parseFromString(svgDoc, "image/svg+xml")
+            document = domImplementation.createDocument(namespace, 'svg:svg')
+            document.appendChild(svg)
+            return this
+        },
         serializeDocument: function () {
             return xmlSerializer.serializeToString(svg)
         },
-        setSvg: function (svgDoc) {
-            document = new DOMParser().parseFromString(svgDoc, "image/svg+xml")
-            const errorNode = document.querySelector('parsererror')
-            console.log(errorNode)
-            // console.log(document)
-
-            return this
-        }
     }
 
     function mapPropertiesToAttributes(propertyMap, svgElement) {
         for (const prop in propertyMap)
             svgElement.setAttributeNS(null, prop, propertyMap[prop])
     }
-
-    // function createDocument() {
-    //     const doc = domImplementation.createDocument(namespace, 'svg:svg')
-    //     document = doc
-    // }
 
 }
 
