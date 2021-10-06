@@ -17,15 +17,26 @@ function MapService() {
             svgService.initEmptyDocument(500, 700)
                 .setViewBox(-10, -10, width, height + 12)
             svgGridArray.forEach(rect => {
-                // let color = "black"
-                // if (rect.breedingCategory === 2){
-                //     color = "red"
-                // }
-                const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, width: 1, height: 1, fill: "black", r: 0.5}
+                const color = setColor(rect.breedingCategory)
+                const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, width: 1, height: 1, fill: color, r: 0.5}
                 return svgService.addCircle(propertyMap)
             })
             return svgService.serializeDocument()
         }
+    }
+
+    function setColor(breedingCategory) {
+        let color = "rgba(124,240,10,0.0)"
+        if (breedingCategory === 4){
+            color = "cornflowerblue"
+        }
+        if (breedingCategory === 3){
+            color = "yellowgreen"
+        }
+        if (breedingCategory === 2){
+            color = "gold"
+        }
+        return color
     }
 
     function transformCoordsByMatrix(coordArray, matrix) {
