@@ -7,7 +7,7 @@ beforeEach(() => {
     querier.mockClear()
 })
 
-test('getById calls querier correctly', () => {
+test('getGridById calls querier correctly', () => {
     const gridDao = new GridDao(querier)
     gridDao.getGridById(661312)
 
@@ -16,7 +16,7 @@ test('getById calls querier correctly', () => {
     expect(querier.mock.calls[0][2]).toEqual([661312])
 })
 
-test('getAll calls querier correctly', () => {
+test('getAllGrids calls querier correctly', () => {
     const gridDao = new GridDao(querier)
     gridDao.getAllGrids()
     expect(querier).toHaveBeenCalledTimes(1)
