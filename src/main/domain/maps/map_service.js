@@ -9,7 +9,7 @@ function MapService() {
             const rotate180ccwMatrix = [[-1, 0], [0, -1]]
             const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
             const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-            const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
+            const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id, "breedingCategory": rect.breedingCategory,
                 "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN })
             const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
             const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
@@ -17,8 +17,12 @@ function MapService() {
             svgService.initEmptyDocument(500, 700)
                 .setViewBox(-10, -10, width, height + 12)
             svgGridArray.forEach(rect => {
-                const propertyMap = {id: rect.id, x: rect.e, y: rect.n, width: 1, height: 1, fill: "black"}
-                return svgService.addRectangle(propertyMap)
+                // let color = "black"
+                // if (rect.breedingCategory === 2){
+                //     color = "red"
+                // }
+                const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, width: 1, height: 1, fill: "black", r: 0.5}
+                return svgService.addCircle(propertyMap)
             })
             return svgService.serializeDocument()
         }

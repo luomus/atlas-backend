@@ -5,7 +5,7 @@ function SvgService() {
     const namespace = 'http://www.w3.org/2000/svg';
     let document, svg;
 
-    return {
+    return {    
         initEmptyDocument: function (width, height) {
             const domImplementation = new DOMImplementation()
             const doc = domImplementation.createDocument(namespace, 'svg:svg')
@@ -19,10 +19,10 @@ function SvgService() {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
-        addRectangle: function (propertyMap) {
-            const rect = document.createElementNS(namespace, 'rect')
-            mapPropertiesToAttributes(propertyMap, rect)
-            svg.appendChild(rect)
+        addCircle: function (propertyMap) {
+            const circle = document.createElementNS(namespace, 'circle')
+            mapPropertiesToAttributes(propertyMap, circle)
+            svg.appendChild(circle)
             return this
         },
         serializeDocument: function () {
