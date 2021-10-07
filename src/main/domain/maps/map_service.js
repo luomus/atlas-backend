@@ -1,28 +1,27 @@
 const SvgService = require(__rootdir + "/domain/maps/svg_service.js")
-const http = require('http')
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-function MapService() {
+function MapService(overlayURL, gridArray) {
     const svgService = SvgService()
-    setOverlay()
+    if (typeof overlayURL === "undefined") createGridOverlay(gridArray)
+    else makeXmlHttpGetRequest(overlayURL, res => svgService.setSvg(res))
 
     return {
         getMap: (type) => type === "svg" ? svgService.serializeDocument() : null
     }
 
-    function setOverlay() {
-        const options = {
-            hostname: 'localhost',
-            port: 3000,
-            path: '/bird_atlas/map.svg',
-            method: 'GET'
+    function makeXmlHttpGetRequest(URL, callbackFunction) {
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', URL)
+        xhr.onload = function () {
+            if (xhr.status === 200) callbackFunction(xhr.responseText)
+            else alert('Request to ' + URL + ' failed.  Returned status of ' + xhr.status)
         }
-        const req = http.request(options, res =>
-            res.on('data', data => svgService.setSvg(data.toString())))
-        req.on('error', error => console.log(error))
-        req.end()
+        xhr.send()
     }
 
     function createGridOverlay(gridArray) {
+        console.log("createGridOverlay")
         const verticalFlipMatrix = [[-1, 0], [0, 1]]
         const rotate180ccwMatrix = [[-1, 0], [0, -1]]
         const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)

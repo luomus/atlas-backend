@@ -25,6 +25,7 @@ function SvgService() {
             return this
         },
         setSvg: function (svgDoc) {
+            console.log("setSvg")
             svg = new DOMParser().parseFromString(svgDoc, "image/svg+xml")
             document = domImplementation.createDocument(namespace, 'svg:svg')
             document.appendChild(svg)
