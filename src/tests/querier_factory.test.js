@@ -1,4 +1,4 @@
-const querierFactory = require('../main/dao/querier_factory')
+const querierFactory = require('../main/dao/querier')
 
 test('', () => {
     
