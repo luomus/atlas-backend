@@ -3,7 +3,7 @@
 ![actions badge](https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/node.js.yml/badge.svg)
 
 
-Tässä projektissa kehitetään Luomuksen Kasvi- ja Lintuatlasta.
+Tässä projektissa kehitetään Luomuksen Kasvi- ja Lintuatlasta!
 
 
 ### Dokumentaatio
