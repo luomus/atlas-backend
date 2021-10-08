@@ -1,11 +1,13 @@
 const SvgService = require('../main/domain/maps/svg_service')
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
 
-// TODO: setup before each test to avoid copy-paste
+const svgService = new SvgService()
+
+beforeEach(() => {
+    svgService.initEmptyDocument(10, 20)
+})
 
 test('initEmptyDocument creates svg with correct width & height', () => {
-    const svgService = new SvgService()
-    
     svgService.initEmptyDocument(200, 300)
     const svg1 = svgService.serializeDocument()
     svgService.initEmptyDocument(10, 10)
@@ -23,9 +25,6 @@ test('initEmptyDocument creates svg with correct width & height', () => {
 })
 
 test('setViewBox sets correct attributes', () => {
-    const svgService = new SvgService()
-    svgService.initEmptyDocument(10, 20)
-
     svgService.setViewBox(0, 0, 10, 20)
     const svg1 = svgService.serializeDocument()
     svgService.setViewBox(1, 2, 3, 4)
@@ -39,9 +38,6 @@ test('setViewBox sets correct attributes', () => {
 })
 
 test('addCircle adds circle element with correct attributes', () => {
-    const svgService = new SvgService()
-    svgService.initEmptyDocument(10, 20)
-
     const propertyMap1 = {id: 1, cx: 1, cy: 1, fill: "black", r: 0.5}
     const propertyMap2 = {id: 2, cx: 5, cy: 10, fill: "red", r: 1}
     svgService.addCircle(propertyMap1)
@@ -54,9 +50,6 @@ test('addCircle adds circle element with correct attributes', () => {
 })
 
 test('addCircle adds no extra attributes to circle', () => {
-    const svgService = new SvgService()
-    svgService.initEmptyDocument(10, 20)
-
     const propertyMap = {testProperty: 1}
     svgService.addCircle(propertyMap)
     const svg = svgService.serializeDocument()
