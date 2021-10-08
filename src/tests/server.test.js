@@ -95,7 +95,7 @@ describe('Map service compiles correctly', () => {
     beforeAll(async () => {
         await page.goto('http://localhost:3000/bird_atlas');
     })
-    it('should be titled "Google"', async () => {
+    it('should be titled "Bird Atlas Example"', async () => {
         await expect(page.title()).resolves.toMatch('Bird Atlas Example');
     })
 })
