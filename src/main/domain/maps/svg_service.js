@@ -11,7 +11,7 @@ function SvgService() {
     return {
         initEmptyDocument: function (width, height) {
             doc = domImplementation.createDocument(namespace, 'svg:svg')
-            svg = doc.createElementNS(namespace, 'svg')
+            svg = doc.documentElement
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
@@ -27,12 +27,13 @@ function SvgService() {
             return this
         },
         setAttribute: function (id, propertyMap) {
-            const circles = doc.getElementsByTagNameNS(namespace,'circle')
-            console.log(circles.length)
-            for (let i = 0; i < circles.length; i++) {
-                console.log("täällä!!")
-                console.log("elementti: ", circle[i].getAttribute(id).value)
-              }
+            const circle = doc.getElementById(id)
+            console.log(`circle: {`,
+                `id: ${circle.getAttribute('id')}, `,
+                `cx: ${circle.getAttribute('cx')}, `,
+                `cy: ${circle.getAttribute('cy')}, `,
+                `fill: ${circle.getAttribute('fill')} `,
+                `}`)
         },
         setSvg: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")

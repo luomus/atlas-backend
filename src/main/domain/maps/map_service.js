@@ -10,7 +10,6 @@ async function MapService(overlayURL, gridArray) {
 
     return {
         getMap: (type) => type === "svg" ? svgService.serializeDocument() : null,
-
         speciesMap: function (data) {
             data.forEach(datapoint => {
                 const color = setColor(datapoint.breedingCategory)
@@ -21,7 +20,7 @@ async function MapService(overlayURL, gridArray) {
         }
     }
 
-    function makeXmlHttpGetRequest(URL, callbackFunction) {
+    function makeXmlHttpGetRequest(URL) {
         return new Promise(function (resolve, reject) {
             const xhr = new XMLHttpRequest()
             xhr.open('GET', URL)
@@ -59,15 +58,9 @@ async function MapService(overlayURL, gridArray) {
 
     function setColor(breedingCategory) {
         let color = "rgba(124,240,10,0.0)"
-        if (breedingCategory === 4) {
-            color = "cornflowerblue"
-        }
-        if (breedingCategory === 3) {
-            color = "yellowgreen"
-        }
-        if (breedingCategory === 2) {
-            color = "gold"
-        }
+        if (breedingCategory === 4) color = "cornflowerblue"
+        else if (breedingCategory === 3) color = "yellowgreen"
+        else if (breedingCategory === 2) color = "gold"
         return color
     }
 

@@ -8,7 +8,6 @@ async function MapService(overlayURL, gridArray) {
 
     return {
         getMap: (type) => type === "svg" ? svgService.serializeDocument() : null,
-
         speciesMap: function (data) {
             data.forEach(datapoint => {
                 const color = setColor(datapoint.breedingCategory)
@@ -19,7 +18,7 @@ async function MapService(overlayURL, gridArray) {
         }
     }
 
-    function makeXmlHttpGetRequest(URL, callbackFunction) {
+    function makeXmlHttpGetRequest(URL) {
         return new Promise(function (resolve, reject) {
             const xhr = new XMLHttpRequest()
             xhr.open('GET', URL)
@@ -57,15 +56,9 @@ async function MapService(overlayURL, gridArray) {
 
     function setColor(breedingCategory) {
         let color = "rgba(124,240,10,0.0)"
-        if (breedingCategory === 4) {
-            color = "cornflowerblue"
-        }
-        if (breedingCategory === 3) {
-            color = "yellowgreen"
-        }
-        if (breedingCategory === 2) {
-            color = "gold"
-        }
+        if (breedingCategory === 4) color = "cornflowerblue"
+        else if (breedingCategory === 3) color = "yellowgreen"
+        else if (breedingCategory === 2) color = "gold"
         return color
     }
 
@@ -114,7 +107,7 @@ function SvgService() {
     return {
         initEmptyDocument: function (width, height) {
             doc = domImplementation.createDocument(namespace, 'svg:svg')
-            svg = doc.createElementNS(namespace, 'svg')
+            svg = doc.documentElement
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
@@ -130,12 +123,13 @@ function SvgService() {
             return this
         },
         setAttribute: function (id, propertyMap) {
-            const circles = doc.getElementsByTagNameNS(namespace,'circle')
-            console.log(circles.length)
-            for (let i = 0; i < circles.length; i++) {
-                console.log("täällä!!")
-                console.log("elementti: ", circle[i].getAttribute(id).value)
-              }
+            const circle = doc.getElementById(id)
+            console.log(`circle: {`,
+                `id: ${circle.getAttribute('id')}, `,
+                `cx: ${circle.getAttribute('cx')}, `,
+                `cy: ${circle.getAttribute('cy')}, `,
+                `fill: ${circle.getAttribute('fill')} `,
+                `}`)
         },
         setSvg: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")
