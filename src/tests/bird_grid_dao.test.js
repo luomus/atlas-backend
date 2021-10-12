@@ -1,7 +1,7 @@
 const BirdGridDao = require('../main/dao/bird_grid_dao')
 
-jest.mock('../main/dao/querier_factory')
-const querier = require('../main/dao/querier_factory')
+jest.mock('../main/dao/querier')
+const querier = require('../main/dao/querier')
 
 beforeEach(() => {
     querier.mockClear()

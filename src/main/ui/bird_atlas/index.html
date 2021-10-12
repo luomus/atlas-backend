@@ -17,11 +17,16 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
    crossorigin=""></script>
+    <script src="map_service.js" async></script>
     <script src="ui.js" async></script>
     <style>
+        .table-container {
+            overflow: auto;
+        }
         #atlas-table tbody tr:hover {
             background-color: rgb(236, 236, 236);
             cursor: pointer;
+            overflow: auto;
         }
         #atlas-map {
             height: 600px;
@@ -47,10 +52,11 @@
     </nav>
     <!-- Page content-->
     <div class="container">
-        <div class="row mt-5">
-            <div class="col">
-                <table id="atlas-table" class="table">
-                </table>
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="table-container">
+                    <table id="atlas-table" class="table"></table>
+                </div>
             </div>
             <div class="col-xl-4">
                 <div class="card">

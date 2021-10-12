@@ -2,19 +2,20 @@
     var svgLayer
 
     window.onload = function () {
-        const atlasMap = L.map('atlas-map').setView([65.3, 27], 4.5)
+        const atlasMap = L.map('atlas-map').setView([65.3, 27], 5)
         addOpenStreetMapLayer(atlasMap)
         addSvgLayer(atlasMap)
         makeGetRequest("/api/birds", createTable)
     }
 
     function addSvgLayer(map) {
-        makeGetRequest('/bird_atlas/grid.svg', (responseText) => {
+        MapService("http://localhost:3000/bird_atlas/map.svg").then(mapService => {
             svgLayer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svgLayer.setAttribute('xmlns', "http://www.w3.org/2000/svg");
-            svgLayer.innerHTML = responseText
-            svgLayer.setAttribute('viewBox', "0 0 668 1148");
-            const svgElementBounds = [[57.8, 17.5], [71, 32.1]];
+            console.log(mapService.getMap("svg"))
+            svgLayer.innerHTML = mapService.getMap("svg")
+            svgLayer.setAttribute('viewBox', "0 0 " + 67 + " " + 116);
+            const svgElementBounds = [[55.8, 17.5], [72, 32.1]];
             L.svgOverlay(svgLayer, svgElementBounds).addTo(map);
         })
     }
@@ -30,7 +31,7 @@
         const tableContent = document.createDocumentFragment()
         const thead = document.createElement('thead')
         const headerRow = document.createElement('tr')
-        const headers = ["Nro", "Suomi", "Englanti", "Tieteellinen", "Lyhenne", "Ryhmä", "Julkisuus"]
+        const headers = ["Id", "Suomi", "Englanti", "Tieteellinen", "Lyhenne", "Ryhmä", "Julkisuus", "Ruotsi"]
         headers.forEach(header => {
             const tableData = document.createElement('td')
             tableData.textContent = header

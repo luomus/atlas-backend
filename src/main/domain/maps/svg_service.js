@@ -1,15 +1,16 @@
-const { DOMImplementation, XMLSerializer } = require('xmldom')
+const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
 
 function SvgService() {
-    const xmlSerializer = new XMLSerializer();
-    const namespace = 'http://www.w3.org/2000/svg';
-    let document, svg;
+    const domImplementation = typeof document === "undefined" ?
+        new DOMImplementation() : document.implementation
+    const xmlSerializer = new XMLSerializer()
+    const domParser = new DOMParser()
+    const namespace = 'http://www.w3.org/2000/svg'
+    let doc, svg
 
-    return {    
+    return {
         initEmptyDocument: function (width, height) {
-            const domImplementation = new DOMImplementation()
-            const doc = domImplementation.createDocument(namespace, 'svg:svg')
-            document = doc
+            doc = domImplementation.createDocument(namespace, 'svg:svg')
             svg = doc.createElementNS(namespace, 'svg')
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
@@ -20,9 +21,14 @@ function SvgService() {
             return this
         },
         addCircle: function (propertyMap) {
-            const circle = document.createElementNS(namespace, 'circle')
+            const circle = doc.createElementNS(namespace, 'circle')
             mapPropertiesToAttributes(propertyMap, circle)
             svg.appendChild(circle)
+            return this
+        },
+        setSvg: function (svgDoc) {
+            doc = domParser.parseFromString(svgDoc, "image/svg+xml")
+            svg = doc.documentElement
             return this
         },
         serializeDocument: function () {

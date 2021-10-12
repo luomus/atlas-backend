@@ -29,21 +29,18 @@ class Grid {
         return (req, res) => this.#gridDao.getAllGrids()
             .then(data => res.json(data), () => res.send(null))
     }
-    
-    
+
     /**
-     * A method that creates an image of the grid.
+     * A method that returns an image of the grid.
      * @returns {SVGElement}
      */
-    createGrid () {
+    getGrid () {
         return (req, res) => {
-            this.#gridDao.getAllGrids().then(data => {
-                const grid = data.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-                res.setHeader('Content-Type', 'image/svg+xml')
-                res.send(this.#mapService.createGridOverlay(grid))
-            })
+            res.setHeader('Content-Type', 'image/svg+xml')
+            res.send(this.#mapService.getMap("svg"))
         }
     }
+
     /**
      * A method that creates an image of the grid with a bird's breeding data.
      * @returns {SVGElement}

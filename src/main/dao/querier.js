@@ -1,4 +1,4 @@
-function querierFactory(db) {
+function Querier(db) {
 
     return (methodName, query, params = []) => {
         return new Promise((resolve, reject) => {
@@ -9,7 +9,6 @@ function querierFactory(db) {
                     console.log(err)
                     reject(err)
                 } else {
-                    console.log(this)
                     resolve(data || this.lastID)
                 }
             })
@@ -31,6 +30,6 @@ function querierFactory(db) {
 
 }
 
-module.exports = querierFactory
+module.exports = Querier
 
 

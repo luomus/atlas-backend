@@ -1,15 +1,21 @@
 {
   "main": "server.js",
-  
   "dependencies": {
     "bluebird": "^3.7.2",
     "express": "^4.17.1",
     "sqlite3": "^5.0.2",
-    "xmldom": "^0.6.0"
+    "w3c-xmlhttprequest": "^3.0.3",
+    "xmldom": "^0.6.0",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "jest": "^27.2.0",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "puppeteer": "^10.4.0",
+    "jest-puppeteer": "^6.0.0"
+  },
+  "jest": {
+    "preset": "jest-puppeteer"
   },
   "scripts": {
     "test": "jest",
