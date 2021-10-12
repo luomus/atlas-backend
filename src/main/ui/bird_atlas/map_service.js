@@ -44,6 +44,20 @@ async function MapService(overlayURL, gridArray) {
         })
     }
 
+    function setColor(breedingCategory) {
+        let color = "rgba(124,240,10,0.0)"
+        if (breedingCategory === 4){
+            color = "cornflowerblue"
+        }
+        if (breedingCategory === 3){
+            color = "yellowgreen"
+        }
+        if (breedingCategory === 2){
+            color = "gold"
+        }
+        return color
+    }
+
     function transformCoordsByMatrix(coordArray, matrix) {
         let [minE, minN] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
         let [maxE, maxN] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
