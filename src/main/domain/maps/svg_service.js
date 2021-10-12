@@ -26,6 +26,14 @@ function SvgService() {
             svg.appendChild(circle)
             return this
         },
+        setAttribute: function (id, propertyMap) {
+            const circles = doc.getElementsByTagNameNS(namespace,'circle')
+            console.log(circles.length)
+            for (let i = 0; i < circles.length; i++) {
+                console.log("täällä!!")
+                console.log("elementti: ", circle[i].getAttribute(id).value)
+              }
+        },
         setSvg: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")
             svg = doc.documentElement

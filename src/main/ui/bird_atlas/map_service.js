@@ -7,7 +7,16 @@ async function MapService(overlayURL, gridArray) {
         .catch(err => console.error('Request to ' + URL + ' failed.', err.statusText))
 
     return {
-        getMap: (type) => type === "svg" ? svgService.serializeDocument() : null
+        getMap: (type) => type === "svg" ? svgService.serializeDocument() : null,
+
+        speciesMap: function (data) {
+            data.forEach(datapoint => {
+                const color = setColor(datapoint.breedingCategory)
+                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
+                svgService.setAttribute(datapoint.id, propertyMap)
+            })
+            return this
+        }
     }
 
     function makeXmlHttpGetRequest(URL, callbackFunction) {
@@ -31,17 +40,33 @@ async function MapService(overlayURL, gridArray) {
         const rotate180ccwMatrix = [[-1, 0], [0, -1]]
         const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
         const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-        const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
-            "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN })
+        const shiftCoordsToStartFromZero = (rect) => ({
+            "id": rect.id,
+            "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN
+        })
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgService.initEmptyDocument(width, height)
             .setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
-            const propertyMap = {id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5}
+            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
             return svgService.addCircle(propertyMap)
         })
+    }
+
+    function setColor(breedingCategory) {
+        let color = "rgba(124,240,10,0.0)"
+        if (breedingCategory === 4) {
+            color = "cornflowerblue"
+        }
+        if (breedingCategory === 3) {
+            color = "yellowgreen"
+        }
+        if (breedingCategory === 2) {
+            color = "gold"
+        }
+        return color
     }
 
     function transformCoordsByMatrix(coordArray, matrix) {
@@ -57,7 +82,7 @@ async function MapService(overlayURL, gridArray) {
             if (coordArray[i].e > maxE) maxE = coordArray[i].e
             if (coordArray[i].n > maxN) maxN = coordArray[i].n
         }
-        return {minE, minN, maxE, maxN}
+        return { minE, minN, maxE, maxN }
     }
 
     function multiplyMatrices(m1, m2) {
@@ -103,6 +128,14 @@ function SvgService() {
             mapPropertiesToAttributes(propertyMap, circle)
             svg.appendChild(circle)
             return this
+        },
+        setAttribute: function (id, propertyMap) {
+            const circles = doc.getElementsByTagNameNS(namespace,'circle')
+            console.log(circles.length)
+            for (let i = 0; i < circles.length; i++) {
+                console.log("täällä!!")
+                console.log("elementti: ", circle[i].getAttribute(id).value)
+              }
         },
         setSvg: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")

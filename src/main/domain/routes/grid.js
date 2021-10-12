@@ -24,9 +24,8 @@ class Grid {
     createGridForBirdData () {
         return (req, res) => {
             this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id")).then(data => {
-                const grid = data.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
                 res.setHeader('Content-Type', 'image/svg+xml')
-                res.send(this.#mapService.createGridOverlay(grid))
+                res.send(this.#mapService.speciesMap(data).getMap("svg"))
             })
         }
     }

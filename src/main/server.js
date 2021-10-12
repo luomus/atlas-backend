@@ -49,13 +49,13 @@ function compileMapServiceForDelivery() {
   const requireRegEx = /^\s*const\s[{\s\w\d,_$}]+\s*=\s*require\(.*?\).*\n/gm
   const moduleExportsRegEx = /module\.exports\s*=\s*[{\s\w\d,_$}]+.+(\n|$)/gm
   try {
-    let map_service = fs.readFileSync('./domain/maps/map_service.js', 'utf8')
-    let svg_service = fs.readFileSync('./domain/maps/svg_service.js', 'utf8')
+    let map_service = fs.readFileSync(__dirname + '/domain/maps/map_service.js', 'utf8')
+    let svg_service = fs.readFileSync(__dirname + '/domain/maps/svg_service.js', 'utf8')
     map_service = map_service.replace(requireRegEx, "")
     map_service = map_service.replace(moduleExportsRegEx, "")
     svg_service = svg_service.replace(requireRegEx, "")
     svg_service = svg_service.replace(moduleExportsRegEx, "")
-    fs.writeFile('./ui/bird_atlas/map_service.js', map_service + svg_service, err => {
+    fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', map_service + svg_service, err => {
       if (err) {
         console.error(err)
         return
