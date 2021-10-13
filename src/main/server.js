@@ -26,15 +26,13 @@ const birds = new Birds(birdDao, birdGridDao)
 
 gridDao.getAllGrids().then(gridArray => {
   gridArray = gridArray.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-  MapService(undefined, gridArray).then(mapService => {
-    const grid = new Grid(gridDao, mapService, birdGridDao)
-    app.get('/api/grid', grid.getAll())
-    app.get('/api/grid/map', grid.getGrid())
-    app.get('/api/grid/map/data', grid.createGridForBirdData())
-  })
+  const mapService = MapService(undefined, gridArray)
+  const grid = new Grid(gridDao, mapService, birdGridDao)
+  app.get('/api/grid', grid.getAll())
+  app.get('/api/grid/map', grid.getGrid())
+  app.get('/api/grid/map/data', grid.createGridForBirdData())
 })
 
-compileMapServiceForDelivery()
 app.use(express.static(__rootdir + '/ui'))
 
 app.get('/', root)
@@ -45,7 +43,7 @@ app.get('/api/map', function (req, res) {
   res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
 })
 
-function compileMapServiceForDelivery() {
+app.compileMapServiceForDelivery = function () {
   const requireRegEx = /^\s*const\s[{\s\w\d,_$}]+\s*=\s*require\(.*?\).*\n/gm
   const moduleExportsRegEx = /module\.exports\s*=\s*[{\s\w\d,_$}]+.+(\n|$)/gm
   try {
@@ -55,16 +53,17 @@ function compileMapServiceForDelivery() {
     map_service = map_service.replace(moduleExportsRegEx, "")
     svg_service = svg_service.replace(requireRegEx, "")
     svg_service = svg_service.replace(moduleExportsRegEx, "")
-    fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', map_service + svg_service, err => {
-      if (err) {
-        console.error(err)
-        return
-      }
-      console.log("Map service successfully compiled for delivery")
-    })
+    return map_service + svg_service
   } catch (err) {
     console.error(err)
   }
 }
+
+const compiledMapService = app.compileMapServiceForDelivery()
+
+fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', compiledMapService, err => {
+  if (err) console.error(err)
+  else console.log("Map service successfully compiled for delivery")
+})
 
 module.exports = app
