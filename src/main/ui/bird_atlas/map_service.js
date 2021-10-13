@@ -11,7 +11,7 @@ function MapService(gridOverlaySvg, gridArray) {
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                gridOverlay.setAttribute(datapoint.id, propertyMap)
+                gridOverlay.setAttribute(datapoint.id, propertyMap, color)
             })
             return this
         }
@@ -102,14 +102,17 @@ function SvgImage() {
             svg.appendChild(circle)
             return this
         },
-        setAttribute: function (id, propertyMap) {
+        setAttribute: function (id, propertyMap, color) {
+            const allElements = doc.querySelectorAllElements()
+            console.log(allElements)
             const circle = doc.getElementById(id)
-            console.log(`circle: {`,
-                `id: ${circle.getAttribute('id')}, `,
-                `cx: ${circle.getAttribute('cx')}, `,
-                `cy: ${circle.getAttribute('cy')}, `,
-                `fill: ${circle.getAttribute('fill')} `,
-                `}`)
+            // console.log(`circle: {`,
+            //     `id: ${circle.getAttribute('id')}, `,
+            //     `cx: ${circle.getAttribute('cx')}, `,
+            //     `cy: ${circle.getAttribute('cy')}, `,
+            //     `fill: ${circle.getAttribute('fill')} `,
+            //     `}`)
+            circle.setAttribute('fill', color)
         },
         setFrom: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")

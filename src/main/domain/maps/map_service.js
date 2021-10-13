@@ -12,7 +12,7 @@ function MapService(gridOverlaySvg, gridArray) {
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                gridOverlay.setAttribute(datapoint.id, propertyMap)
+                gridOverlay.setAttribute(datapoint.id, propertyMap, color)
             })
             return this
         }
