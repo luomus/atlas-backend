@@ -26,14 +26,17 @@ function SvgService() {
             svg.appendChild(circle)
             return this
         },
-        setAttribute: function (id, propertyMap) {
+        setAttribute: function (id, propertyMap, color) {
+            const allElements = doc.querySelectorAllElements()
+            console.log(allElements)
             const circle = doc.getElementById(id)
-            console.log(`circle: {`,
-                `id: ${circle.getAttribute('id')}, `,
-                `cx: ${circle.getAttribute('cx')}, `,
-                `cy: ${circle.getAttribute('cy')}, `,
-                `fill: ${circle.getAttribute('fill')} `,
-                `}`)
+            // console.log(`circle: {`,
+            //     `id: ${circle.getAttribute('id')}, `,
+            //     `cx: ${circle.getAttribute('cx')}, `,
+            //     `cy: ${circle.getAttribute('cy')}, `,
+            //     `fill: ${circle.getAttribute('fill')} `,
+            //     `}`)
+            circle.setAttribute('fill', color)
         },
         setSvg: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")

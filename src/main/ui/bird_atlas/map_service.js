@@ -11,7 +11,7 @@ function MapService(gridOverlay, gridArray) {
             data.forEach(datapoint => {
                 const color = setColorByBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                svgService.setAttribute(datapoint.id, propertyMap)
+                svgService.setAttribute(datapoint.id, propertyMap, color)
             })
             return this
         }
@@ -29,7 +29,7 @@ function MapService(gridOverlay, gridArray) {
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgService.initEmptyDocument(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
+            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "rgba(124,240,10,0.0)", r: 0.5 }
             return svgService.addCircle(propertyMap)
         })
     }
@@ -102,14 +102,17 @@ function SvgService() {
             svg.appendChild(circle)
             return this
         },
-        setAttribute: function (id, propertyMap) {
+        setAttribute: function (id, propertyMap, color) {
+            const allElements = doc.querySelectorAllElements()
+            console.log(allElements)
             const circle = doc.getElementById(id)
-            console.log(`circle: {`,
-                `id: ${circle.getAttribute('id')}, `,
-                `cx: ${circle.getAttribute('cx')}, `,
-                `cy: ${circle.getAttribute('cy')}, `,
-                `fill: ${circle.getAttribute('fill')} `,
-                `}`)
+            // console.log(`circle: {`,
+            //     `id: ${circle.getAttribute('id')}, `,
+            //     `cx: ${circle.getAttribute('cx')}, `,
+            //     `cy: ${circle.getAttribute('cy')}, `,
+            //     `fill: ${circle.getAttribute('fill')} `,
+            //     `}`)
+            circle.setAttribute('fill', color)
         },
         setSvg: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")
