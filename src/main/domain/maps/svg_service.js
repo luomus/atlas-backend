@@ -10,7 +10,7 @@ function SvgService() {
 
     return {
         initEmptyDocument: function (width, height) {
-            doc = domImplementation.createDocument(namespace, 'svg:svg')
+            doc = domImplementation.createDocument(namespace, 'svg')
             svg = doc.documentElement
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)

@@ -6,7 +6,6 @@ CREATE TABLE users (
 );
 
 CREATE TABLE species (
-	id INTEGER AUTOINCREMENT,
 	mxCode INTEGER PRIMARY KEY,
 	speciesAbbr VARCHAR(6),
 	speciesSCI VARCHAR(100),
@@ -28,7 +27,7 @@ CREATE TABLE grid (
 	coordinateN INTEGER,
 	coordinateE INTEGER,
 	municipality_id INTEGER REFERENCES municipality,
-	gridName varchar(50)
+	gridName varchar(100)
 );
 
 CREATE TABLE grid_atlas3 (
@@ -47,9 +46,9 @@ CREATE TABLE grid_atlas3 (
 CREATE TABLE grid_atlas12 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	grid_id INTEGER REFERENCES grid,
-	realiability_atlas1 INTEGER,
-	realiability_atlas2 INTEGER,
-	realiability_combined INTEGER
+	realiabilityAtlas1 INTEGER,
+	realiabilityAtlas2 INTEGER,
+	realiabilityCombined INTEGER
 );
 
 
@@ -64,7 +63,7 @@ CREATE TABLE municipality (
 
 CREATE TABLE bird_data_atlas3 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	species_code INTEGER REFERENCES species,
+	species_id INTEGER REFERENCES species,
 	grid_id INTEGER REFERENCES grid,
 	breedingIndex INTEGER,
 	breedingCategory INTEGER
@@ -73,11 +72,11 @@ CREATE TABLE bird_data_atlas3 (
 
 CREATE TABLE bird_data_atlas12 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	species_code INTEGER REFERENCES species,
+	species_id INTEGER REFERENCES species,
 	grid_id INTEGER REFERENCES grid,
-	breedingIndex_atlas1 INTEGER,
-	breedingIndex_atlas2 INTEGER,
-	breedingIndex_combined INTEGER
+	breedingIndexAtlas1 INTEGER,
+	breedingIndexAtlas2 INTEGER,
+	breedingIndexCombined INTEGER
 );
 
 

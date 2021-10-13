@@ -1,5 +1,4 @@
 const request = require('supertest')
-const { response } = require('../main/server')
 const app = require('../main/server')
 jest.mock('../main/dao/bird_dao')
 jest.mock('../main/dao/bird_grid_dao')
@@ -92,10 +91,14 @@ describe('Bird species API', () => {
 })
 
 describe('Map service compiles correctly', () => {
-    beforeAll(async () => {
-        await page.goto('http://localhost:3000/bird_atlas');
+
+    test("Map service can be run on a website", async () => {
+        const compiledMapService = app.compileMapServiceForDelivery()
+        const page = await browser.newPage()
+        const html = '<!DOCTYPE html><head><title></title></head><body></body></html>'
+        await page.setContent(html)
+        await page.evaluate(compiledMapService)
+        await page.evaluate(() => MapService())
     })
-    it('should be titled "Bird Atlas Example"', async () => {
-        await expect(page.title()).resolves.toMatch('Bird Atlas Example');
-    })
+
 })

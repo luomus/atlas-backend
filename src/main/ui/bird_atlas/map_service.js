@@ -1,16 +1,15 @@
 
-async function MapService(overlayURL, gridArray) {
+function MapService(gridOverlay, gridArray) {
     const svgService = SvgService()
-    if (typeof overlayURL === "undefined") createGridOverlay(gridArray)
-    else await makeXmlHttpGetRequest(overlayURL)
-        .then(res => svgService.setSvg(res))
-        .catch(err => console.error('Request to ' + URL + ' failed.', err.statusText))
+    if (typeof gridOverlay !== "undefined") svgService.setSvg(gridOverlay)
+    else if (typeof gridArray !== "undefined") createGridOverlay(gridArray)
+    else console.error("Wrong number of arguments: either gridOverlay or gridArray should be defined")
 
     return {
         getMap: (type) => type === "svg" ? svgService.serializeDocument() : null,
         speciesMap: function (data) {
             data.forEach(datapoint => {
-                const color = setColor(datapoint.breedingCategory)
+                const color = setColorByBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
                 svgService.setAttribute(datapoint.id, propertyMap)
             })
@@ -18,43 +17,24 @@ async function MapService(overlayURL, gridArray) {
         }
     }
 
-    function makeXmlHttpGetRequest(URL) {
-        return new Promise(function (resolve, reject) {
-            const xhr = new XMLHttpRequest()
-            xhr.open('GET', URL)
-            xhr.onload = function () {
-                if (this.status >= 200 && this.status < 300) resolve(xhr.response)
-                else reject({ status: this.URL, statusText: xhr.statusText })
-            }
-            xhr.onerror = function () {
-                reject({ status: this.URL, statusText: xhr.statusText })
-            }
-            xhr.onerror = reject;
-            xhr.send();
-        })
-    }
-
     function createGridOverlay(gridArray) {
         const verticalFlipMatrix = [[-1, 0], [0, 1]]
         const rotate180ccwMatrix = [[-1, 0], [0, -1]]
         const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
         const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-        const shiftCoordsToStartFromZero = (rect) => ({
-            "id": rect.id,
-            "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN
-        })
+        const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
+            "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN})
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        svgService.initEmptyDocument(width, height)
-            .setViewBox(0, 0, width, height)
+        svgService.initEmptyDocument(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
             const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
             return svgService.addCircle(propertyMap)
         })
     }
 
-    function setColor(breedingCategory) {
+    function setColorByBreedingCategory(breedingCategory) {
         let color = "rgba(124,240,10,0.0)"
         if (breedingCategory === 4) color = "cornflowerblue"
         else if (breedingCategory === 3) color = "yellowgreen"
@@ -75,7 +55,7 @@ async function MapService(overlayURL, gridArray) {
             if (coordArray[i].e > maxE) maxE = coordArray[i].e
             if (coordArray[i].n > maxN) maxN = coordArray[i].n
         }
-        return { minE, minN, maxE, maxN }
+        return {minE, minN, maxE, maxN}
     }
 
     function multiplyMatrices(m1, m2) {
@@ -106,7 +86,7 @@ function SvgService() {
 
     return {
         initEmptyDocument: function (width, height) {
-            doc = domImplementation.createDocument(namespace, 'svg:svg')
+            doc = domImplementation.createDocument(namespace, 'svg')
             svg = doc.documentElement
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)

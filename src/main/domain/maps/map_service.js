@@ -1,12 +1,10 @@
 const SvgService = require(__rootdir + "/domain/maps/svg_service.js")
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-async function MapService(overlayURL, gridArray) {
+function MapService(gridOverlay, gridArray) {
     const svgService = SvgService()
-    if (typeof overlayURL === "undefined") createGridOverlay(gridArray)
-    else await makeXmlHttpGetRequest(overlayURL)
-        .then(res => svgService.setSvg(res))
-        .catch(err => console.error('Request to ' + URL + ' failed.', err.statusText))
+    if (typeof gridOverlay !== "undefined") svgService.setSvg(gridOverlay)
+    else if (typeof gridArray !== "undefined") createGridOverlay(gridArray)
+    else console.error("Wrong number of arguments: either gridOverlay or gridArray should be defined")
 
     return {
         getMap: (type) => type === "svg" ? svgService.serializeDocument() : null,
@@ -18,22 +16,6 @@ async function MapService(overlayURL, gridArray) {
             })
             return this
         }
-    }
-
-    function makeXmlHttpGetRequest(URL) {
-        return new Promise(function (resolve, reject) {
-            const xhr = new XMLHttpRequest()
-            xhr.open('GET', URL)
-            xhr.onload = function () {
-                if (this.status >= 200 && this.status < 300) resolve(xhr.response)
-                else reject({ status: this.URL, statusText: xhr.statusText })
-            }
-            xhr.onerror = function () {
-                reject({ status: this.URL, statusText: xhr.statusText })
-            }
-            xhr.onerror = reject;
-            xhr.send();
-        })
     }
 
     function createGridOverlay(gridArray) {
