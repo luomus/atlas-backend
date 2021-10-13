@@ -1,17 +1,17 @@
 
-function MapService(gridOverlay, gridArray) {
-    const svgService = SvgService()
-    if (typeof gridOverlay !== "undefined") svgService.setSvg(gridOverlay)
+function MapService(gridOverlaySvg, gridArray) {
+    const gridOverlay = SvgImage()
+    if (typeof gridOverlaySvg !== "undefined") gridOverlay.setFrom(gridOverlaySvg)
     else if (typeof gridArray !== "undefined") createGridOverlay(gridArray)
-    else console.error("Wrong number of arguments: either gridOverlay or gridArray should be defined")
+    else console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
 
     return {
-        getMap: (type) => type === "svg" ? svgService.serializeDocument() : null,
-        speciesMap: function (data) {
+        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serializeImage() : null,
+        getSpeciesMap: function (data, type = 'svg') {
             data.forEach(datapoint => {
-                const color = setColorByBreedingCategory(datapoint.breedingCategory)
+                const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                svgService.setAttribute(datapoint.id, propertyMap)
+                gridOverlay.setAttribute(datapoint.id, propertyMap)
             })
             return this
         }
@@ -27,14 +27,14 @@ function MapService(gridOverlay, gridArray) {
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        svgService.initEmptyDocument(width, height).setViewBox(0, 0, width, height)
+        gridOverlay.initEmptyImage(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
             const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
-            return svgService.addCircle(propertyMap)
+            return gridOverlay.addCircle(propertyMap)
         })
     }
 
-    function setColorByBreedingCategory(breedingCategory) {
+    function getColorForBreedingCategory(breedingCategory) {
         let color = "rgba(124,240,10,0.0)"
         if (breedingCategory === 4) color = "cornflowerblue"
         else if (breedingCategory === 3) color = "yellowgreen"
@@ -76,7 +76,7 @@ function MapService(gridOverlay, gridArray) {
 }
 
 
-function SvgService() {
+function SvgImage() {
     const domImplementation = typeof document === "undefined" ?
         new DOMImplementation() : document.implementation
     const xmlSerializer = new XMLSerializer()
@@ -85,7 +85,7 @@ function SvgService() {
     let doc, svg
 
     return {
-        initEmptyDocument: function (width, height) {
+        initEmptyImage: function (width, height) {
             doc = domImplementation.createDocument(namespace, 'svg')
             svg = doc.documentElement
             svg.setAttribute('width', width)
@@ -111,12 +111,12 @@ function SvgService() {
                 `fill: ${circle.getAttribute('fill')} `,
                 `}`)
         },
-        setSvg: function (svgDoc) {
+        setFrom: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")
             svg = doc.documentElement
             return this
         },
-        serializeDocument: function () {
+        serializeImage: function () {
             return xmlSerializer.serializeToString(svg)
         },
     }

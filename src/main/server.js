@@ -48,7 +48,7 @@ app.compileMapServiceForDelivery = function () {
   const moduleExportsRegEx = /module\.exports\s*=\s*[{\s\w\d,_$}]+.+(\n|$)/gm
   try {
     let map_service = fs.readFileSync(__dirname + '/domain/maps/map_service.js', 'utf8')
-    let svg_service = fs.readFileSync(__dirname + '/domain/maps/svg_service.js', 'utf8')
+    let svg_service = fs.readFileSync(__dirname + '/domain/maps/svg_image.js', 'utf8')
     map_service = map_service.replace(requireRegEx, "")
     map_service = map_service.replace(moduleExportsRegEx, "")
     svg_service = svg_service.replace(requireRegEx, "")

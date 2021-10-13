@@ -12,8 +12,8 @@
         MapService("http://localhost:3000/bird_atlas/map.svg").then(mapService => {
             svgLayer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svgLayer.setAttribute('xmlns', "http://www.w3.org/2000/svg");
-            console.log(mapService.getMap("svg"))
-            svgLayer.innerHTML = mapService.getMap("svg")
+            console.log(mapService.getGrid("svg"))
+            svgLayer.innerHTML = mapService.getGrid("svg")
             svgLayer.setAttribute('viewBox', "0 0 " + 67 + " " + 116);
             const svgElementBounds = [[55.8, 17.5], [72, 32.1]];
             L.svgOverlay(svgLayer, svgElementBounds).addTo(map);

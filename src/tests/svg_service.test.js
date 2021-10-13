@@ -1,17 +1,17 @@
-const SvgService = require('../main/domain/maps/svg_service')
+const SvgService = require('../main/domain/maps/svg_image')
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
 
 const svgService = new SvgService()
 
 beforeEach(() => {
-    svgService.initEmptyDocument(10, 20)
+    svgService.initEmptyImage(10, 20)
 })
 
 test('initEmptyDocument creates svg with correct width & height', () => {
-    svgService.initEmptyDocument(200, 300)
-    const svg1 = svgService.serializeDocument()
-    svgService.initEmptyDocument(10, 10)
-    const svg2 = svgService.serializeDocument()
+    svgService.initEmptyImage(200, 300)
+    const svg1 = svgService.serializeImage()
+    svgService.initEmptyImage(10, 10)
+    const svg2 = svgService.serializeImage()
 
     expect(svg1).toMatch(/^<svg.+\/>$/)
     expect(svg1).toContain('width="200"')
@@ -26,9 +26,9 @@ test('initEmptyDocument creates svg with correct width & height', () => {
 
 test('setViewBox sets correct attributes', () => {
     svgService.setViewBox(0, 0, 10, 20)
-    const svg1 = svgService.serializeDocument()
+    const svg1 = svgService.serializeImage()
     svgService.setViewBox(1, 2, 3, 4)
-    const svg2 = svgService.serializeDocument()
+    const svg2 = svgService.serializeImage()
 
     expect(svg1).toMatch(/^<svg.+\/>$/)
     expect(svg1).toContain('viewBox="0 0 10 20"')
@@ -42,7 +42,7 @@ test('addCircle adds circle element with correct attributes', () => {
     const propertyMap2 = {id: 2, cx: 5, cy: 10, fill: "red", r: 1}
     svgService.addCircle(propertyMap1)
     svgService.addCircle(propertyMap2)
-    const svg = svgService.serializeDocument()
+    const svg = svgService.serializeImage()
 
     expect(svg).toMatch(/^<svg.+\>.+<\/svg>$/)
     expect(svg).toContain('<circle id="1" cx="1" cy="1" fill="black" r="0.5"/>')
@@ -52,7 +52,7 @@ test('addCircle adds circle element with correct attributes', () => {
 test('addCircle adds no extra attributes to circle', () => {
     const propertyMap = {testProperty: 1}
     svgService.addCircle(propertyMap)
-    const svg = svgService.serializeDocument()
+    const svg = svgService.serializeImage()
 
     expect(svg).toMatch(/^<svg.+\>.+<\/svg>$/)
     expect(svg).toContain('<circle testProperty="1"/>')

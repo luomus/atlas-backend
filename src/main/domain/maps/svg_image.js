@@ -1,6 +1,6 @@
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
 
-function SvgService() {
+function SvgImage() {
     const domImplementation = typeof document === "undefined" ?
         new DOMImplementation() : document.implementation
     const xmlSerializer = new XMLSerializer()
@@ -9,7 +9,7 @@ function SvgService() {
     let doc, svg
 
     return {
-        initEmptyDocument: function (width, height) {
+        initEmptyImage: function (width, height) {
             doc = domImplementation.createDocument(namespace, 'svg')
             svg = doc.documentElement
             svg.setAttribute('width', width)
@@ -35,12 +35,12 @@ function SvgService() {
                 `fill: ${circle.getAttribute('fill')} `,
                 `}`)
         },
-        setSvg: function (svgDoc) {
+        setFrom: function (svgDoc) {
             doc = domParser.parseFromString(svgDoc, "image/svg+xml")
             svg = doc.documentElement
             return this
         },
-        serializeDocument: function () {
+        serializeImage: function () {
             return xmlSerializer.serializeToString(svg)
         },
     }
@@ -52,4 +52,4 @@ function SvgService() {
 
 }
 
-module.exports = SvgService
+module.exports = SvgImage

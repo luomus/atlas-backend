@@ -37,7 +37,7 @@ class Grid {
     getGrid () {
         return (req, res) => {
             res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(this.#mapService.getMap("svg"))
+            res.send(this.#mapService.getGrid("svg"))
         }
     }
 
@@ -49,7 +49,7 @@ class Grid {
         return (req, res) => {
             this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id")).then(data => {
                 res.setHeader('Content-Type', 'image/svg+xml')
-                res.send(this.#mapService.speciesMap(data).getMap("svg"))
+                res.send(this.#mapService.getSpeciesMap(data).getGrid("svg"))
             })
         }
     }
