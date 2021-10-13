@@ -91,10 +91,17 @@ describe('Bird species API', () => {
 })
 
 describe('Map service compiles correctly', () => {
+    let server
+
     beforeAll(async () => {
-        await page.goto('http://localhost:3000/bird_atlas');
+        server = app.listen(3000)
+        await page.goto('http://localhost:3000/bird_atlas')
     })
+
+    afterEach(() => server.close())
+
     it('should be titled "Bird Atlas Example"', async () => {
         await expect(page.title()).resolves.toMatch('Bird Atlas Example');
     })
+
 })
