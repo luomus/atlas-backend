@@ -1,5 +1,4 @@
 const request = require('supertest')
-const { response } = require('../main/server')
 const app = require('../main/server')
 jest.mock('../main/dao/bird_dao')
 jest.mock('../main/dao/bird_grid_dao')
