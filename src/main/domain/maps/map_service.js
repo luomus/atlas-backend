@@ -31,13 +31,11 @@ function MapService(gridOverlaySvg, gridArray) {
             })
             return this
         },
-        setBaseMap: function (geoJsonArray) {
+        addToBaseMap: function (geoJson) {
             const converter = geojson2svg(converterOptions)
-            geoJsonArray.forEach(geoJson => {
-                let svgStrings = converter.convert(geoJson)
-                const propertyMap = { stroke: 'black' }
-                baseMap.addGroupFromStrings(svgStrings, propertyMap)
-            })
+            let svgStrings = converter.convert(geoJson)
+            const propertyMap = { stroke: 'black' }
+            baseMap.addGroupFromStrings(svgStrings, propertyMap)
             console.log(baseMap.serialize())
             return this
         }

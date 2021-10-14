@@ -29,16 +29,14 @@ gridDao.getAllGrids().then(gridArray => {
   const mapService = MapService(undefined, gridArray)
   const grid = new Grid(gridDao, mapService, birdGridDao)
 
-  const baseMapJsons = []
   try {
     let baseMapGrid = fs.readFileSync(__dirname + '/geojson/YKJ100km.geojson')
     let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
-    baseMapJsons.push(JSON.parse(baseMapGrid))
-    baseMapJsons.push(JSON.parse(finnishBorders))
+    mapService.addToBaseMap(JSON.parse(baseMapGrid))
+    mapService.addToBaseMap(JSON.parse(finnishBorders))
   } catch (err) {
     console.error(err)
   }
-  mapService.setBaseMap(baseMapJsons)
 
   app.get('/api/grid', grid.getAll())
   app.get('/api/grid/map', grid.getGrid())
