@@ -38,6 +38,12 @@ function SvgImage(svgDocument) {
             svg.appendChild(circle)
             return this
         },
+        addElementFromString: function (svgString) {
+            const domParser = new DOMParser()
+            const svgElement = domParser.parseFromString(svgString)
+            svg.appendChild(svgElement)
+            return this
+        },
         setAttribute: function (id, propertyMap, color) {
             const allElements = doc.querySelectorAllElements()
             console.log(allElements)

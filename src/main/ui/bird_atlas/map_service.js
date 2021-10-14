@@ -5,6 +5,20 @@ function MapService(gridOverlaySvg, gridArray) {
     const gridOverlay = typeof gridOverlaySvg !== "undefined" ?
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
+    const mapWidth = 200
+    const mapHeight = 300
+    const converterOptions = {
+        mapExtent: {
+            left: 50199.4814,
+            bottom: 6582464.0358,
+            right: 761274.6247,
+            top: 7799839.8902
+        }
+    }
+    const baseMap = SvgImage()
+    baseMap.setDimensions(mapWidth, mapHeight)
+    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
+
     return {
         getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
         getSpeciesMap: function (data, type = 'svg') {
@@ -12,6 +26,14 @@ function MapService(gridOverlaySvg, gridArray) {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
                 gridOverlay.setAttribute(datapoint.id, propertyMap, color)
+            })
+            return this
+        },
+        setBaseMap: function (geoJsonArray) {
+            const converter = geojson2svg(converterOptions)
+            geoJsonArray.forEach(geoJson => {
+                let svgStrings = converter.convert(geoJson)
+                return svgStrings.forEach(str => baseMap.addElementFromString(str))
             })
             return this
         }
@@ -113,6 +135,12 @@ function SvgImage(svgDocument) {
             const circle = doc.createElementNS(namespace, 'circle')
             mapPropertiesToAttributes(propertyMap, circle)
             svg.appendChild(circle)
+            return this
+        },
+        addElementFromString: function (svgString) {
+            const domParser = new DOMParser()
+            const svgElement = domParser.parseFromString(svgString)
+            svg.appendChild(svgElement)
             return this
         },
         setAttribute: function (id, propertyMap, color) {

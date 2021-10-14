@@ -1,10 +1,25 @@
 const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
+const geojson2svg = require('geojson2svg')
 
 function MapService(gridOverlaySvg, gridArray) {
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
         return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
     const gridOverlay = typeof gridOverlaySvg !== "undefined" ?
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
+
+    const mapWidth = 200
+    const mapHeight = 300
+    const converterOptions = {
+        mapExtent: {
+            left: 50199.4814,
+            bottom: 6582464.0358,
+            right: 761274.6247,
+            top: 7799839.8902
+        }
+    }
+    const baseMap = SvgImage()
+    baseMap.setDimensions(mapWidth, mapHeight)
+    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
         getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
@@ -13,6 +28,14 @@ function MapService(gridOverlaySvg, gridArray) {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
                 gridOverlay.setAttribute(datapoint.id, propertyMap, color)
+            })
+            return this
+        },
+        setBaseMap: function (geoJsonArray) {
+            const converter = geojson2svg(converterOptions)
+            geoJsonArray.forEach(geoJson => {
+                let svgStrings = converter.convert(geoJson)
+                return svgStrings.forEach(str => baseMap.addElementFromString(str))
             })
             return this
         }
