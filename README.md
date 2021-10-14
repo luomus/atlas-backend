@@ -8,7 +8,7 @@ In this project, Luomus Bird and Plant Atlas are developed.
 
 ### Classes
 #### Routing
-* [Birds](/docs/Birds.html)
+* [Birds](ATLAS/Birds.html)
 
 ## Project management
 
