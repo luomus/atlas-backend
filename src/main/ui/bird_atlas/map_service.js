@@ -1,12 +1,12 @@
 
 function MapService(gridOverlaySvg, gridArray) {
-    const gridOverlay = SvgImage()
-    if (typeof gridOverlaySvg !== "undefined") gridOverlay.setFrom(gridOverlaySvg)
-    else if (typeof gridArray !== "undefined") createGridOverlay(gridArray)
-    else console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
+    if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
+        return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
+    const gridOverlay = typeof gridOverlaySvg !== "undefined" ?
+         SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     return {
-        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serializeImage() : null,
+        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
         getSpeciesMap: function (data, type = 'svg') {
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
@@ -17,7 +17,7 @@ function MapService(gridOverlaySvg, gridArray) {
         }
     }
 
-    function createGridOverlay(gridArray) {
+    function drawGrid(gridArray, svgImage) {
         const verticalFlipMatrix = [[-1, 0], [0, 1]]
         const rotate180ccwMatrix = [[-1, 0], [0, -1]]
         const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
@@ -27,11 +27,12 @@ function MapService(gridOverlaySvg, gridArray) {
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        gridOverlay.initEmptyImage(width, height).setViewBox(0, 0, width, height)
+        svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
             const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
-            return gridOverlay.addCircle(propertyMap)
+            return svgImage.addCircle(propertyMap)
         })
+        return svgImage
     }
 
     function getColorForBreedingCategory(breedingCategory) {
@@ -76,18 +77,30 @@ function MapService(gridOverlaySvg, gridArray) {
 }
 
 
-function SvgImage() {
-    const domImplementation = typeof document === "undefined" ?
-        new DOMImplementation() : document.implementation
+function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
-    const domParser = new DOMParser()
     const namespace = 'http://www.w3.org/2000/svg'
     let doc, svg
 
+    const docType = typeof svgDocument
+    if (docType === 'undefined') doc = createEmptyDocument()
+    else if (docType === 'string') doc = parseDocument(svgDocument)
+    else doc = svgDocument
+    svg = doc.documentElement
+
+    function parseDocument(svgDoc) {
+        const domParser = new DOMParser()
+        return  domParser.parseFromString(svgDoc, "image/svg+xml")
+    }
+
+    function createEmptyDocument() {
+        const domImplementation = typeof document === "undefined" ?
+            new DOMImplementation() : document.implementation
+        return domImplementation.createDocument(namespace, 'svg')
+    }
+
     return {
-        initEmptyImage: function (width, height) {
-            doc = domImplementation.createDocument(namespace, 'svg')
-            svg = doc.documentElement
+        setDimensions: function(width, height) {
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
@@ -114,12 +127,10 @@ function SvgImage() {
             //     `}`)
             circle.setAttribute('fill', color)
         },
-        setFrom: function (svgDoc) {
-            doc = domParser.parseFromString(svgDoc, "image/svg+xml")
-            svg = doc.documentElement
-            return this
+        copy: function () {
+           return SvgImage(doc.cloneNode(true))
         },
-        serializeImage: function () {
+        serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
     }

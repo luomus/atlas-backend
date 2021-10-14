@@ -1,13 +1,13 @@
 const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
 
 function MapService(gridOverlaySvg, gridArray) {
-    const gridOverlay = SvgImage()
-    if (typeof gridOverlaySvg !== "undefined") gridOverlay.setFrom(gridOverlaySvg)
-    else if (typeof gridArray !== "undefined") createGridOverlay(gridArray)
-    else console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
+    if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
+        return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
+    const gridOverlay = typeof gridOverlaySvg !== "undefined" ?
+         SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     return {
-        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serializeImage() : null,
+        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
         getSpeciesMap: function (data, type = 'svg') {
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
@@ -18,7 +18,7 @@ function MapService(gridOverlaySvg, gridArray) {
         }
     }
 
-    function createGridOverlay(gridArray) {
+    function drawGrid(gridArray, svgImage) {
         const verticalFlipMatrix = [[-1, 0], [0, 1]]
         const rotate180ccwMatrix = [[-1, 0], [0, -1]]
         const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
@@ -28,11 +28,12 @@ function MapService(gridOverlaySvg, gridArray) {
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        gridOverlay.initEmptyImage(width, height).setViewBox(0, 0, width, height)
+        svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
             const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
-            return gridOverlay.addCircle(propertyMap)
+            return svgImage.addCircle(propertyMap)
         })
+        return svgImage
     }
 
     function getColorForBreedingCategory(breedingCategory) {

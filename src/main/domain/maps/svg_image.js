@@ -1,17 +1,29 @@
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
 
-function SvgImage() {
-    const domImplementation = typeof document === "undefined" ?
-        new DOMImplementation() : document.implementation
+function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
-    const domParser = new DOMParser()
     const namespace = 'http://www.w3.org/2000/svg'
     let doc, svg
 
+    const docType = typeof svgDocument
+    if (docType === 'undefined') doc = createEmptyDocument()
+    else if (docType === 'string') doc = parseDocument(svgDocument)
+    else doc = svgDocument
+    svg = doc.documentElement
+
+    function parseDocument(svgDoc) {
+        const domParser = new DOMParser()
+        return  domParser.parseFromString(svgDoc, "image/svg+xml")
+    }
+
+    function createEmptyDocument() {
+        const domImplementation = typeof document === "undefined" ?
+            new DOMImplementation() : document.implementation
+        return domImplementation.createDocument(namespace, 'svg')
+    }
+
     return {
-        initEmptyImage: function (width, height) {
-            doc = domImplementation.createDocument(namespace, 'svg')
-            svg = doc.documentElement
+        setDimensions: function(width, height) {
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
@@ -38,12 +50,10 @@ function SvgImage() {
             //     `}`)
             circle.setAttribute('fill', color)
         },
-        setFrom: function (svgDoc) {
-            doc = domParser.parseFromString(svgDoc, "image/svg+xml")
-            svg = doc.documentElement
-            return this
+        copy: function () {
+           return SvgImage(doc.cloneNode(true))
         },
-        serializeImage: function () {
+        serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
     }
