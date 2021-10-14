@@ -35,8 +35,9 @@ function MapService(gridOverlaySvg, gridArray) {
             const converter = geojson2svg(converterOptions)
             geoJsonArray.forEach(geoJson => {
                 let svgStrings = converter.convert(geoJson)
-                return svgStrings.forEach(str => baseMap.addElementFromString(str))
+                baseMap.addGroupFromStrings(svgStrings)
             })
+            // console.log(baseMap.serialize())
             return this
         }
     }
