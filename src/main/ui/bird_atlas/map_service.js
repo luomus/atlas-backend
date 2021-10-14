@@ -17,7 +17,7 @@ function MapService(gridOverlaySvg, gridArray) {
     }
     const baseMap = SvgImage()
     baseMap.setDimensions(mapWidth, mapHeight)
-    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
+    baseMap.setViewBox(-20, -10, mapWidth, mapHeight)
 
     return {
         getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
@@ -33,7 +33,7 @@ function MapService(gridOverlaySvg, gridArray) {
             const converter = geojson2svg(converterOptions)
             geoJsonArray.forEach(geoJson => {
                 let svgStrings = converter.convert(geoJson)
-                baseMap.addGroupFromStrings(svgStrings)
+                baseMap.addGroupFromStrings(svgStrings, 'black')
             })
             console.log(baseMap.serialize())
             return this
@@ -138,19 +138,18 @@ function SvgImage(svgDocument) {
             svg.appendChild(circle)
             return this
         },
-        addGroupFromStrings: function (svgStringArray) {
+        addGroupFromStrings: function (svgStringArray, color) {
             const group = doc.createElementNS(namespace, 'g')
             svg.appendChild(group)
-            const domParser = new DOMParser()
+            group.setAttributeNS(null, 'stroke', color)
             svgStringArray.forEach(str => {
-                svgElement = domParser.parseFromString(str)
+                svgElement = parseDocument(str)
                 group.appendChild(svgElement)
             })
             return this
         },
         addElementFromString: function (svgString) {
-            const domParser = new DOMParser()
-            const svgElement = domParser.parseFromString(svgString)
+            const svgElement = parseDocument(svgString)
             svg.appendChild(svgElement)
             return this
         },

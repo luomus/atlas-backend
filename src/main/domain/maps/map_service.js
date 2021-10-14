@@ -19,7 +19,7 @@ function MapService(gridOverlaySvg, gridArray) {
     }
     const baseMap = SvgImage()
     baseMap.setDimensions(mapWidth, mapHeight)
-    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
+    baseMap.setViewBox(-20, -10, mapWidth, mapHeight)
 
     return {
         getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
@@ -35,9 +35,9 @@ function MapService(gridOverlaySvg, gridArray) {
             const converter = geojson2svg(converterOptions)
             geoJsonArray.forEach(geoJson => {
                 let svgStrings = converter.convert(geoJson)
-                baseMap.addGroupFromStrings(svgStrings)
+                baseMap.addGroupFromStrings(svgStrings, 'black')
             })
-            // console.log(baseMap.serialize())
+            console.log(baseMap.serialize())
             return this
         }
     }
