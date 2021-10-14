@@ -38,10 +38,10 @@ function SvgImage(svgDocument) {
             svg.appendChild(circle)
             return this
         },
-        addGroupFromStrings: function (svgStringArray, color) {
+        addGroupFromStrings: function (svgStringArray, propertyMap) {
             const group = doc.createElementNS(namespace, 'g')
+            mapPropertiesToAttributes(propertyMap, group)
             svg.appendChild(group)
-            group.setAttributeNS(null, 'stroke', color)
             svgStringArray.forEach(str => {
                 svgElement = parseDocument(str)
                 group.appendChild(svgElement)
