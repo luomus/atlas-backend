@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: API for Bird Atlas
+  version: ALPHA
+servers:
+  - url: http://localhost:3000
+    description: Development server
+paths:
+  /api/birds/:
+    get:
+      summary: Retrieve a list of birds.
+      description: Can be used to populate a list of birds.
+      responses:
+        200:
+          description: A list of birds.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        species_id:
+                          type: integer
+                          description: MX-code of the bird.
+                          example: 25836
+                        speciesFI:
+                          type: string
+                          description: Finnish name
+                          example: Kaakkuri
+                        speciesEN:
+                          type: string
+                          description: English name
+                          example: Red-throated Diver
+                        speciesSV:
+                          type: string
+                          description: Swedish name
+                          example: Smålom
+                        speciesSCI:
+                          type: string
+                          description: Scientific name
+                          example: Gavia stellata
+                        speciesAbbr:
+                          type: string
+                          description: Abbreviation of the scientific name
+                          example: GAVSTE
+                        speciesGroup_id:
+                          type: integer
+                          description: Group ID
+                          example: 0
