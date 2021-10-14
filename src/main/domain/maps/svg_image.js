@@ -41,16 +41,14 @@ function SvgImage(svgDocument) {
         addGroupFromStrings: function (svgStringArray) {
             const group = doc.createElementNS(namespace, 'g')
             svg.appendChild(group)
-            const domParser = new DOMParser()
             svgStringArray.forEach(str => {
-                svgElement = domParser.parseFromString(str)
+                svgElement = parseDocument(str)
                 group.appendChild(svgElement)
             })
             return this
         },
         addElementFromString: function (svgString) {
-            const domParser = new DOMParser()
-            const svgElement = domParser.parseFromString(svgString)
+            const svgElement = parseDocument(svgString)
             svg.appendChild(svgElement)
             return this
         },
