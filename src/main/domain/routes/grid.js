@@ -49,7 +49,7 @@ class Grid {
         return (req, res) => {
             this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id")).then(data => {
                 res.setHeader('Content-Type', 'image/svg+xml')
-                res.send(this.#mapService.getSpeciesMap(data).getGrid("svg"))
+                res.send(this.#mapService.getSpeciesMap(data))
             })
         }
     }

@@ -8,12 +8,14 @@ function MapService(gridOverlaySvg, gridArray) {
     return {
         getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
         getSpeciesMap: function (data, type = 'svg') {
+            const copy = gridOverlay.copy()
+            console.log("kopio: ", copy)
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                gridOverlay.setAttribute(datapoint.id, propertyMap, color)
+                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5}
+                copy.setAttribute(datapoint.id, propertyMap, color)
             })
-            return this
+            return copy.serialize()
         }
     }
 
@@ -29,7 +31,7 @@ function MapService(gridOverlaySvg, gridArray) {
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
+            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5, display: "none" }
             return svgImage.addCircle(propertyMap)
         })
         return svgImage
@@ -116,16 +118,15 @@ function SvgImage(svgDocument) {
             return this
         },
         setAttribute: function (id, propertyMap, color) {
-            const allElements = doc.querySelectorAllElements()
-            console.log(allElements)
             const circle = doc.getElementById(id)
-            // console.log(`circle: {`,
-            //     `id: ${circle.getAttribute('id')}, `,
-            //     `cx: ${circle.getAttribute('cx')}, `,
-            //     `cy: ${circle.getAttribute('cy')}, `,
-            //     `fill: ${circle.getAttribute('fill')} `,
-            //     `}`)
+            console.log(`circle: {`,
+                `id: ${circle.getAttribute('id')}, `,
+                `cx: ${circle.getAttribute('cx')}, `,
+                `cy: ${circle.getAttribute('cy')}, `,
+                `fill: ${circle.getAttribute('fill')} `,
+                `}`)
             circle.setAttribute('fill', color)
+            circle.setAttribute('display', 'contets')
         },
         copy: function () {
            return SvgImage(doc.cloneNode(true))

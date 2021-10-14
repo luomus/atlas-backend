@@ -39,16 +39,15 @@ function SvgImage(svgDocument) {
             return this
         },
         setAttribute: function (id, propertyMap, color) {
-            const allElements = doc.querySelectorAllElements()
-            console.log(allElements)
             const circle = doc.getElementById(id)
-            // console.log(`circle: {`,
-            //     `id: ${circle.getAttribute('id')}, `,
-            //     `cx: ${circle.getAttribute('cx')}, `,
-            //     `cy: ${circle.getAttribute('cy')}, `,
-            //     `fill: ${circle.getAttribute('fill')} `,
-            //     `}`)
+            console.log(`circle: {`,
+                `id: ${circle.getAttribute('id')}, `,
+                `cx: ${circle.getAttribute('cx')}, `,
+                `cy: ${circle.getAttribute('cy')}, `,
+                `fill: ${circle.getAttribute('fill')} `,
+                `}`)
             circle.setAttribute('fill', color)
+            circle.setAttribute('display', 'contets')
         },
         copy: function () {
            return SvgImage(doc.cloneNode(true))
