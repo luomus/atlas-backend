@@ -29,13 +29,15 @@ function MapService(gridOverlaySvg, gridArray) {
             })
             return this
         },
-        addToBaseMap: function (geoJson) {
+        addToBaseMap: function (geoJson, id) {
             const converter = geojson2svg(converterOptions)
             let svgStrings = converter.convert(geoJson)
-            const propertyMap = { stroke: 'black' }
+            const propertyMap = { id: id, stroke: 'black' }
             baseMap.addGroupFromStrings(svgStrings, propertyMap)
-            console.log(baseMap.serialize())
             return this
+        },
+        getBaseMap: function () {
+            return baseMap.serialize()
         }
     }
 
