@@ -7,8 +7,16 @@ function MapService(gridOverlaySvg, gridArray) {
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     return {
-        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
+        getGrid: function (type = 'svg') {
+            if (type === 'svg'){
+                gridOverlay.changeDisplayForAll(display = true)
+                return gridOverlay.serialize()
+            } else {
+                return null
+            }
+        },
         getSpeciesMap: function (data, type = 'svg') {
+           gridOverlay.changeDisplayForAll(display = false)
             const copy = gridOverlay.copy()
             console.log("kopio: ", copy)
             data.forEach(datapoint => {
