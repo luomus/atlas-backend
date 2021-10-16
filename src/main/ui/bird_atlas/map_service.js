@@ -134,13 +134,13 @@ function SvgImage(svgDocument) {
                 // `fill: ${circle.getAttribute('fill')} `,
                 // `}`)
             circle.setAttribute('fill', color)
-            circle.setAttribute('display', 'contets')
+            circle.setAttribute('display', 'block')
         },
         changeDisplayForAll: function (display) {
             const allCircles = doc.getElementsByTagName('circle')
             for (let i = 0; i < allCircles.length; i++) {
                 const element = allCircles[i];
-                if (display) { element.setAttribute('display', 'contets') } 
+                if (display) { element.setAttribute('display', 'block') } 
                 else { element.setAttribute('display', 'none') }
             }
         },

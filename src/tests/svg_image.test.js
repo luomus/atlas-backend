@@ -70,3 +70,27 @@ test('copy works correctly', () => {
     expect(svg).not.toContain('width="10"')
     expect(svg).not.toContain('height="20"')
 })
+
+test('changeDisplayForAll changes display to block', () => {
+    svgImage.addCircle({testProperty: 1})
+    svgImage.changeDisplayForAll(display = true)
+    const svg = svgImage.serialize()
+
+    expect(svg).toContain('display=\"block\"')
+})
+
+test('changeDisplayForAll changes display to none', () => {
+    svgImage.addCircle({testProperty: 1})
+    svgImage.changeDisplayForAll(display = false)
+    const svg = svgImage.serialize()
+
+    expect(svg).toContain('display=\"none\"')
+})
+
+test('setAtrribute changes the color of a circle', () => {
+    svgImage.addCircle({testProperty: 1, id: 1})
+    svgImage.setAttribute(1,{testProperty: 1, id: 1}, 'red')
+    const svg = svgImage.serialize()
+
+    expect(svg).toContain('fill=\"red\"')
+})
