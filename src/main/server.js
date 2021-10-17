@@ -1,7 +1,6 @@
 global.__rootdir = __dirname
 const express = require('express')
 const sqlite3 = require('sqlite3')
-const root = require('./domain/routes/root.js')
 const Querier = require('./dao/querier')
 const BirdDao = require("./dao/bird_dao")
 const BirdGridDao = require("./dao/bird_grid_dao")
@@ -10,7 +9,18 @@ const Birds = require('./domain/routes/birds.js')
 const Grid = require('./domain/routes/grid')
 const MapService = require('./domain/maps/map_service')
 const fs = require('fs')
+const swaggerUi = require('swagger-ui-express')
+const YAML = require('yamljs')
 const app = express()
+
+const path = './openAPI.yaml'
+try {
+  if (fs.existsSync(path)) {
+    const swaggerDocument = YAML.load(path);
+    app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+    app.get('/',(req, res) => res.redirect('/doc') )
+  }
+} catch(ignore) {}
 
 
 const db = new sqlite3.Database('./birds.db', (err) => {
@@ -35,7 +45,6 @@ gridDao.getAllGrids().then(gridArray => {
 
 app.use(express.static(__rootdir + '/ui'))
 
-app.get('/', root)
 app.get('/api/birds', birds.getAll())
 app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 app.get('/api/species/data', birds.getGridAndBreedingdataForBird())

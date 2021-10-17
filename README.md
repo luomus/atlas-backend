@@ -2,11 +2,15 @@
 
 ![actions badge](https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/node.js.yml/badge.svg)
 
+In this project, Luomus Bird and Plant Atlas are developed.
 
-Tässä projektissa kehitetään Luomuksen Kasvi- ja Lintuatlasta!
+## Documentation
 
+### Classes
+#### Routing
+* [Birds](https://atlas-ohtuprojekti.github.io/ATLAS/Birds.html)
 
-### Dokumentaatio
+## Project management
 
 * [Working Hours](https://docs.google.com/spreadsheets/d/19Y2sjV4hNleklp-nDP_OXDvz_ATXy6dcdp0JDMt3L9Q/edit#gid=1182794126)
 * [Product Backlog](https://docs.google.com/spreadsheets/d/19Y2sjV4hNleklp-nDP_OXDvz_ATXy6dcdp0JDMt3L9Q/edit#gid=1236889651)
