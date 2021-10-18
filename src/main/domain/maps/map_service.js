@@ -40,14 +40,16 @@ function MapService(gridOverlaySvg, gridArray) {
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5}
                 copy.setAttribute(datapoint.id, propertyMap, color)
             })
-            copy.setDimensions(copy.getWidth() * scaleFactor, copy.getHeight() * scaleFactor)
+            const width = copy.getWidth() * scaleFactor
+            const height = copy.getHeight() * scaleFactor
+            copy.setDimensions(width, height)
             if (type === 'png') {
                 const image = new Image()
                 const canvas = typeof createCanvas !== 'undefined' ?
-                    createCanvas(268, 464) : document.createElement('canvas')
+                    createCanvas(width, height) : document.createElement('canvas')
                 const context = canvas.getContext('2d')
                 image.onload = () => {
-                    context.drawImage(image, 0, 0, 268, 464)
+                    context.drawImage(image, 0, 0, width, height)
                     const png = canvas.toBuffer('image/png')
                     callback(png)
                 }
