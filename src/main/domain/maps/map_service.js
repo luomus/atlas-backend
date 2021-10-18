@@ -26,14 +26,14 @@ function MapService(gridOverlaySvg, gridArray) {
     return {
         getGrid: function (type = 'svg') {
             if (type === 'svg'){
-                gridOverlay.changeDisplayForAll(display = true)
-                return gridOverlay.serialize()
+                const copy = gridOverlay.copy()
+                copy.changeDisplayForAll(display = true)
+                return copy.serialize()
             } else {
                 return null
             }
         },
         getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
-           gridOverlay.changeDisplayForAll(display = false)
             const copy = gridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
