@@ -32,7 +32,7 @@ function MapService(gridOverlaySvg, gridArray) {
         addToBaseMap: function (geoJson, id) {
             const converter = geojson2svg(converterOptions)
             let svgStrings = converter.convert(geoJson)
-            const propertyMap = { id: id, stroke: 'black' }
+            const propertyMap = { id: id, stroke: 'black', 'fill-opacity': 0 }
             baseMap.addGroupFromStrings(svgStrings, propertyMap)
             return this
         },
