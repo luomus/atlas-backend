@@ -80,7 +80,7 @@ app.compileMapServiceForDelivery = function () {
 
 const compiledMapService = app.compileMapServiceForDelivery()
 
-fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', compiledMapService, err => {
+fs.writeFile(__dirname + '/static/map_service.js', compiledMapService, err => {
   if (err) console.error(err)
   else console.log("Map service successfully compiled for delivery")
 })
