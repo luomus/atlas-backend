@@ -55,10 +55,10 @@ function SvgImage(svgDocument) {
             svg.appendChild(svgElement)
             return this
         },
-        setAttribute: function (id, propertyMap, color) {
+        setAttribute: function (id, propertyMap) {
             const circle = doc.getElementById(id)
-            circle.setAttribute('fill', color)
-            circle.setAttribute('display', 'block')
+            mapPropertiesToAttributes(propertyMap, circle)
+            return this
         },
         changeDisplayForAll: function (display) {
             const allCircles = doc.getElementsByTagName('circle')

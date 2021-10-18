@@ -89,7 +89,7 @@ test('changeDisplayForAll changes display to none', () => {
 
 test('setAtrribute changes the color of a circle', () => {
     svgImage.addCircle({testProperty: 1, id: 1})
-    svgImage.setAttribute(1,{testProperty: 1, id: 1}, 'red')
+    svgImage.setAttribute(1, {fill: 'red'})
     const svg = svgImage.serialize()
 
     expect(svg).toContain('fill=\"red\"')
