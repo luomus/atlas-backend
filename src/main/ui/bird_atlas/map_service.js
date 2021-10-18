@@ -9,15 +9,15 @@ function MapService(gridOverlaySvg, gridArray) {
     const mapHeight = 300
     const converterOptions = {
         mapExtent: {
-            left: 50199.4814,
-            bottom: 6582464.0358,
-            right: 761274.6247,
-            top: 7799839.8902
+            left: 32.215,
+            bottom: 6597226.034,
+            right: 799710.013,
+            top: 7796745.612
         }
     }
     const baseMap = SvgImage()
     baseMap.setDimensions(mapWidth, mapHeight)
-    baseMap.setViewBox(-20, -10, mapWidth, mapHeight)
+    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
         getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
