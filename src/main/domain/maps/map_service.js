@@ -1,5 +1,7 @@
 const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
 const geojson2svg = require('geojson2svg')
+const { createCanvas, Image } = require('canvas')
+const svg64 = require('svg64')
 
 function MapService(gridOverlaySvg, gridArray) {
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
@@ -22,14 +24,38 @@ function MapService(gridOverlaySvg, gridArray) {
     baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
-        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
-        getSpeciesMap: function (data, type = 'svg') {
+        getGrid: function (type = 'svg') {
+            if (type === 'svg'){
+                gridOverlay.changeDisplayForAll(display = true)
+                return gridOverlay.serialize()
+            } else {
+                return null
+            }
+        },
+        getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
+           gridOverlay.changeDisplayForAll(display = false)
+            const copy = gridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                gridOverlay.setAttribute(datapoint.id, propertyMap, color)
+                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5}
+                copy.setAttribute(datapoint.id, propertyMap, color)
             })
-            return this
+            copy.setDimensions(copy.getWidth() * scaleFactor, copy.getHeight() * scaleFactor)
+            if (type === 'png') {
+                const image = new Image()
+                const canvas = typeof createCanvas !== 'undefined' ?
+                    createCanvas(268, 464) : document.createElement('canvas')
+                const context = canvas.getContext('2d')
+                image.onload = () => {
+                    context.drawImage(image, 0, 0, 268, 464)
+                    const png = canvas.toBuffer('image/png')
+                    callback(png)
+                }
+                image.onerror = err => { throw err }
+                image.src = svg64(copy.serialize())
+            } else {
+                return copy.serialize()
+            }
         },
         addToBaseMap: function (geoJson, id) {
             const converter = geojson2svg(converterOptions)
@@ -55,7 +81,7 @@ function MapService(gridOverlaySvg, gridArray) {
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
+            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5, display: "none" }
             return svgImage.addCircle(propertyMap)
         })
         return svgImage

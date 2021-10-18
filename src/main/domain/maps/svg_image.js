@@ -13,7 +13,7 @@ function SvgImage(svgDocument) {
 
     function parseDocument(svgDoc) {
         const domParser = new DOMParser()
-        return  domParser.parseFromString(svgDoc, "image/svg+xml")
+        return domParser.parseFromString(svgDoc, "image/svg+xml")
     }
 
     function createEmptyDocument() {
@@ -23,11 +23,13 @@ function SvgImage(svgDocument) {
     }
 
     return {
-        setDimensions: function(width, height) {
+        setDimensions: function (width, height) {
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
         },
+        getWidth: () => svg.getAttribute('width'),
+        getHeight: () => svg.getAttribute('height'),
         setViewBox: function (minX, minY, width, height) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
@@ -54,20 +56,28 @@ function SvgImage(svgDocument) {
             return this
         },
         setAttribute: function (id, propertyMap, color) {
-            const allElements = doc.querySelectorAllElements()
-            console.log(allElements)
             const circle = doc.getElementById(id)
             // console.log(`circle: {`,
-            //     `id: ${circle.getAttribute('id')}, `,
-            //     `cx: ${circle.getAttribute('cx')}, `,
-            //     `cy: ${circle.getAttribute('cy')}, `,
-            //     `fill: ${circle.getAttribute('fill')} `,
-            //     `}`)
+                // `id: ${circle.getAttribute('id')}, `,
+                // `cx: ${circle.getAttribute('cx')}, `,
+                // `cy: ${circle.getAttribute('cy')}, `,
+                // `fill: ${circle.getAttribute('fill')} `,
+                // `}`)
             circle.setAttribute('fill', color)
+            circle.setAttribute('display', 'block')
+        },
+        changeDisplayForAll: function (display) {
+            const allCircles = doc.getElementsByTagName('circle')
+            for (let i = 0; i < allCircles.length; i++) {
+                const element = allCircles[i];
+                if (display) { element.setAttribute('display', 'block') } 
+                else { element.setAttribute('display', 'none') }
+            }
         },
         copy: function () {
-           return SvgImage(doc.cloneNode(true))
+            return SvgImage(doc.cloneNode(true))
         },
+        getSvgElement: () => svg,
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },

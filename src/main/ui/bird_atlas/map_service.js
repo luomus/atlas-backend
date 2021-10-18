@@ -20,14 +20,38 @@ function MapService(gridOverlaySvg, gridArray) {
     baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
-        getGrid: (type = 'svg') => type === "svg" ? gridOverlay.serialize() : null,
-        getSpeciesMap: function (data, type = 'svg') {
+        getGrid: function (type = 'svg') {
+            if (type === 'svg'){
+                gridOverlay.changeDisplayForAll(display = true)
+                return gridOverlay.serialize()
+            } else {
+                return null
+            }
+        },
+        getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
+           gridOverlay.changeDisplayForAll(display = false)
+            const copy = gridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5 }
-                gridOverlay.setAttribute(datapoint.id, propertyMap, color)
+                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5}
+                copy.setAttribute(datapoint.id, propertyMap, color)
             })
-            return this
+            copy.setDimensions(copy.getWidth() * scaleFactor, copy.getHeight() * scaleFactor)
+            if (type === 'png') {
+                const image = new Image()
+                const canvas = typeof createCanvas !== 'undefined' ?
+                    createCanvas(268, 464) : document.createElement('canvas')
+                const context = canvas.getContext('2d')
+                image.onload = () => {
+                    context.drawImage(image, 0, 0, 268, 464)
+                    const png = canvas.toBuffer('image/png')
+                    callback(png)
+                }
+                image.onerror = err => { throw err }
+                image.src = svg64(copy.serialize())
+            } else {
+                return copy.serialize()
+            }
         },
         addToBaseMap: function (geoJson, id) {
             const converter = geojson2svg(converterOptions)
@@ -53,7 +77,7 @@ function MapService(gridOverlaySvg, gridArray) {
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5 }
+            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5, display: "none" }
             return svgImage.addCircle(propertyMap)
         })
         return svgImage
@@ -114,7 +138,7 @@ function SvgImage(svgDocument) {
 
     function parseDocument(svgDoc) {
         const domParser = new DOMParser()
-        return  domParser.parseFromString(svgDoc, "image/svg+xml")
+        return domParser.parseFromString(svgDoc, "image/svg+xml")
     }
 
     function createEmptyDocument() {
@@ -124,11 +148,13 @@ function SvgImage(svgDocument) {
     }
 
     return {
-        setDimensions: function(width, height) {
+        setDimensions: function (width, height) {
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
             return this
         },
+        getWidth: () => svg.getAttribute('width'),
+        getHeight: () => svg.getAttribute('height'),
         setViewBox: function (minX, minY, width, height) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
@@ -155,20 +181,28 @@ function SvgImage(svgDocument) {
             return this
         },
         setAttribute: function (id, propertyMap, color) {
-            const allElements = doc.querySelectorAllElements()
-            console.log(allElements)
             const circle = doc.getElementById(id)
             // console.log(`circle: {`,
-            //     `id: ${circle.getAttribute('id')}, `,
-            //     `cx: ${circle.getAttribute('cx')}, `,
-            //     `cy: ${circle.getAttribute('cy')}, `,
-            //     `fill: ${circle.getAttribute('fill')} `,
-            //     `}`)
+                // `id: ${circle.getAttribute('id')}, `,
+                // `cx: ${circle.getAttribute('cx')}, `,
+                // `cy: ${circle.getAttribute('cy')}, `,
+                // `fill: ${circle.getAttribute('fill')} `,
+                // `}`)
             circle.setAttribute('fill', color)
+            circle.setAttribute('display', 'block')
+        },
+        changeDisplayForAll: function (display) {
+            const allCircles = doc.getElementsByTagName('circle')
+            for (let i = 0; i < allCircles.length; i++) {
+                const element = allCircles[i];
+                if (display) { element.setAttribute('display', 'block') } 
+                else { element.setAttribute('display', 'none') }
+            }
         },
         copy: function () {
-           return SvgImage(doc.cloneNode(true))
+            return SvgImage(doc.cloneNode(true))
         },
+        getSvgElement: () => svg,
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
