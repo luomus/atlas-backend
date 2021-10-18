@@ -3,6 +3,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "sqlite3": "^5.0.2",
+    "oracledb": "^5.2.0",
     "swagger-ui-express": "^4.1.6",
     "xmldom": "^0.6.0",
     "yamljs": "^0.3.0"
