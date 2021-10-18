@@ -1,4 +1,6 @@
 const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
+const { createCanvas, Image } = require('canvas')
+const svg64 = require('svg64')
 
 function MapService(gridOverlaySvg, gridArray) {
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
@@ -15,16 +17,30 @@ function MapService(gridOverlaySvg, gridArray) {
                 return null
             }
         },
-        getSpeciesMap: function (data, type = 'svg') {
+        getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
            gridOverlay.changeDisplayForAll(display = false)
             const copy = gridOverlay.copy()
-            console.log("kopio: ", copy)
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5}
                 copy.setAttribute(datapoint.id, propertyMap, color)
             })
-            return copy.serialize()
+            copy.setDimensions(copy.getWidth() * scaleFactor, copy.getHeight() * scaleFactor)
+            if (type === 'png') {
+                const image = new Image()
+                const canvas = typeof createCanvas !== 'undefined' ?
+                    createCanvas(268, 464) : document.createElement('canvas')
+                const context = canvas.getContext('2d')
+                image.onload = () => {
+                    context.drawImage(image, 0, 0, 268, 464)
+                    const png = canvas.toBuffer('image/png')
+                    callback(png)
+                }
+                image.onerror = err => { throw err }
+                image.src = svg64(copy.serialize())
+            } else {
+                return copy.serialize()
+            }
         }
     }
 

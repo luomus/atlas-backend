@@ -28,6 +28,8 @@ function SvgImage(svgDocument) {
             svg.setAttribute('height', height)
             return this
         },
+        getWidth: () => svg.getAttribute('width'),
+        getHeight: () => svg.getAttribute('height'),
         setViewBox: function (minX, minY, width, height) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
@@ -60,6 +62,7 @@ function SvgImage(svgDocument) {
         copy: function () {
             return SvgImage(doc.cloneNode(true))
         },
+        getSvgElement: () => svg,
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },

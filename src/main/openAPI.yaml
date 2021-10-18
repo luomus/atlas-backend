@@ -9,7 +9,7 @@ paths:
   /api/birds/:
     get:
       summary: Retrieve a list of birds.
-      description: Can be used to populate a list of birds.
+      description: Can be used to populate a list or table element.
       responses:
         200:
           description: A list of birds.
@@ -51,3 +51,23 @@ paths:
                           type: integer
                           description: Group ID
                           example: 0
+  /api/grid/map/data:
+    get:
+      description: Auto generated using Swagger Inspector
+      parameters:
+        - name: scaling
+          in: query
+          schema:
+            type: string
+          example: '5'
+        - name: id
+          in: query
+          schema:
+            type: string
+          example: '25836'
+      responses:
+        '200':
+          description: Auto generated using Swagger Inspector
+          content:
+            image/*:
+              schema:

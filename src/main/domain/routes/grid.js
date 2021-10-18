@@ -1,4 +1,5 @@
 const BirdGridDao = require("../../dao/bird_grid_dao")
+const {param} = require("express/lib/router");
 
 class Grid {
     #mapService
@@ -48,8 +49,16 @@ class Grid {
     createGridForBirdData () {
         return (req, res) => {
             this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id")).then(data => {
-                res.setHeader('Content-Type', 'image/svg+xml')
-                res.send(this.#mapService.getSpeciesMap(data))
+                if (req.param('type') === 'png') {
+                    res.setHeader('Content-Type', 'image/png')
+                    this.#mapService.getSpeciesMap(data, callback, 'png', req.param('scaling'))
+                    function callback(png) {
+                        res.send(png)
+                    }
+                } else {
+                    res.setHeader('Content-Type', 'image/svg+xml')
+                    res.send(this.#mapService.getSpeciesMap(data, 'svg', req.param('scaling')))
+                }
             })
         }
     }
