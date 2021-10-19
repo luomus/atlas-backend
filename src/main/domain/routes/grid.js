@@ -27,8 +27,12 @@ class Grid {
      * @returns {array}
      */
     getAll () {
-        return (req, res) => this.#gridDao.getAllGrids()
-            .then(data => res.json(data), () => res.send(null))
+        // return (req, res) => this.#gridDao.getAllGrids()
+        //     .then(data => res.json(data), () => res.send(null))
+        return (req, res) => {
+            res.setHeader('Content-Type', 'image/svg+xml')
+            res.send(this.#mapService.getBaseMap())
+        }
     }
 
     /**

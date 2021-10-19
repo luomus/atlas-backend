@@ -44,7 +44,6 @@ gridDao.getAllGrids().then(gridArray => {
     let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
     mapService.addToBaseMap(JSON.parse(baseMapGrid), 'YKJ100km')
     mapService.addToBaseMap(JSON.parse(finnishBorders), 'borders')
-    console.log(mapService.getBaseMap())
   } catch (err) {
     console.error(err)
   }
