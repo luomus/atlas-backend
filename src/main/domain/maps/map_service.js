@@ -68,8 +68,12 @@ function MapService(gridOverlaySvg, gridArray) {
             baseMap.addGroupFromStrings(svgStrings, propertyMap)
             return this
         },
-        getBaseMap: function () {
-            return baseMap.serialize()
+        getBaseMap: function (type, callback) {
+            if (type === 'png') {
+                this.convertToPng(baseMap, callback, baseMap.getWidth(), baseMap.getHeight())
+            } else {
+                return baseMap.serialize()
+            }
         }
     }
 

@@ -73,9 +73,15 @@ class Grid {
      */
     getBaseMap () {
         return (req, res) => {
-            res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(this.#mapService.getBaseMap())
-        }        
+            if (req.param('type') === 'png') {
+                res.setHeader('Content-Type', 'image/png')
+                const callback = png => res.send(png)
+                res.send(this.#mapService.getBaseMap("png", callback))
+            } else {
+                res.setHeader('Content-Type', 'image/svg+xml')
+                res.send(this.#mapService.getBaseMap("svg", undefined))
+            }
+        }
     }
 
 }
