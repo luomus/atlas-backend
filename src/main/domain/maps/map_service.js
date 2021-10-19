@@ -72,8 +72,11 @@ function MapService(gridOverlaySvg, gridArray) {
             return this
         },
         getBaseMap: function (type, callback) {
+            const width = baseMap.getWidth() * 2
+            const height = baseMap.getHeight() * 2
+            baseMap.setDimensions(width, height)
             if (type === 'png') {
-                this.convertToPng(baseMap, callback, baseMap.getWidth(), baseMap.getHeight())
+                this.convertToPng(baseMap, callback, width, height)
             } else {
                 return baseMap.serialize()
             }
