@@ -27,12 +27,8 @@ class Grid {
      * @returns {array}
      */
     getAll () {
-        // return (req, res) => this.#gridDao.getAllGrids()
-        //     .then(data => res.json(data), () => res.send(null))
-        return (req, res) => {
-            res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(this.#mapService.getBaseMap())
-        }
+        return (req, res) => this.#gridDao.getAllGrids()
+            .then(data => res.json(data), () => res.send(null))
     }
 
     /**
@@ -65,6 +61,17 @@ class Grid {
                 }
             })
         }
+    }
+
+    /**
+     * A method that returns an image of the base map with YKJ100km grid and borders of Finland.
+     * @returns {SVGElement}
+     */
+    getBaseMap () {
+        return (req, res) => {
+            res.setHeader('Content-Type', 'image/svg+xml')
+            res.send(this.#mapService.getBaseMap())
+        }        
     }
 
 }

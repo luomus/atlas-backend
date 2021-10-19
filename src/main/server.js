@@ -51,6 +51,7 @@ gridDao.getAllGrids().then(gridArray => {
   app.get('/api/grid', grid.getAll())
   app.get('/api/grid/map', grid.getGrid())
   app.get('/api/grid/map/data', grid.createGridForBirdData())
+  app.get('/api/grid/basemap', grid.getBaseMap())
 })
 
 app.use(express.static(__rootdir + '/ui'))
