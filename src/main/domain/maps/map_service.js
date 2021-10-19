@@ -6,7 +6,7 @@ const svg64 = require('svg64')
 function MapService(gridOverlaySvg, gridArray) {
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
         return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
-    const gridOverlay = typeof gridOverlaySvg !== "undefined" ?
+    const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     const mapWidth = 200
@@ -26,35 +26,36 @@ function MapService(gridOverlaySvg, gridArray) {
     return {
         getGrid: function (type = 'svg') {
             if (type === 'svg'){
-                const copy = gridOverlay.copy()
-                copy.changeDisplayForAll(display = true)
-                return copy.serialize()
+                const gridOverlay = invisibleGridOverlay.copy()
+                gridOverlay.changeDisplayForAll(true)
+                return gridOverlay.serialize()
             } else {
                 return null
             }
         },
         getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
-            const copy = gridOverlay.copy()
+            const gridOverlay = invisibleGridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                const propertyMap = { cx: datapoint.coordinateE, cy: datapoint.coordinateN, fill: color, r: 0.5}
-                copy.setAttribute(datapoint.id, propertyMap, color)
+                gridOverlay.setAttribute(datapoint.id, {fill: color, display: 'block'})
             })
-            copy.setDimensions(copy.getWidth() * scaleFactor, copy.getHeight() * scaleFactor)
+            const width = gridOverlay.getWidth() * scaleFactor
+            const height = gridOverlay.getHeight() * scaleFactor
+            gridOverlay.setDimensions(width, height)
             if (type === 'png') {
                 const image = new Image()
                 const canvas = typeof createCanvas !== 'undefined' ?
-                    createCanvas(268, 464) : document.createElement('canvas')
+                    createCanvas(width, height) : document.createElement('canvas')
                 const context = canvas.getContext('2d')
                 image.onload = () => {
-                    context.drawImage(image, 0, 0, 268, 464)
+                    context.drawImage(image, 0, 0, width, height)
                     const png = canvas.toBuffer('image/png')
                     callback(png)
                 }
                 image.onerror = err => { throw err }
-                image.src = svg64(copy.serialize())
+                image.src = svg64(gridOverlay.serialize())
             } else {
-                return copy.serialize()
+                return gridOverlay.serialize()
             }
         },
         addToBaseMap: function (geoJson, id) {

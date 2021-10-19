@@ -44,7 +44,6 @@ gridDao.getAllGrids().then(gridArray => {
     let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
     mapService.addToBaseMap(JSON.parse(baseMapGrid), 'YKJ100km')
     mapService.addToBaseMap(JSON.parse(finnishBorders), 'borders')
-    console.log(mapService.getBaseMap())
   } catch (err) {
     console.error(err)
   }
@@ -81,7 +80,7 @@ app.compileMapServiceForDelivery = function () {
 
 const compiledMapService = app.compileMapServiceForDelivery()
 
-fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', compiledMapService, err => {
+fs.writeFile(__dirname + '/static/map_service.js', compiledMapService, err => {
   if (err) console.error(err)
   else console.log("Map service successfully compiled for delivery")
 })
