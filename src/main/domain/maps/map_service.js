@@ -24,13 +24,13 @@ function MapService(gridOverlaySvg, gridArray) {
     baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
-        getGrid: function (type = 'svg') {
-            if (type === 'svg'){
-                const gridOverlay = invisibleGridOverlay.copy()
-                gridOverlay.changeDisplayForAll(true)
-                return gridOverlay.serialize()
+        getGrid: function (type = 'svg', callback) {
+            const gridOverlay = invisibleGridOverlay.copy()
+            gridOverlay.changeDisplayForAll(true)
+            if (type === 'png') {
+               this.convertToPng(gridOverlay, callback, gridOverlay.getWidth(), gridOverlay.getHeight())
             } else {
-                return null
+                return gridOverlay.serialize()
             }
         },
         getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
@@ -43,20 +43,23 @@ function MapService(gridOverlaySvg, gridArray) {
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
             if (type === 'png') {
-                const image = new Image()
-                const canvas = typeof createCanvas !== 'undefined' ?
-                    createCanvas(width, height) : document.createElement('canvas')
-                const context = canvas.getContext('2d')
-                image.onload = () => {
-                    context.drawImage(image, 0, 0, width, height)
-                    const png = canvas.toBuffer('image/png')
-                    callback(png)
-                }
-                image.onerror = err => { throw err }
-                image.src = svg64(gridOverlay.serialize())
+                this.convertToPng(gridOverlay, callback, width, height)
             } else {
                 return gridOverlay.serialize()
             }
+        },
+        convertToPng: function (svg, callback, width, height) {
+            const image = new Image()
+            const canvas = typeof createCanvas !== 'undefined' ?
+                createCanvas(width, height) : document.createElement('canvas')
+            const context = canvas.getContext('2d')
+            image.onload = () => {
+                context.drawImage(image, 0, 0, width, height)
+                const png = canvas.toBuffer('image/png')
+                callback(png)
+            }
+            image.onerror = err => { throw err }
+            image.src = svg64(svg.serialize())
         },
         addToBaseMap: function (geoJson, id) {
             const converter = geojson2svg(converterOptions)

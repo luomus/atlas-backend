@@ -37,8 +37,14 @@ class Grid {
      */
     getGrid () {
         return (req, res) => {
-            res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(this.#mapService.getGrid("svg"))
+            if (req.param('type') === 'png') {
+                res.setHeader('Content-Type', 'image/png')
+                const callback = png => res.send(png)
+                res.send(this.#mapService.getGrid("png", callback))
+            } else {
+                res.setHeader('Content-Type', 'image/svg+xml')
+                res.send(this.#mapService.getGrid("svg", undefined))
+            }
         }
     }
 
@@ -50,11 +56,9 @@ class Grid {
         return (req, res) => {
             this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id")).then(data => {
                 if (req.param('type') === 'png') {
+                    const callback = png => res.send(png)
                     res.setHeader('Content-Type', 'image/png')
                     this.#mapService.getSpeciesMap(data, callback, 'png', req.param('scaling'))
-                    function callback(png) {
-                        res.send(png)
-                    }
                 } else {
                     res.setHeader('Content-Type', 'image/svg+xml')
                     res.send(this.#mapService.getSpeciesMap(data, undefined, 'svg', req.param('scaling')))
