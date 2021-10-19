@@ -13,7 +13,7 @@ const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 const app = express()
 
-const path = './openAPI.yaml'
+const path = __dirname + '/openAPI.yaml'
 try {
   if (fs.existsSync(path)) {
     const swaggerDocument = YAML.load(path);

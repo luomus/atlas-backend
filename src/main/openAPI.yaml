@@ -53,7 +53,7 @@ paths:
                           example: 0
   /api/grid/map/data:
     get:
-      description: Auto generated using Swagger Inspector
+      description: Retrieves a map showing the breeding data of a spesified bird.
       parameters:
         - name: scaling
           in: query
@@ -65,9 +65,15 @@ paths:
           schema:
             type: string
           example: '25836'
+        - name: type
+          in: query
+          schema: 
+            type: string
+          example: 'png'
       responses:
         '200':
-          description: Auto generated using Swagger Inspector
-          content:
+          description: Svg or png image
+          content: 
             image/*:
               schema:
+                type: string
