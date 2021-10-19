@@ -61,7 +61,7 @@ class Grid {
                     }
                 } else {
                     res.setHeader('Content-Type', 'image/svg+xml')
-                    res.send(this.#mapService.getSpeciesMap(data, 'svg', req.param('scaling')))
+                    res.send(this.#mapService.getSpeciesMap(data, undefined, 'svg', req.param('scaling')))
                 }
             })
         }

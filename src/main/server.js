@@ -13,7 +13,7 @@ const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 const app = express()
 
-const path = './openAPI.yaml'
+const path = __dirname + '/openAPI.yaml'
 try {
   if (fs.existsSync(path)) {
     const swaggerDocument = YAML.load(path);
@@ -80,7 +80,7 @@ app.compileMapServiceForDelivery = function () {
 
 const compiledMapService = app.compileMapServiceForDelivery()
 
-fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', compiledMapService, err => {
+fs.writeFile(__dirname + '/static/map_service.js', compiledMapService, err => {
   if (err) console.error(err)
   else console.log("Map service successfully compiled for delivery")
 })
