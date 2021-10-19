@@ -28,8 +28,8 @@ function SvgImage(svgDocument) {
             svg.setAttribute('height', height)
             return this
         },
-        getWidth: () => svg.getAttribute('width'),
-        getHeight: () => svg.getAttribute('height'),
+        getWidth: () => parseInt(svg.getAttribute('width')),
+        getHeight: () => parseInt(svg.getAttribute('height')),
         setViewBox: function (minX, minY, width, height) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
