@@ -80,8 +80,8 @@ paths:
                 type: string
   /api/grid/basemap:
     get:
-      summary: Basemap with a 10x10km grid
-      description: Retrieves a basemap with 10x10km grid
+      summary: Basemap with a 100x100km grid
+      description: Retrieves a basemap with 100x100km grid
       parameters:
         - name: type
           in: query
