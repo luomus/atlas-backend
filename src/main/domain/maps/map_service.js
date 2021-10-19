@@ -24,9 +24,12 @@ function MapService(gridOverlaySvg, gridArray) {
     baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
-        getGrid: function (type = 'svg', callback) {
+        getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
             gridOverlay.changeDisplayForAll(true)
+            const width = gridOverlay.getWidth() * scaleFactor
+            const height = gridOverlay.getHeight() * scaleFactor
+            gridOverlay.setDimensions(width, height)
             if (type === 'png') {
                this.convertToPng(gridOverlay, callback, gridOverlay.getWidth(), gridOverlay.getHeight())
             } else {
