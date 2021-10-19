@@ -1,7 +1,3 @@
-const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
-const geojson2svg = require('geojson2svg')
-const { createCanvas, Image } = require('canvas')
-const svg64 = require('svg64')
 
 function MapService(gridOverlaySvg, gridArray) {
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
@@ -24,12 +20,9 @@ function MapService(gridOverlaySvg, gridArray) {
     baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
-        getGrid: function (type = 'svg', callback, scaleFactor = 4) {
+        getGrid: function (type = 'svg', callback) {
             const gridOverlay = invisibleGridOverlay.copy()
             gridOverlay.changeDisplayForAll(true)
-            const width = gridOverlay.getWidth() * scaleFactor
-            const height = gridOverlay.getHeight() * scaleFactor
-            gridOverlay.setDimensions(width, height)
             if (type === 'png') {
                this.convertToPng(gridOverlay, callback, gridOverlay.getWidth(), gridOverlay.getHeight())
             } else {
@@ -139,4 +132,88 @@ function MapService(gridOverlaySvg, gridArray) {
 
 }
 
-module.exports = MapService
+
+function SvgImage(svgDocument) {
+    const xmlSerializer = new XMLSerializer()
+    const namespace = 'http://www.w3.org/2000/svg'
+    let doc, svg
+
+    const docType = typeof svgDocument
+    if (docType === 'undefined') doc = createEmptyDocument()
+    else if (docType === 'string') doc = parseDocument(svgDocument)
+    else doc = svgDocument
+    svg = doc.documentElement
+
+    function parseDocument(svgDoc) {
+        const domParser = new DOMParser()
+        return domParser.parseFromString(svgDoc, "image/svg+xml")
+    }
+
+    function createEmptyDocument() {
+        const domImplementation = typeof document === "undefined" ?
+            new DOMImplementation() : document.implementation
+        return domImplementation.createDocument(namespace, 'svg')
+    }
+
+    return {
+        setDimensions: function (width, height) {
+            svg.setAttribute('width', width)
+            svg.setAttribute('height', height)
+            return this
+        },
+        getWidth: () => svg.getAttribute('width'),
+        getHeight: () => svg.getAttribute('height'),
+        setViewBox: function (minX, minY, width, height) {
+            svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
+            return this
+        },
+        addCircle: function (propertyMap) {
+            const circle = doc.createElementNS(namespace, 'circle')
+            mapPropertiesToAttributes(propertyMap, circle)
+            svg.appendChild(circle)
+            return this
+        },
+        addGroupFromStrings: function (svgStringArray, propertyMap) {
+            const group = doc.createElementNS(namespace, 'g')
+            mapPropertiesToAttributes(propertyMap, group)
+            svg.appendChild(group)
+            svgStringArray.forEach(str => {
+                svgElement = parseDocument(str)
+                group.appendChild(svgElement)
+            })
+            return this
+        },
+        addElementFromString: function (svgString) {
+            const svgElement = parseDocument(svgString)
+            svg.appendChild(svgElement)
+            return this
+        },
+        setAttribute: function (id, propertyMap) {
+            const circle = doc.getElementById(id)
+            mapPropertiesToAttributes(propertyMap, circle)
+            return this
+        },
+        changeDisplayForAll: function (display) {
+            const allCircles = doc.getElementsByTagName('circle')
+            for (let i = 0; i < allCircles.length; i++) {
+                const element = allCircles[i];
+                if (display) { element.setAttribute('display', 'block') } 
+                else { element.setAttribute('display', 'none') }
+            }
+        },
+        copy: function () {
+            return SvgImage(doc.cloneNode(true))
+        },
+        getSvgElement: () => svg,
+        serialize: function () {
+            return xmlSerializer.serializeToString(svg)
+        },
+    }
+
+    function mapPropertiesToAttributes(propertyMap, svgElement) {
+        for (const prop in propertyMap)
+            svgElement.setAttributeNS(null, prop, propertyMap[prop])
+    }
+
+}
+

@@ -13,7 +13,7 @@ const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 const app = express()
 
-const path = './openAPI.yaml'
+const path = __dirname + '/openAPI.yaml'
 try {
   if (fs.existsSync(path)) {
     const swaggerDocument = YAML.load(path);
@@ -38,9 +38,20 @@ gridDao.getAllGrids().then(gridArray => {
   gridArray = gridArray.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
   const mapService = MapService(undefined, gridArray)
   const grid = new Grid(gridDao, mapService, birdGridDao)
+
+  try {
+    let baseMapGrid = fs.readFileSync(__dirname + '/geojson/YKJ100km.geojson')
+    let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
+    mapService.addToBaseMap(JSON.parse(baseMapGrid), 'YKJ100km')
+    mapService.addToBaseMap(JSON.parse(finnishBorders), 'borders')
+  } catch (err) {
+    console.error(err)
+  }
+
   app.get('/api/grid', grid.getAll())
   app.get('/api/grid/map', grid.getGrid())
   app.get('/api/grid/map/data', grid.createGridForBirdData())
+  app.get('/api/grid/basemap', grid.getBaseMap())
 })
 
 app.use(express.static(__rootdir + '/ui'))
@@ -57,7 +68,7 @@ app.compileMapServiceForDelivery = function () {
   const moduleExportsRegEx = /module\.exports\s*=\s*[{\s\w\d,_$}]+.+(\n|$)/gm
   try {
     let map_service = fs.readFileSync(__dirname + '/domain/maps/map_service.js', 'utf8')
-    let svg_service = fs.readFileSync(__dirname + '/domain/maps/svg_service.js', 'utf8')
+    let svg_service = fs.readFileSync(__dirname + '/domain/maps/svg_image.js', 'utf8')
     map_service = map_service.replace(requireRegEx, "")
     map_service = map_service.replace(moduleExportsRegEx, "")
     svg_service = svg_service.replace(requireRegEx, "")
@@ -70,7 +81,7 @@ app.compileMapServiceForDelivery = function () {
 
 const compiledMapService = app.compileMapServiceForDelivery()
 
-fs.writeFile(__dirname + '/ui/bird_atlas/map_service.js', compiledMapService, err => {
+fs.writeFile(__dirname + '/static/map_service.js', compiledMapService, err => {
   if (err) console.error(err)
   else console.log("Map service successfully compiled for delivery")
 })

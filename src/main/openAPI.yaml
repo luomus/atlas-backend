@@ -9,7 +9,7 @@ paths:
   /api/birds/:
     get:
       summary: Retrieve a list of birds.
-      description: Can be used to populate a list of birds.
+      description: Can be used to populate a list or table element.
       responses:
         200:
           description: A list of birds.
@@ -51,3 +51,70 @@ paths:
                           type: integer
                           description: Group ID
                           example: 0
+  /api/grid/map/data:
+    get:
+      summary: Map with datapoints for birds
+      description: Retrieves a map showing the breeding data of a spesified bird.
+      parameters:
+        - name: scaling
+          in: query
+          schema:
+            type: string
+          example: '5'
+        - name: id
+          in: query
+          schema:
+            type: string
+          example: '25836'
+        - name: type
+          in: query
+          schema: 
+            type: string
+          example: 'png'
+      responses:
+        '200':
+          description: Svg or png image
+          content: 
+            image/*:
+              schema:
+                type: string
+  /api/grid/basemap:
+    get:
+      summary: Basemap with a 100x100km grid
+      description: Retrieves a basemap with 100x100km grid
+      parameters:
+        - name: type
+          in: query
+          schema: 
+            type: string
+          example: 'png'
+      responses:
+        '200':
+          description: Svg or png image
+          content: 
+            image/*:
+              schema:
+                type: string
+
+  /api/grid/map:
+    get:
+      summary: Map with all possible datapoints
+      description: Retrieves a map of Finland with all possible datapoints
+      parameters:
+        - name: type
+          in: query
+          schema: 
+            type: string
+          example: 'png'
+        - name: scaling
+          in: query
+          schema: 
+            type: string
+          example: '6'
+      responses:
+        '200':
+          description: Svg or png image
+          content: 
+            image/*:
+              schema:
+                type: string

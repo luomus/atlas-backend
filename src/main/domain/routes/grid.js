@@ -1,4 +1,5 @@
 const BirdGridDao = require("../../dao/bird_grid_dao")
+const {param} = require("express/lib/router");
 
 class Grid {
     #mapService
@@ -36,8 +37,14 @@ class Grid {
      */
     getGrid () {
         return (req, res) => {
-            res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(this.#mapService.getMap("svg"))
+            if (req.param('type') === 'png') {
+                res.setHeader('Content-Type', 'image/png')
+                const callback = png => res.send(png)
+                res.send(this.#mapService.getGrid("png", callback))
+            } else {
+                res.setHeader('Content-Type', 'image/svg+xml')
+                res.send(this.#mapService.getGrid("svg", undefined))
+            }
         }
     }
 
@@ -48,10 +55,32 @@ class Grid {
     createGridForBirdData () {
         return (req, res) => {
             this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id")).then(data => {
-                const grid = data.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-                res.setHeader('Content-Type', 'image/svg+xml')
-                res.send(this.#mapService.getMap("svg"))
+                if (req.param('type') === 'png') {
+                    const callback = png => res.send(png)
+                    res.setHeader('Content-Type', 'image/png')
+                    this.#mapService.getSpeciesMap(data, callback, 'png', req.param('scaling'))
+                } else {
+                    res.setHeader('Content-Type', 'image/svg+xml')
+                    res.send(this.#mapService.getSpeciesMap(data, undefined, 'svg', req.param('scaling')))
+                }
             })
+        }
+    }
+
+    /**
+     * A method that returns an image of the base map with YKJ100km grid and borders of Finland.
+     * @returns {SVGElement}
+     */
+    getBaseMap () {
+        return (req, res) => {
+            if (req.param('type') === 'png') {
+                res.setHeader('Content-Type', 'image/png')
+                const callback = png => res.send(png)
+                res.send(this.#mapService.getBaseMap("png", callback))
+            } else {
+                res.setHeader('Content-Type', 'image/svg+xml')
+                res.send(this.#mapService.getBaseMap("svg", undefined))
+            }
         }
     }
 
