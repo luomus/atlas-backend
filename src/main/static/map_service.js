@@ -5,16 +5,9 @@ function MapService(gridOverlaySvg, gridArray) {
     const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
+    let converterOptions
     const mapWidth = 200
     const mapHeight = 300
-    const converterOptions = {
-        mapExtent: {
-            left: 32.215,
-            bottom: 6597226.034,
-            right: 799710.013,
-            top: 7796745.612
-        }
-    }
     const baseMap = SvgImage()
     baseMap.setDimensions(mapWidth, mapHeight)
     baseMap.setViewBox(0, 0, mapWidth, mapHeight)
@@ -60,12 +53,14 @@ function MapService(gridOverlaySvg, gridArray) {
             image.onerror = err => { throw err }
             image.src = svg64(svg.serialize())
         },
-        addToBaseMap: function (geoJson, id) {
+        setBaseMap: function (geoJsons) {
+            setConverterOptions(geoJsons)
             const converter = geojson2svg(converterOptions)
-            let svgStrings = converter.convert(geoJson)
-            const propertyMap = { id: id, stroke: 'black', 'fill-opacity': 0 }
-            baseMap.addGroupFromStrings(svgStrings, propertyMap)
-            return this
+            geoJsons.forEach(obj => {
+                let svgStringArray = converter.convert(obj.geoJson)
+                const propertyMap = { id: obj.id, stroke: 'black', 'stroke-width':'0.15', 'fill-opacity': 0 }
+                baseMap.addGroupFromStrings(svgStringArray, propertyMap)
+            })
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth() * 2
@@ -134,6 +129,39 @@ function MapService(gridOverlaySvg, gridArray) {
             }
         }
         return result;
+    }
+
+    function setConverterOptions(geoJsonArray) {
+        let [minN, minE] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
+        let [maxN, maxE] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
+        const geoJsons = geoJsonArray.map(obj => obj.geoJson)
+        geoJsons.forEach(geoJson => {
+            const features = geoJson.features
+            const n1 = features.map(f => f.properties.ETRS_N1)
+            n1.forEach(x => {
+                if (typeof x !== 'undefined' && x < minN) minN = x
+            })
+            const e1 = features.map(f => f.properties.ETRS_E1)
+            e1.forEach(x => {
+                if (typeof x !== 'undefined' && x < minE) minE = x
+            })
+            const n2 = features.map(f => f.properties.ETRS_N2)
+            n2.forEach(x => {
+                if (typeof x !== 'undefined' && x > maxN) maxN = x
+            })
+            const e2 = features.map(f => f.properties.ETRS_E2)
+            e2.forEach(x => {
+                if (typeof x !== 'undefined' && maxE) maxE = x
+            })
+        })
+        converterOptions = {
+            mapExtent: {
+                bottom: minN,
+                left: minE,
+                top: maxN,
+                right: maxE
+            }
+        }
     }
 
 }
