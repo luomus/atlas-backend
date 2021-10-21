@@ -60,12 +60,12 @@ function MapService(gridOverlaySvg, gridArray) {
             const minMaxCoords = baseMap.getMinMaxCoords()
             const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
             const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
-            baseMap.setDimensions(width, height)
+            baseMap.setDimensions(width * 2, height * 2)
             baseMap.setViewBox(0, 0, width, height)
         },
         getBaseMap: function (type, callback) {
-            const width = baseMap.getWidth() * 2
-            const height = baseMap.getHeight() * 2
+            const width = baseMap.getWidth()
+            const height = baseMap.getHeight()
             baseMap.setDimensions(width, height)
             if (type === 'png') {
                 this.convertToPng(baseMap, callback, width, height)
