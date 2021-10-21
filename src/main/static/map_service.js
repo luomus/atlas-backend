@@ -52,9 +52,15 @@ function MapService(gridOverlaySvg, gridArray) {
         setBaseMap: function (geoJsons) {
             setConverterOptions(geoJsons)
             const converter = geojson2svg(converterOptions)
+            let color
             geoJsons.forEach(obj => {
                 let svgStringArray = converter.convert(obj.geoJson)
-                const propertyMap = { id: obj.id, stroke: 'black', 'stroke-width':'0.15', 'fill-opacity': 0 }
+                if (obj.id === 'YKJ100km') {
+                    color = 'darkgrey'
+                } else {
+                    color = 'black'
+                }
+                const propertyMap = { id: obj.id, stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
                 baseMap.addGroupFromStrings(svgStringArray, propertyMap)
             })
             const minMaxCoords = baseMap.getMinMaxCoords()
