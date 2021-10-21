@@ -6,11 +6,7 @@ function MapService(gridOverlaySvg, gridArray) {
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     let converterOptions
-    const mapWidth = 200
-    const mapHeight = 300
     const baseMap = SvgImage()
-    baseMap.setDimensions(mapWidth, mapHeight)
-    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
@@ -61,6 +57,11 @@ function MapService(gridOverlaySvg, gridArray) {
                 const propertyMap = { id: obj.id, stroke: 'black', 'stroke-width':'0.15', 'fill-opacity': 0 }
                 baseMap.addGroupFromStrings(svgStringArray, propertyMap)
             })
+            const minMaxCoords = baseMap.getMinMaxCoords()
+            const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
+            const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
+            baseMap.setDimensions(width, height)
+            baseMap.setViewBox(0, 0, width, height)
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth() * 2
@@ -242,6 +243,28 @@ function SvgImage(svgDocument) {
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
+        getMinMaxCoords: function () {
+            const xArray = []
+            const yArray = []
+            const allPaths = doc.getElementsByTagName('path')
+            for (let i = 0; i < allPaths.length; i++) {
+                const path = allPaths[i]
+                const d = path.getAttribute('d')
+                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+                const coordArray = coordString.split(' ')
+                coordArray.forEach(coord => {
+                    xArray.push(parseFloat(coord.split(',')[0]))
+                    yArray.push(parseFloat(coord.split(',')[1]))
+                })
+            }
+            const coords = {
+                minX: Math.min.apply(null, xArray),
+                minY: Math.min.apply(null, yArray),
+                maxX: Math.max.apply(null, xArray),
+                maxY: Math.max.apply(null, yArray)
+            }
+            return coords
+        }
     }
 
     function mapPropertiesToAttributes(propertyMap, svgElement) {

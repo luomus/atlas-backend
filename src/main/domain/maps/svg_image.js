@@ -1,4 +1,5 @@
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
+const { all } = require('../../server')
 
 function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
@@ -75,6 +76,28 @@ function SvgImage(svgDocument) {
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
+        getMinMaxCoords: function () {
+            const xArray = []
+            const yArray = []
+            const allPaths = doc.getElementsByTagName('path')
+            for (let i = 0; i < allPaths.length; i++) {
+                const path = allPaths[i]
+                const d = path.getAttribute('d')
+                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+                const coordArray = coordString.split(' ')
+                coordArray.forEach(coord => {
+                    xArray.push(parseFloat(coord.split(',')[0]))
+                    yArray.push(parseFloat(coord.split(',')[1]))
+                })
+            }
+            const coords = {
+                minX: Math.min.apply(null, xArray),
+                minY: Math.min.apply(null, yArray),
+                maxX: Math.max.apply(null, xArray),
+                maxY: Math.max.apply(null, yArray)
+            }
+            return coords
+        }
     }
 
     function mapPropertiesToAttributes(propertyMap, svgElement) {

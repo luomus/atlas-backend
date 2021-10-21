@@ -10,11 +10,7 @@ function MapService(gridOverlaySvg, gridArray) {
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     let converterOptions
-    const mapWidth = 200
-    const mapHeight = 300
     const baseMap = SvgImage()
-    baseMap.setDimensions(mapWidth, mapHeight)
-    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
@@ -65,6 +61,11 @@ function MapService(gridOverlaySvg, gridArray) {
                 const propertyMap = { id: obj.id, stroke: 'black', 'stroke-width':'0.15', 'fill-opacity': 0 }
                 baseMap.addGroupFromStrings(svgStringArray, propertyMap)
             })
+            const minMaxCoords = baseMap.getMinMaxCoords()
+            const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
+            const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
+            baseMap.setDimensions(width, height)
+            baseMap.setViewBox(0, 0, width, height)
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth() * 2
