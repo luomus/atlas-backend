@@ -165,7 +165,8 @@ function MapService(gridOverlaySvg, gridArray) {
                 left: minE,
                 top: maxN,
                 right: maxE
-            }
+            },
+            attributes: ['properties.lineID', 'properties.typeID']
         }
     }
 
