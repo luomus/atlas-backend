@@ -1,5 +1,4 @@
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
-const { all } = require('../../server')
 
 function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
