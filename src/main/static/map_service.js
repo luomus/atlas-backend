@@ -1,10 +1,10 @@
 
 function MapService(gridOverlaySvg, gridArray) {
+    const overlayPadding = 15
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
         return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
     const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
-
     let converterOptions
     let baseMapScaleFactor
     let overlayTranslationCoords
@@ -17,7 +17,6 @@ function MapService(gridOverlaySvg, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
-            gridOverlay.setTransformForAll('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
             if (type === 'png') {
                this.convertToPng(gridOverlay, callback, gridOverlay.getWidth(), gridOverlay.getHeight())
             } else {
@@ -97,7 +96,7 @@ function MapService(gridOverlaySvg, gridArray) {
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
+        svgImage.setDimensions(width + overlayPadding, height + overlayPadding).setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
         svgGridArray.forEach(rect => {
             const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5, display: "none" }
             return svgImage.addCircle(propertyMap)
@@ -295,6 +294,9 @@ function SvgImage(svgDocument) {
         },
         getCircleCoords: function (id) {
             const circle = doc.getElementById(id)
+            if (circle === null) {
+                return { x: null, y: null }
+            }
             const x = circle.getAttribute('cx')
             const y = circle.getAttribute('cy')
             return { x: x, y: y }
