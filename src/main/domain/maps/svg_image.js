@@ -60,6 +60,12 @@ function SvgImage(svgDocument) {
             mapPropertiesToAttributes(propertyMap, circle)
             return this
         },
+        setTransformForAll: function (transformOptions) {
+            const allCircles = doc.getElementsByTagName('circle')
+            for (let i = 0; i < allCircles.length; i++) {
+                allCircles[i].setAttribute('transform', transformOptions)
+            }
+        },
         changeDisplayForAll: function (display) {
             const allCircles = doc.getElementsByTagName('circle')
             for (let i = 0; i < allCircles.length; i++) {
@@ -96,6 +102,26 @@ function SvgImage(svgDocument) {
                 maxY: Math.max.apply(null, yArray)
             }
             return coords
+        },
+        getCircleCoords: function (id) {
+            const circle = doc.getElementById(id)
+            const x = circle.getAttribute('cx')
+            const y = circle.getAttribute('cy')
+            return { x: x, y: y }
+        },
+        getPathX: function (id) {
+            const path = doc.getElementById(id)
+            const d = path.getAttribute('d')
+            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+            const x = parseFloat(coordString.split(',')[0])
+            return x
+        },
+        getPathY: function (id) {
+            const path = doc.getElementById(id)
+            const d = path.getAttribute('d')
+            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+            const y = parseFloat(coordString.split(',')[1])
+            return y
         }
     }
 

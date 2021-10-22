@@ -10,6 +10,8 @@ function MapService(gridOverlaySvg, gridArray) {
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     let converterOptions
+    let baseMapScaleFactor
+    let overlayTranslationCoords
     const baseMap = SvgImage()
 
     return {
@@ -34,6 +36,7 @@ function MapService(gridOverlaySvg, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
+            gridOverlay.setTransformForAll('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
             } else {
@@ -70,8 +73,10 @@ function MapService(gridOverlaySvg, gridArray) {
             const minMaxCoords = baseMap.getMinMaxCoords()
             const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
             const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
-            baseMap.setDimensions(width * 2, height * 2)
+            baseMapScaleFactor = 10 / (width / 8)
+            baseMap.setDimensions(baseMapScaleFactor * width * 4, baseMapScaleFactor * height * 4)
             baseMap.setViewBox(0, 0, width, height)
+            overlayTranslationCoords = calculateOverlayTranslationCoords()
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth()
@@ -172,8 +177,17 @@ function MapService(gridOverlaySvg, gridArray) {
                 top: maxN,
                 right: maxE
             },
-            attributes: ['properties.lineID', 'properties.typeID']
+            attributes: [{ property: 'properties.lineID', type: 'dynamic', key: 'id' }, 'properties.typeID']
         }
+    }
+
+    function calculateOverlayTranslationCoords() {
+        const dataMapCoords = invisibleGridOverlay.getCircleCoords(680320)
+        const baseMapX = baseMap.getPathX(32) * baseMapScaleFactor
+        const baseMapY = baseMap.getPathY(68) * baseMapScaleFactor
+        const translateX = baseMapX - dataMapCoords.x
+        const translateY = baseMapY - dataMapCoords.y
+        return { x: translateX, y: translateY }
     }
 
 }
