@@ -105,6 +105,9 @@ function SvgImage(svgDocument) {
         },
         getCircleCoords: function (id) {
             const circle = doc.getElementById(id)
+            if (circle === null) {
+                return { x: null, y: null }
+            }
             const x = circle.getAttribute('cx')
             const y = circle.getAttribute('cy')
             return { x: x, y: y }
