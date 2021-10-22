@@ -125,6 +125,11 @@ function SvgImage(svgDocument) {
             const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
             const y = parseFloat(coordString.split(',')[1])
             return y
+        },
+        mergeSvg: function (other) {
+            const otherSvg = other.getSvgElement()
+            svg.appendChild(otherSvg)
+            return this
         }
     }
 
