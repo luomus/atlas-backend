@@ -4,24 +4,16 @@ const { createCanvas, Image } = require('canvas')
 const svg64 = require('svg64')
 
 function MapService(gridOverlaySvg, gridArray) {
+    const overlayPadding = 15
+    const overlayCircleRadius = 0.5
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
         return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
     const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
          SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
-
-    const mapWidth = 200
-    const mapHeight = 300
-    const converterOptions = {
-        mapExtent: {
-            left: 32.215,
-            bottom: 6597226.034,
-            right: 799710.013,
-            top: 7796745.612
-        }
-    }
+    let converterOptions
+    let baseMapScaleFactor
+    let overlayTranslationCoords
     const baseMap = SvgImage()
-    baseMap.setDimensions(mapWidth, mapHeight)
-    baseMap.setViewBox(0, 0, mapWidth, mapHeight)
 
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
@@ -45,6 +37,8 @@ function MapService(gridOverlaySvg, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
+            gridOverlay.setTransformForAll('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
+            gridOverlay.mergeSvg(baseMap)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
             } else {
@@ -64,16 +58,34 @@ function MapService(gridOverlaySvg, gridArray) {
             image.onerror = err => { throw err }
             image.src = svg64(svg.serialize())
         },
-        addToBaseMap: function (geoJson, id) {
+        setBaseMap: function (geoJsons) {
+            setConverterOptions(geoJsons)
             const converter = geojson2svg(converterOptions)
-            let svgStrings = converter.convert(geoJson)
-            const propertyMap = { id: id, stroke: 'black', 'fill-opacity': 0 }
-            baseMap.addGroupFromStrings(svgStrings, propertyMap)
-            return this
+            let color
+            geoJsons.forEach(obj => {
+                let svgStringArray = converter.convert(obj.geoJson)
+                if (obj.id === 'YKJ100km') {
+                    color = 'darkgrey'
+                } else {
+                    color = 'black'
+                }
+                const propertyMap = { id: obj.id, stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
+                baseMap.addGroupFromStrings(svgStringArray, propertyMap)
+            })
+            const minMaxCoords = baseMap.getMinMaxCoords()
+            const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
+            const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
+            baseMapScaleFactor = 10 / (width / 8)
+            baseMap.setDimensions(baseMapScaleFactor * width, baseMapScaleFactor * height)
+            baseMap.setViewBox(0, 0, width, height)
+            overlayTranslationCoords = calculateOverlayTranslationCoords()
         },
         getBaseMap: function (type, callback) {
+            const width = baseMap.getWidth()
+            const height = baseMap.getHeight()
+            baseMap.setDimensions(width, height)
             if (type === 'png') {
-                this.convertToPng(baseMap, callback, baseMap.getWidth(), baseMap.getHeight())
+                this.convertToPng(baseMap, callback, width, height)
             } else {
                 return baseMap.serialize()
             }
@@ -90,9 +102,9 @@ function MapService(gridOverlaySvg, gridArray) {
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        svgImage.setDimensions(width, height).setViewBox(0, 0, width, height)
+        svgImage.setDimensions(width + overlayPadding, height + overlayPadding).setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: 0.5, display: "none" }
+            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
             return svgImage.addCircle(propertyMap)
         })
         return svgImage
@@ -135,6 +147,49 @@ function MapService(gridOverlaySvg, gridArray) {
             }
         }
         return result;
+    }
+
+    function setConverterOptions(geoJsonArray) {
+        let [minN, minE] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
+        let [maxN, maxE] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
+        const geoJsons = geoJsonArray.map(obj => obj.geoJson)
+        geoJsons.forEach(geoJson => {
+            const features = geoJson.features
+            const n1 = features.map(f => f.properties.ETRS_N1)
+            n1.forEach(x => {
+                if (typeof x !== 'undefined' && x < minN) minN = x
+            })
+            const e1 = features.map(f => f.properties.ETRS_E1)
+            e1.forEach(x => {
+                if (typeof x !== 'undefined' && x < minE) minE = x
+            })
+            const n2 = features.map(f => f.properties.ETRS_N2)
+            n2.forEach(x => {
+                if (typeof x !== 'undefined' && x > maxN) maxN = x
+            })
+            const e2 = features.map(f => f.properties.ETRS_E2)
+            e2.forEach(x => {
+                if (typeof x !== 'undefined' && maxE) maxE = x
+            })
+        })
+        converterOptions = {
+            mapExtent: {
+                bottom: minN,
+                left: minE,
+                top: maxN,
+                right: maxE
+            },
+            attributes: [{ property: 'properties.lineID', type: 'dynamic', key: 'id' }, 'properties.typeID']
+        }
+    }
+
+    function calculateOverlayTranslationCoords() {
+        const dataMapCoords = invisibleGridOverlay.getCircleCoords(680320)
+        const baseMapX = baseMap.getPathX(32) * baseMapScaleFactor
+        const baseMapY = baseMap.getPathY(68) * baseMapScaleFactor
+        const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
+        const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
+        return { x: translateX, y: translateY }
     }
 
 }

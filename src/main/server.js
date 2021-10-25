@@ -34,19 +34,31 @@ const gridDao = new GridDao(querier)
 const birdGridDao = new BirdGridDao(querier)
 const birds = new Birds(birdDao, birdGridDao)
 
+app.readBaseMapFiles = function () {
+  const geoJsons = []
+  try {
+    let baseMapGrid = fs.readFileSync(__dirname + '/geojson/YKJ100km.geojson')
+    let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
+    geoJsons.push({
+      geoJson: JSON.parse(baseMapGrid),
+      id: 'YKJ100km'
+    })
+    geoJsons.push({
+      geoJson: JSON.parse(finnishBorders),
+      id: 'borders'
+    })
+  } catch (err) {
+    console.error(err)
+  }
+  return geoJsons
+}
+
 gridDao.getAllGrids().then(gridArray => {
   gridArray = gridArray.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
   const mapService = MapService(undefined, gridArray)
   const grid = new Grid(gridDao, mapService, birdGridDao)
-
-  try {
-    let baseMapGrid = fs.readFileSync(__dirname + '/geojson/YKJ100km.geojson')
-    let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
-    mapService.addToBaseMap(JSON.parse(baseMapGrid), 'YKJ100km')
-    mapService.addToBaseMap(JSON.parse(finnishBorders), 'borders')
-  } catch (err) {
-    console.error(err)
-  }
+  const geoJsons = app.readBaseMapFiles()
+  mapService.setBaseMap(geoJsons)
 
   app.get('/api/grid', grid.getAll())
   app.get('/api/grid/map', grid.getGrid())

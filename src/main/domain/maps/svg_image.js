@@ -60,6 +60,12 @@ function SvgImage(svgDocument) {
             mapPropertiesToAttributes(propertyMap, circle)
             return this
         },
+        setTransformForAll: function (transformOptions) {
+            const allCircles = doc.getElementsByTagName('circle')
+            for (let i = 0; i < allCircles.length; i++) {
+                allCircles[i].setAttribute('transform', transformOptions)
+            }
+        },
         changeDisplayForAll: function (display) {
             const allCircles = doc.getElementsByTagName('circle')
             for (let i = 0; i < allCircles.length; i++) {
@@ -75,6 +81,56 @@ function SvgImage(svgDocument) {
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
+        getMinMaxCoords: function () {
+            const xArray = []
+            const yArray = []
+            const allPaths = doc.getElementsByTagName('path')
+            for (let i = 0; i < allPaths.length; i++) {
+                const path = allPaths[i]
+                const d = path.getAttribute('d')
+                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+                const coordArray = coordString.split(' ')
+                coordArray.forEach(coord => {
+                    xArray.push(parseFloat(coord.split(',')[0]))
+                    yArray.push(parseFloat(coord.split(',')[1]))
+                })
+            }
+            const coords = {
+                minX: Math.min.apply(null, xArray),
+                minY: Math.min.apply(null, yArray),
+                maxX: Math.max.apply(null, xArray),
+                maxY: Math.max.apply(null, yArray)
+            }
+            return coords
+        },
+        getCircleCoords: function (id) {
+            const circle = doc.getElementById(id)
+            if (circle === null) {
+                return { x: null, y: null }
+            }
+            const x = circle.getAttribute('cx')
+            const y = circle.getAttribute('cy')
+            return { x: x, y: y }
+        },
+        getPathX: function (id) {
+            const path = doc.getElementById(id)
+            const d = path.getAttribute('d')
+            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+            const x = parseFloat(coordString.split(',')[0])
+            return x
+        },
+        getPathY: function (id) {
+            const path = doc.getElementById(id)
+            const d = path.getAttribute('d')
+            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+            const y = parseFloat(coordString.split(',')[1])
+            return y
+        },
+        mergeSvg: function (other) {
+            const otherSvg = other.getSvgElement()
+            svg.appendChild(otherSvg)
+            return this
+        }
     }
 
     function mapPropertiesToAttributes(propertyMap, svgElement) {
