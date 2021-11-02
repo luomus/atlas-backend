@@ -1,11 +1,25 @@
+
 const oracledb = require('oracledb')
+const fs = require('fs');
+
+//You will also need to create a 'pass.txt' file to the root of the project.
+//The file should contain the password only.
+
+//This file can be run with 'node checkConnection.js' command.
+//You need to use the university VPN connection for this.
+
+const pass = fs.readFileSync("pass.txt")
+const pw = pass.toString()
+
+
 
 async function checkConnection() {
-    let connection;
+
+  let connection;
     try {
       connection = await oracledb.getConnection( {
       user : "atlas_staging",
-      password : "${{secret.ORACLEPASS}}",
+      password : pw,
       connectString : "oracle.luomus.fi:1521/oracle.luomus.fi"
       });
       console.log("Connected to Oracle Database")
