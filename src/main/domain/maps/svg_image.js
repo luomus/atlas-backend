@@ -1,5 +1,11 @@
 const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
 
+/**
+ * Represents SVG image with methods to manipulate the image. Uses DOM interface internally, hiding it from the user of the SVG image.
+ * @param {object=} svgDocument
+ * @returns {any}
+ * @constructor
+ */
 function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
     const namespace = 'http://www.w3.org/2000/svg'
