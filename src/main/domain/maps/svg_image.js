@@ -1,9 +1,11 @@
-const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
+const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 /**
- * Represents SVG image with methods to manipulate the image. Uses DOM interface internally, hiding it from the user of the SVG image.
- * @param {object=} svgDocument
- * @returns {any}
+ * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface
+ * internally, hiding it from the user of the SVG image.
+ * @param {Object, string=} svgDocument - Either an SVG XMLDocument
+ *     (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.
+ * @returns {SvgImage}
  * @constructor
  */
 function SvgImage(svgDocument) {
@@ -40,6 +42,7 @@ function SvgImage(svgDocument) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
+        // Is it even necessary to have this method or could addElement be used instead?
         addGroup: function (id, propertyMap) {
             const group = doc.createElementNS(namespace, 'g')
             group.setAttribute('id', id)
@@ -48,6 +51,7 @@ function SvgImage(svgDocument) {
             svg.appendChild(group)
             return this
         },
+        // parentId should default to root svg element
         addElement: function (id, propertyMap, tag, parentId) {
             const element = doc.createElementNS(namespace, tag)
             propertyMap.id = id
@@ -56,6 +60,9 @@ function SvgImage(svgDocument) {
             parent.appendChild(element)
             return this
         },
+        // Is it necessary to have complex manipulations like this in SvgImage or should we instead use
+        // multiple simple methods to achieve the same result? We could first create the group and then use
+        // addElementFromString to add all the elements to the group. It could improve readability.
         addGroupFromStrings: function (svgStringArray, propertyMap) {
             const group = doc.createElementNS(namespace, 'g')
             mapPropertiesToAttributes(propertyMap, group)
@@ -71,19 +78,24 @@ function SvgImage(svgDocument) {
             svg.appendChild(svgElement)
             return this
         },
+        // Should this be renamed to setAttributesOfElement as it can set multiple attributes of one element at once?
+        // Also we should probably add a new method called setAttributesOfElements that can set multiple attributes of
+        // multiple elements using their class name.
         setAttribute: function (id, propertyMap) {
             const element = doc.getElementById(id)
             mapPropertiesToAttributes(propertyMap, element)
             return this
         },
+        // We should do transformations at group level. We could use setAttribute instead.
         setTransformForAllCircles: function (transformOptions) {
             const allCircles = doc.getElementsByTagName('circle')
             for (let i = 0; i < allCircles.length; i++) {
                 allCircles[i].setAttribute('transform', transformOptions)
             }
         },
-        changeAttributeForAllElements: function (attribute, value) {
-            const allElements = doc.getElements()
+        // Should setAttribute be used instead?
+        changeAttributeForAllElements: function (attribute, tag) {
+            const allElements = doc.getElementsByTagName(tag)
             for (let i = 0; i < allElements.length; i++) {
                 const element = allElements[i];
                 element.setAttribute(attribute, value)
@@ -96,6 +108,7 @@ function SvgImage(svgDocument) {
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
+        // This should take advantage of getElementCoords.
         getMinMaxCoords: function () {
             const xArray = []
             const yArray = []
@@ -135,8 +148,9 @@ function SvgImage(svgDocument) {
                 x = element.getAttribute('x')
                 y = element.getAttribute('y')
             }
-            return { x: x, y: y }
+            return {x: x, y: y}
         },
+        // Instead of the root element all the immediate child elements of the root should be appended.
         mergeSvg: function (other) {
             const otherSvg = other.getSvgElement()
             svg.appendChild(otherSvg)

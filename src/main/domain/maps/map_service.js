@@ -3,17 +3,30 @@ const geojson2svg = require('geojson2svg')
 const { createCanvas, Image } = require('canvas')
 const svg64 = require('svg64')
 
-function MapService(gridOverlaySvg, gridArray) {
-    if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
-        return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
+/**
+ * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
+ * used as it stands as an archetypal atlas map. Otherwise, grid data must be given as an argument for a base map and
+ * grid overlay to be created during construction. The base map is created using specific GeoJSON files.
+ * @param {Object, string=} atlasMap - An archetypal atlas map that contains certain mandatory elements. It can be an
+ *     SVG XMLDocument (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.
+ * @param {{id: string, e: number, n: number}[]} gridArray - An object array containing grid objects with an id as well
+ *     as north and east coordinates in Finland Uniform Coordinate System (EPSG:2393).
+ * @returns {MapService}
+ * @constructor
+ */
+// To improve readability, initialization procedures, like base map and grid creation, should be differentiated from
+// this main function. Should GeoJSON files be dependency injected?
+function MapService(atlasMap, gridArray) {
+    if (typeof gridArray === 'undefined' && typeof atlasMap === 'undefined')
+        return console.error("Wrong number of arguments: either atlasMap or gridArray should be defined")
     const overlayPadding = 15
     const overlayCircleRadius = 0.5
     let converterOptions
     let baseMapScaleFactor
     let overlayTranslationCoords
     const baseMap = SvgImage()
-    const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
-        SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
+    const invisibleGridOverlay = typeof atlasMap !== "undefined" ?
+        SvgImage(atlasMap) : drawGrid(gridArray, SvgImage())
 
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
