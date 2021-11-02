@@ -1,20 +1,20 @@
 
 function MapService(gridOverlaySvg, gridArray) {
-    const overlayPadding = 15
-    const overlayCircleRadius = 0.5
     if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
         return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
-    const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
-         SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
+    const overlayPadding = 15
+    const overlayCircleRadius = 0.5
     let converterOptions
     let baseMapScaleFactor
     let overlayTranslationCoords
     const baseMap = SvgImage()
+    const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
+        SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
 
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
-            gridOverlay.changeDisplayForAll(true)
+            gridOverlay.changeAttributeForAllElements('display', true)
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
@@ -33,7 +33,7 @@ function MapService(gridOverlaySvg, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
-            gridOverlay.setTransformForAll('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
+            gridOverlay.setTransformForAllCircles('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
             gridOverlay.mergeSvg(baseMap)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
@@ -98,12 +98,27 @@ function MapService(gridOverlaySvg, gridArray) {
         const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
         const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        svgImage.setDimensions(width + overlayPadding, height + overlayPadding).setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
+        svgImage.setDimensions(width + overlayPadding, height + overlayPadding)
+                .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
+                .addGroup("overlay")
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
-            return svgImage.addCircle(propertyMap)
+            const propertyMap = { cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
+            return svgImage.addElement(rect.id, propertyMap, 'circle', 'overlay')
         })
         return svgImage
+    }
+
+    function drawLegend(svgImage) {
+        const baseMapWidth = baseMap.getWidth()
+
+        svgImage.addGroup('legend')
+        const boxPropertyMap = { x: 1, y: 1, width: 50, height: 50, fill: "white", stroke: "black", strokeWidth: 1, display: "none" }
+        svgImage.addElement('box', boxPropertyMap, 'rect', 'legend')
+
+        const textPropertyMap = { font: '12 px', display: "none" }
+        svgImage.addElement("speciesFI", textPropertyMap, 'text', 'legend')
+                .addElement("speciesSVE", textPropertyMap, 'text', 'legend')
+                .addElement("speciesSCI", textPropertyMap, 'text', 'legend')
     }
 
     function getColorForBreedingCategory(breedingCategory) {
@@ -180,9 +195,9 @@ function MapService(gridOverlaySvg, gridArray) {
     }
 
     function calculateOverlayTranslationCoords() {
-        const dataMapCoords = invisibleGridOverlay.getCircleCoords(680320)
-        const baseMapX = baseMap.getPathX(32) * baseMapScaleFactor
-        const baseMapY = baseMap.getPathY(68) * baseMapScaleFactor
+        const dataMapCoords = invisibleGridOverlay.getElementCoords(680320)
+        const baseMapX = baseMap.getElementCoords(32).x * baseMapScaleFactor
+        const baseMapY = baseMap.getElementCoords(68).y * baseMapScaleFactor
         const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
         const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
         return { x: translateX, y: translateY }
@@ -191,6 +206,12 @@ function MapService(gridOverlaySvg, gridArray) {
 }
 
 
+/**
+ * Represents SVG image with methods to manipulate the image. Uses DOM interface internally, hiding it from the user of the SVG image.
+ * @param {object=} svgDocument
+ * @returns {any}
+ * @constructor
+ */
 function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
     const namespace = 'http://www.w3.org/2000/svg'
@@ -225,10 +246,20 @@ function SvgImage(svgDocument) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
-        addCircle: function (propertyMap) {
-            const circle = doc.createElementNS(namespace, 'circle')
-            mapPropertiesToAttributes(propertyMap, circle)
-            svg.appendChild(circle)
+        addGroup: function (id, propertyMap) {
+            const group = doc.createElementNS(namespace, 'g')
+            group.setAttribute('id', id)
+            if (typeof propertyMap !== 'undefined')
+                mapPropertiesToAttributes(propertyMap, group)
+            svg.appendChild(group)
+            return this
+        },
+        addElement: function (id, propertyMap, tag, parentId) {
+            const element = doc.createElementNS(namespace, tag)
+            propertyMap.id = id
+            mapPropertiesToAttributes(propertyMap, element)
+            const parent = doc.getElementById(parentId)
+            parent.appendChild(element)
             return this
         },
         addGroupFromStrings: function (svgStringArray, propertyMap) {
@@ -247,22 +278,21 @@ function SvgImage(svgDocument) {
             return this
         },
         setAttribute: function (id, propertyMap) {
-            const circle = doc.getElementById(id)
-            mapPropertiesToAttributes(propertyMap, circle)
+            const element = doc.getElementById(id)
+            mapPropertiesToAttributes(propertyMap, element)
             return this
         },
-        setTransformForAll: function (transformOptions) {
+        setTransformForAllCircles: function (transformOptions) {
             const allCircles = doc.getElementsByTagName('circle')
             for (let i = 0; i < allCircles.length; i++) {
                 allCircles[i].setAttribute('transform', transformOptions)
             }
         },
-        changeDisplayForAll: function (display) {
-            const allCircles = doc.getElementsByTagName('circle')
-            for (let i = 0; i < allCircles.length; i++) {
-                const element = allCircles[i];
-                if (display) { element.setAttribute('display', 'block') } 
-                else { element.setAttribute('display', 'none') }
+        changeAttributeForAllElements: function (attribute, value) {
+            const allElements = doc.getElements()
+            for (let i = 0; i < allElements.length; i++) {
+                const element = allElements[i];
+                element.setAttribute(attribute, value)
             }
         },
         copy: function () {
@@ -294,28 +324,24 @@ function SvgImage(svgDocument) {
             }
             return coords
         },
-        getCircleCoords: function (id) {
-            const circle = doc.getElementById(id)
-            if (circle === null) {
-                return { x: null, y: null }
+        getElementCoords: function (id) {
+            const element = doc.getElementById(id)
+            let x, y
+            if (element === null)
+                return console.error('Element not found')
+            if (element.tagName === 'circle') {
+                x = element.getAttribute('cx')
+                y = element.getAttribute('cy')
+            } else if (element.tagName === 'path') {
+                const d = element.getAttribute('d')
+                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+                x = parseFloat(coordString.split(',')[0])
+                y = parseFloat(coordString.split(',')[1])
+            } else {
+                x = element.getAttribute('x')
+                y = element.getAttribute('y')
             }
-            const x = circle.getAttribute('cx')
-            const y = circle.getAttribute('cy')
             return { x: x, y: y }
-        },
-        getPathX: function (id) {
-            const path = doc.getElementById(id)
-            const d = path.getAttribute('d')
-            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-            const x = parseFloat(coordString.split(',')[0])
-            return x
-        },
-        getPathY: function (id) {
-            const path = doc.getElementById(id)
-            const d = path.getAttribute('d')
-            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-            const y = parseFloat(coordString.split(',')[1])
-            return y
         },
         mergeSvg: function (other) {
             const otherSvg = other.getSvgElement()
