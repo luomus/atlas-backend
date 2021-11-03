@@ -1,7 +1,7 @@
 node_modules/
 .idea
 src/main/static/map_service.js
-pass .txt
+pass.txt
 
 # Ignore databases
 src/main/birds.db
