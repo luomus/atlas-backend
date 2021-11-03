@@ -42,21 +42,12 @@ function SvgImage(svgDocument) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
-        // Is it even necessary to have this method or could addElement be used instead?
-        addGroup: function (id, propertyMap) {
-            const group = doc.createElementNS(namespace, 'g')
-            group.setAttribute('id', id)
+        addElement: function (tagName, propertyMap, parentId) {
+            const element = doc.createElementNS(namespace, tagName)
+            const parent = typeof parentId !== 'undefined' ?
+                doc.getElementById(parentId) : svg
             if (typeof propertyMap !== 'undefined')
-                mapPropertiesToAttributes(propertyMap, group)
-            svg.appendChild(group)
-            return this
-        },
-        // parentId should default to root svg element
-        addElement: function (id, propertyMap, tag, parentId) {
-            const element = doc.createElementNS(namespace, tag)
-            propertyMap.id = id
-            mapPropertiesToAttributes(propertyMap, element)
-            const parent = doc.getElementById(parentId)
+                mapPropertiesToAttributes(propertyMap, element)
             parent.appendChild(element)
             return this
         },
@@ -78,28 +69,17 @@ function SvgImage(svgDocument) {
             svg.appendChild(svgElement)
             return this
         },
-        // Should this be renamed to setAttributesOfElement as it can set multiple attributes of one element at once?
-        // Also we should probably add a new method called setAttributesOfElements that can set multiple attributes of
-        // multiple elements using their class name.
-        setAttribute: function (id, propertyMap) {
+        setAttributesOfElement: function (id, propertyMap) {
             const element = doc.getElementById(id)
             mapPropertiesToAttributes(propertyMap, element)
             return this
         },
-        // We should do transformations at group level. We could use setAttribute instead.
-        setTransformForAllCircles: function (transformOptions) {
-            const allCircles = doc.getElementsByTagName('circle')
-            for (let i = 0; i < allCircles.length; i++) {
-                allCircles[i].setAttribute('transform', transformOptions)
-            }
-        },
-        // Should setAttribute be used instead?
-        changeAttributeForAllElements: function (attribute, tag) {
-            const allElements = doc.getElementsByTagName(tag)
+        setAttributesForAllElements: function (className, propertyMap) {
+            const allElements = doc.getElementsByClassName(className)
             for (let i = 0; i < allElements.length; i++) {
-                const element = allElements[i];
-                element.setAttribute(attribute, value)
+                mapPropertiesToAttributes(propertyMap, allElements[i])
             }
+            return this
         },
         copy: function () {
             return SvgImage(doc.cloneNode(true))
@@ -108,52 +88,35 @@ function SvgImage(svgDocument) {
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
-        // This should take advantage of getElementCoords.
         getMinMaxCoords: function () {
             const xArray = []
             const yArray = []
             const allPaths = doc.getElementsByTagName('path')
             for (let i = 0; i < allPaths.length; i++) {
-                const path = allPaths[i]
-                const d = path.getAttribute('d')
-                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-                const coordArray = coordString.split(' ')
-                coordArray.forEach(coord => {
-                    xArray.push(parseFloat(coord.split(',')[0]))
-                    yArray.push(parseFloat(coord.split(',')[1]))
-                })
+                const coords = getElementCoords(allPaths[i])
+                xArray.push(coords.x)
+                yArray.push(coords.y)
             }
-            const coords = {
+            return coords = {
                 minX: Math.min.apply(null, xArray),
                 minY: Math.min.apply(null, yArray),
                 maxX: Math.max.apply(null, xArray),
                 maxY: Math.max.apply(null, yArray)
             }
-            return coords
         },
-        getElementCoords: function (id) {
+        getElementCoordsById: function (id) {
             const element = doc.getElementById(id)
-            let x, y
             if (element === null)
                 return console.error('Element not found')
-            if (element.tagName === 'circle') {
-                x = element.getAttribute('cx')
-                y = element.getAttribute('cy')
-            } else if (element.tagName === 'path') {
-                const d = element.getAttribute('d')
-                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-                x = parseFloat(coordString.split(',')[0])
-                y = parseFloat(coordString.split(',')[1])
-            } else {
-                x = element.getAttribute('x')
-                y = element.getAttribute('y')
-            }
-            return {x: x, y: y}
+            return getElementCoords(element)
         },
         // Instead of the root element all the immediate child elements of the root should be appended.
         mergeSvg: function (other) {
             const otherSvg = other.getSvgElement()
-            svg.appendChild(otherSvg)
+            const children = otherSvg.childNodes
+            for (let i = 0; i > children.length; i++) {
+                svg.appendChild(children[i])
+            }
             return this
         }
     }
@@ -161,6 +124,23 @@ function SvgImage(svgDocument) {
     function mapPropertiesToAttributes(propertyMap, svgElement) {
         for (const prop in propertyMap)
             svgElement.setAttributeNS(null, prop, propertyMap[prop])
+    }
+
+    function getElementCoords(element) {
+        let x, y
+        if (element.tagName === 'circle') {
+            x = element.getAttribute('cx')
+            y = element.getAttribute('cy')
+        } else if (element.tagName === 'path') {
+            const d = element.getAttribute('d')
+            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+            x = parseFloat(coordString.split(',')[0])
+            y = parseFloat(coordString.split(',')[1])
+        } else {
+            x = element.getAttribute('x')
+            y = element.getAttribute('y')
+        }
+        return {x: x, y: y}
     }
 
 }

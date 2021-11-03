@@ -31,7 +31,7 @@ function MapService(atlasMap, gridArray) {
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
-            gridOverlay.changeAttributeForAllElements('display', true)
+            gridOverlay.setAttributesForAllElements("gridCircle", { display: true })
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
@@ -45,12 +45,13 @@ function MapService(atlasMap, gridArray) {
             const gridOverlay = invisibleGridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                gridOverlay.setAttribute(datapoint.id, {fill: color, display: 'block'})
+                gridOverlay.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
             })
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
-            gridOverlay.setTransformForAllCircles('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
+            const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
+            gridOverlay.setAttributesForAllElements("gridCircle", { transform: transformOptions })
             gridOverlay.mergeSvg(baseMap)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
@@ -75,15 +76,16 @@ function MapService(atlasMap, gridArray) {
             setConverterOptions(geoJsons)
             const converter = geojson2svg(converterOptions)
             let color
-            geoJsons.forEach(obj => {
-                let svgStringArray = converter.convert(obj.geoJson)
-                if (obj.id === 'YKJ100km') {
+            geoJsons.forEach(geoJsonObj => {
+                let svgStringArray = converter.convert(geoJsonObj.geoJson)
+                if (geoJsonObj.id === 'YKJ100km') {
                     color = 'darkgrey'
                 } else {
                     color = 'black'
                 }
-                const propertyMap = { id: obj.id, stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
-                baseMap.addGroupFromStrings(svgStringArray, propertyMap)
+                const propertyMap = { id: geoJsonObj.id, class: 'basemap', stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
+                baseMap.addElement('g', propertyMap)
+                svgStringArray.forEach(str => baseMap.addElementFromString(str, propertyMap, geoJsonObj.id))
             })
             const minMaxCoords = baseMap.getMinMaxCoords()
             const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
@@ -117,25 +119,27 @@ function MapService(atlasMap, gridArray) {
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgImage.setDimensions(width + overlayPadding, height + overlayPadding)
                 .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
-                .addGroup("overlay")
+                .addElement("g", {id: "overlay"})
+        drawLegend(svgImage)
         svgGridArray.forEach(rect => {
-            const propertyMap = { cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
-            return svgImage.addElement(rect.id, propertyMap, 'circle', 'overlay')
+            const propertyMap = { id: rect.id, class: "gridCircle", cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
+            return svgImage.addElement('circle', propertyMap, 'overlay')
         })
         return svgImage
     }
 
     function drawLegend(svgImage) {
-        const baseMapWidth = baseMap.getWidth()
-
-        svgImage.addGroup('legend')
-        const boxPropertyMap = { x: 1, y: 1, width: 50, height: 50, fill: "white", stroke: "black", strokeWidth: 1, display: "none" }
-        svgImage.addElement('box', boxPropertyMap, 'rect', 'legend')
-
-        const textPropertyMap = { font: '12 px', display: "none" }
-        svgImage.addElement("speciesFI", textPropertyMap, 'text', 'legend')
-                .addElement("speciesSVE", textPropertyMap, 'text', 'legend')
-                .addElement("speciesSCI", textPropertyMap, 'text', 'legend')
+        const legendWidth = baseMap.getWidth() * (2 / 5)
+        const legendHeight = baseMap.getHeight() * (2 / 5)
+        svgImage.addElement("g", {id: "legend"})
+        const boxPropertyMap = { id: "legendBox", class: "legendBox", x: 0, y: 0, width: legendWidth, height: legendHeight, fill: "white", stroke: "black", strokeWidth: 1, display: "none" }
+        svgImage.addElement('rect', boxPropertyMap, 'legend')
+                .addElement("text", { id: "atlasTitle", class: "title", font: '12 px', display: "none" }, 'legend')
+                .addElement('text', { id: "speciesFI", class: "speciesName", font: '12 px', display: "none" }, 'legend')
+                .addElement('text', { id: "speciesSVE", class: "speciesName", font: '12 px', display: "none" }, 'legend')
+                .addElement('text', { id: "speciesENG", class: "speciesName", font: '12 px', display: "none" }, 'legend')
+                .addElement('text', { id: "speciesSCI", class: "speciesName", font: '12 px', display: "none" }, 'legend')
+                .addElement('text', { id: "colorTitle", class: "title", font: '12 px', display: "none" }, 'legend')
     }
 
     function getColorForBreedingCategory(breedingCategory) {
@@ -212,9 +216,9 @@ function MapService(atlasMap, gridArray) {
     }
 
     function calculateOverlayTranslationCoords() {
-        const dataMapCoords = invisibleGridOverlay.getElementCoords(680320)
-        const baseMapX = baseMap.getElementCoords(32).x * baseMapScaleFactor
-        const baseMapY = baseMap.getElementCoords(68).y * baseMapScaleFactor
+        const dataMapCoords = invisibleGridOverlay.getElementCoordsById(680320)
+        const baseMapX = baseMap.getElementCoordsById(32).x * baseMapScaleFactor
+        const baseMapY = baseMap.getElementCoordsById(68).y * baseMapScaleFactor
         const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
         const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
         return { x: translateX, y: translateY }
