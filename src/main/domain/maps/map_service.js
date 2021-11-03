@@ -1,7 +1,7 @@
 const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
 const geojson2svg = require('geojson2svg')
-const { createCanvas, Image } = require('canvas')
-const svg64 = require('svg64')
+// const { createCanvas, Image } = require('canvas')
+// const svg64 = require('svg64')
 
 function MapService(gridOverlaySvg, gridArray) {
     const overlayPadding = 15
@@ -46,17 +46,17 @@ function MapService(gridOverlaySvg, gridArray) {
             }
         },
         convertToPng: function (svg, callback, width, height) {
-            const image = new Image()
-            const canvas = typeof createCanvas !== 'undefined' ?
-                createCanvas(width, height) : document.createElement('canvas')
-            const context = canvas.getContext('2d')
-            image.onload = () => {
-                context.drawImage(image, 0, 0, width, height)
-                const png = canvas.toBuffer('image/png')
-                callback(png)
-            }
-            image.onerror = err => { throw err }
-            image.src = svg64(svg.serialize())
+            // const image = new Image()
+            // const canvas = typeof createCanvas !== 'undefined' ?
+            //     createCanvas(width, height) : document.createElement('canvas')
+            // const context = canvas.getContext('2d')
+            // image.onload = () => {
+            //     context.drawImage(image, 0, 0, width, height)
+            //     const png = canvas.toBuffer('image/png')
+            //     callback(png)
+            // }
+            // image.onerror = err => { throw err }
+            // image.src = svg64(svg.serialize())
         },
         setBaseMap: function (geoJsons) {
             setConverterOptions(geoJsons)
