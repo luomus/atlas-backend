@@ -50,8 +50,9 @@ function MapService(atlasMap, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
+            // Moving the grid overlay should be done during initialization
             const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
-            gridOverlay.setAttributesForAllElements("gridCircle", { transform: transformOptions })
+            gridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
             gridOverlay.mergeSvg(baseMap)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
@@ -83,9 +84,9 @@ function MapService(atlasMap, gridArray) {
                 } else {
                     color = 'black'
                 }
-                const propertyMap = { id: geoJsonObj.id, class: 'basemap', stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
+                const propertyMap = { id: geoJsonObj.id, class: 'baseMap', stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
                 baseMap.addElement('g', propertyMap)
-                svgStringArray.forEach(str => baseMap.addElementFromString(str, propertyMap, geoJsonObj.id))
+                svgStringArray.forEach(str => baseMap.addElementFromString(str, geoJsonObj.id))
             })
             const minMaxCoords = baseMap.getMinMaxCoords()
             const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)

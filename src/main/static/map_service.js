@@ -1,7 +1,3 @@
-const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
-const geojson2svg = require('geojson2svg')
-const { createCanvas, Image } = require('canvas')
-const svg64 = require('svg64')
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
@@ -50,8 +46,9 @@ function MapService(atlasMap, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
+            // Moving the grid overlay should be done during initialization
             const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
-            gridOverlay.setAttributesForAllElements("gridCircle", { transform: transformOptions })
+            gridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
             gridOverlay.mergeSvg(baseMap)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
@@ -83,9 +80,9 @@ function MapService(atlasMap, gridArray) {
                 } else {
                     color = 'black'
                 }
-                const propertyMap = { id: geoJsonObj.id, class: 'basemap', stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
+                const propertyMap = { id: geoJsonObj.id, class: 'baseMap', stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
                 baseMap.addElement('g', propertyMap)
-                svgStringArray.forEach(str => baseMap.addElementFromString(str, propertyMap, geoJsonObj.id))
+                svgStringArray.forEach(str => baseMap.addElementFromString(str, geoJsonObj.id))
             })
             const minMaxCoords = baseMap.getMinMaxCoords()
             const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
@@ -243,7 +240,6 @@ function MapService(atlasMap, gridArray) {
 
 }
 
-const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 /**
  * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface
@@ -296,22 +292,12 @@ function SvgImage(svgDocument) {
             parent.appendChild(element)
             return this
         },
-        // Is it necessary to have complex manipulations like this in SvgImage or should we instead use
-        // multiple simple methods to achieve the same result? We could first create the group and then use
-        // addElementFromString to add all the elements to the group. It could improve readability.
-        addGroupFromStrings: function (svgStringArray, propertyMap) {
-            const group = doc.createElementNS(namespace, 'g')
-            mapPropertiesToAttributes(propertyMap, group)
-            svg.appendChild(group)
-            svgStringArray.forEach(str => {
-                svgElement = parseDocument(str)
-                group.appendChild(svgElement)
-            })
-            return this
-        },
-        addElementFromString: function (svgString) {
-            const svgElement = parseDocument(svgString)
-            svg.appendChild(svgElement)
+        // Could use propertyMap as well
+        addElementFromString: function (svgString, parentId) {
+            const element = parseDocument(svgString)
+            const parent = typeof parentId !== 'undefined' ?
+                doc.getElementById(parentId) : svg
+            parent.appendChild(element)
             return this
         },
         setAttributesOfElement: function (id, propertyMap) {
@@ -365,10 +351,7 @@ function SvgImage(svgDocument) {
         // Instead of the root element all the immediate child elements of the root should be appended.
         mergeSvg: function (other) {
             const otherSvg = other.getSvgElement()
-            const children = otherSvg.childNodes
-            for (let i = 0; i > children.length; i++) {
-                svg.appendChild(children[i])
-            }
+            svg.appendChild(otherSvg)
             return this
         }
     }

@@ -51,22 +51,12 @@ function SvgImage(svgDocument) {
             parent.appendChild(element)
             return this
         },
-        // Is it necessary to have complex manipulations like this in SvgImage or should we instead use
-        // multiple simple methods to achieve the same result? We could first create the group and then use
-        // addElementFromString to add all the elements to the group. It could improve readability.
-        addGroupFromStrings: function (svgStringArray, propertyMap) {
-            const group = doc.createElementNS(namespace, 'g')
-            mapPropertiesToAttributes(propertyMap, group)
-            svg.appendChild(group)
-            svgStringArray.forEach(str => {
-                svgElement = parseDocument(str)
-                group.appendChild(svgElement)
-            })
-            return this
-        },
-        addElementFromString: function (svgString) {
-            const svgElement = parseDocument(svgString)
-            svg.appendChild(svgElement)
+        // Could use propertyMap as well
+        addElementFromString: function (svgString, parentId) {
+            const element = parseDocument(svgString)
+            const parent = typeof parentId !== 'undefined' ?
+                doc.getElementById(parentId) : svg
+            parent.appendChild(element)
             return this
         },
         setAttributesOfElement: function (id, propertyMap) {
@@ -120,10 +110,7 @@ function SvgImage(svgDocument) {
         // Instead of the root element all the immediate child elements of the root should be appended.
         mergeSvg: function (other) {
             const otherSvg = other.getSvgElement()
-            const children = otherSvg.childNodes
-            for (let i = 0; i > children.length; i++) {
-                svg.appendChild(children[i])
-            }
+            svg.appendChild(otherSvg)
             return this
         }
     }
