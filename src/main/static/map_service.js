@@ -1,3 +1,7 @@
+const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
+const geojson2svg = require('geojson2svg')
+const { createCanvas, Image } = require('canvas')
+const svg64 = require('svg64')
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
@@ -37,7 +41,7 @@ function MapService(atlasMap, gridArray) {
                 return gridOverlay.serialize()
             }
         },
-        getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
+        getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
@@ -50,6 +54,7 @@ function MapService(atlasMap, gridArray) {
             const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
             gridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
             gridOverlay.mergeSvg(baseMap)
+            setDefaultLegend(gridOverlay, species)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
             } else {
@@ -134,15 +139,15 @@ function MapService(atlasMap, gridArray) {
         svgImage.addElement('rect', boxPropertyMap, 'legendBox')
                 .addElement("text", { id: "atlasTitle", class: "title", x: 1, y: 5, "font-size": 4 }, 'legend')
                 .setText("atlasTitle", "Lintuatlas 3")
-                .addElement('text', { id: "speciesFI", class: "speciesName", x: 1, y: 10, "font-size": 3 }, 'legend')
+                .addElement('text', { id: "speciesFI", class: "speciesName", x: 1, y: 10, "font-size": 2.5 }, 'legend')
                 .setText("speciesFI", "suomenkielinen nimi")
-                .addElement('text', { id: "speciesSVE", class: "speciesName", x: 1, y: 15, "font-size": 3 }, 'legend')
-                .setText("speciesSVE", "svenskt namn")
-                .addElement('text', { id: "speciesENG", class: "speciesName", x: 1, y: 20, "font-size": 3 }, 'legend')
-                .setText("speciesENG", "English name")
-                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 25, "font-size": 3, "font-style": "italic" }, 'legend')
+                .addElement('text', { id: "speciesSV", class: "speciesName", x: 1, y: 15, "font-size": 2.5 }, 'legend')
+                .setText("speciesSV", "svenskt namn")
+                .addElement('text', { id: "speciesEN", class: "speciesName", x: 1, y: 20, "font-size": 2.5 }, 'legend')
+                .setText("speciesEN", "English name")
+                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 25, "font-size": 2.5, "font-style": "italic" }, 'legend')
                 .setText("speciesSCI", "scientific name")
-                .addElement('text', { id: "breedingColourTitle", class: "title", x: 1, y: 35, "font-size": 4 }, 'legend')
+                .addElement('text', { id: "breedingColourTitle", class: "title", x: 1, y: 35, "font-size": 3 }, 'legend')
                 .setText("breedingColourTitle", "Pesintä")
                 .addElement("rect", {id: "colourBox4", class: "colourBox", x: 1, y: 38, width: 1, height: 1, fill: getColorForBreedingCategory(4), stroke: "black", "stroke-width": 0.1 }, "legend")
                 .addElement('text', { id: "colorTitle4", class: "colourTitle", x: 3, y: 39, "font-size": 2 }, 'legend')
@@ -154,6 +159,13 @@ function MapService(atlasMap, gridArray) {
                 .addElement('text', { id: "colorTitle2", class: "colourTitle", x: 3, y: 47, "font-size": 2 }, 'legend')
                 .setText("colorTitle2", "mahdollinen pesintä")
         return svgImage
+    }
+
+    function setDefaultLegend(gridOverlay, species) {
+        gridOverlay.setText("speciesFI", species.speciesFI)
+                .setText("speciesSV", species.speciesSV)
+                .setText("speciesEN", species.speciesEN)
+                .setText("speciesSCI", species.speciesSCI)
     }
 
     function getColorForBreedingCategory(breedingCategory) {
@@ -240,6 +252,7 @@ function MapService(atlasMap, gridArray) {
 
 }
 
+const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 /**
  * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface

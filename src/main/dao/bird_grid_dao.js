@@ -48,12 +48,12 @@ class BirdGridDao {
 
     getGridAndBreedingdataForBird(species_mxcode) {
         return this.#querier('all', `SELECT species.speciesFI, grid.id, grid.coordinateN, grid.coordinateE, bird_data_atlas3.breedingCategory 
-            FROM bird_data_atlas3 JOIN grid 
-            ON grid.id = bird_data_atlas3.grid_id 
-            JOIN species 
-            ON species.mxCode = bird_data_atlas3.species_mxcode 
-            WHERE species.mxcode=? 
-            AND species.visibility=1`, [species_mxcode])
+        FROM bird_data_atlas3 JOIN grid 
+        ON grid.id = bird_data_atlas3.grid_id 
+        JOIN species 
+        ON species.mxCode = bird_data_atlas3.species_mxcode 
+        WHERE species.mxcode=? 
+        AND species.visibility=1`, [species_mxcode])
     }
     
 

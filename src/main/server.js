@@ -56,7 +56,7 @@ app.readBaseMapFiles = function () {
 gridDao.getAllGrids().then(gridArray => {
   gridArray = gridArray.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
   const mapService = MapService(undefined, gridArray)
-  const grid = new Grid(gridDao, mapService, birdGridDao)
+  const grid = new Grid(gridDao, mapService, birdGridDao, birdDao)
   const geoJsons = app.readBaseMapFiles()
   mapService.setBaseMap(geoJsons)
 
