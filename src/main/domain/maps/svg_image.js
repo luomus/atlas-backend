@@ -81,6 +81,13 @@ function SvgImage(svgDocument) {
             }
             return this
         },
+        getElementById: function (id) {
+            return doc.getElementById(id)
+        },
+        setText: function (id, text) {
+            doc.getElementById(id).textContent = text
+            return this
+        },
         copy: function () {
             return SvgImage(doc.cloneNode(true))
         },

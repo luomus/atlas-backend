@@ -32,6 +32,7 @@ function MapService(atlasMap, gridArray) {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
             gridOverlay.setAttributesForAllElements("gridCircle", { display: true })
+            gridOverlay.setAttributesForAllElements("legend", { display: true })
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
@@ -129,17 +130,24 @@ function MapService(atlasMap, gridArray) {
     }
 
     function drawLegend(svgImage) {
-        const legendWidth = baseMap.getWidth() * (2 / 5)
-        const legendHeight = baseMap.getHeight() * (2 / 5)
+        const legendWidth = svgImage.getWidth() * (2 / 5)
+        const legendHeight = svgImage.getHeight() * (2 / 5)
         svgImage.addElement("g", {id: "legend"})
-        const boxPropertyMap = { id: "legendBox", class: "legendBox", x: 0, y: 0, width: legendWidth, height: legendHeight, fill: "white", stroke: "black", strokeWidth: 1, display: "none" }
+        const boxPropertyMap = { id: "legendBox", class: "legendBox", x: 0, y: 0, width: legendWidth, height: legendHeight, fill: "white", stroke: "black", "stroke-width": 0.15, display: false }
         svgImage.addElement('rect', boxPropertyMap, 'legend')
-                .addElement("text", { id: "atlasTitle", class: "title", font: '12 px', display: "none" }, 'legend')
-                .addElement('text', { id: "speciesFI", class: "speciesName", font: '12 px', display: "none" }, 'legend')
-                .addElement('text', { id: "speciesSVE", class: "speciesName", font: '12 px', display: "none" }, 'legend')
-                .addElement('text', { id: "speciesENG", class: "speciesName", font: '12 px', display: "none" }, 'legend')
-                .addElement('text', { id: "speciesSCI", class: "speciesName", font: '12 px', display: "none" }, 'legend')
-                .addElement('text', { id: "colorTitle", class: "title", font: '12 px', display: "none" }, 'legend')
+                .addElement("text", { id: "atlasTitle", class: "title", x: 1, y: 5, "font-size": 4, display: false}, 'legend')
+                .setText("atlasTitle", "Lintuatlas 3")
+                .addElement('text', { id: "speciesFI", class: "speciesName", x: 1, y: 10, "font-size": 3, display: false }, 'legend')
+                .setText("speciesFI", "suomenkielinen nimi")
+                .addElement('text', { id: "speciesSVE", class: "speciesName", x: 1, y: 15, "font-size": 3, display: false }, 'legend')
+                .setText("speciesSVE", "svenskt namn")
+                .addElement('text', { id: "speciesENG", class: "speciesName", x: 1, y: 20, "font-size": 3, display: false }, 'legend')
+                .setText("speciesENG", "English name")
+                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 25, "font-size": 3, "font-style": "italic", display: false }, 'legend')
+                .setText("speciesSCI", "scientific name")
+                .addElement('text', { id: "colorTitle", class: "title", x: 1, y: 35, "font-size": 4, display: false }, 'legend')
+                .setText("colorTitle", "Pesintä")
+        return svgImage
     }
 
     function getColorForBreedingCategory(breedingCategory) {
