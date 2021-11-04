@@ -32,7 +32,6 @@ function MapService(atlasMap, gridArray) {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
             gridOverlay.setAttributesForAllElements("gridCircle", { display: true })
-            gridOverlay.setAttributesForAllElements("legend", { display: true })
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
@@ -133,20 +132,30 @@ function MapService(atlasMap, gridArray) {
         const legendWidth = svgImage.getWidth() * (2 / 5)
         const legendHeight = svgImage.getHeight() * (2 / 5)
         svgImage.addElement("g", {id: "legend"})
-        const boxPropertyMap = { id: "legendBox", class: "legendBox", x: 0, y: 0, width: legendWidth, height: legendHeight, fill: "white", stroke: "black", "stroke-width": 0.15, display: false }
-        svgImage.addElement('rect', boxPropertyMap, 'legend')
-                .addElement("text", { id: "atlasTitle", class: "title", x: 1, y: 5, "font-size": 4, display: false}, 'legend')
+                .addElement("g", {id: "legendBox", display: "none"})
+        const boxPropertyMap = { id: "legendBox", class: "legendBox", x: 0, y: 0, width: legendWidth, height: legendHeight, fill: "white", 'fill-opacity': 0, stroke: "black", "stroke-width": 0.15 }
+        svgImage.addElement('rect', boxPropertyMap, 'legendBox')
+                .addElement("text", { id: "atlasTitle", class: "title", x: 1, y: 5, "font-size": 4 }, 'legend')
                 .setText("atlasTitle", "Lintuatlas 3")
-                .addElement('text', { id: "speciesFI", class: "speciesName", x: 1, y: 10, "font-size": 3, display: false }, 'legend')
+                .addElement('text', { id: "speciesFI", class: "speciesName", x: 1, y: 10, "font-size": 3 }, 'legend')
                 .setText("speciesFI", "suomenkielinen nimi")
-                .addElement('text', { id: "speciesSVE", class: "speciesName", x: 1, y: 15, "font-size": 3, display: false }, 'legend')
+                .addElement('text', { id: "speciesSVE", class: "speciesName", x: 1, y: 15, "font-size": 3 }, 'legend')
                 .setText("speciesSVE", "svenskt namn")
-                .addElement('text', { id: "speciesENG", class: "speciesName", x: 1, y: 20, "font-size": 3, display: false }, 'legend')
+                .addElement('text', { id: "speciesENG", class: "speciesName", x: 1, y: 20, "font-size": 3 }, 'legend')
                 .setText("speciesENG", "English name")
-                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 25, "font-size": 3, "font-style": "italic", display: false }, 'legend')
+                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 25, "font-size": 3, "font-style": "italic" }, 'legend')
                 .setText("speciesSCI", "scientific name")
-                .addElement('text', { id: "colorTitle", class: "title", x: 1, y: 35, "font-size": 4, display: false }, 'legend')
-                .setText("colorTitle", "Pesintä")
+                .addElement('text', { id: "breedingColourTitle", class: "title", x: 1, y: 35, "font-size": 4 }, 'legend')
+                .setText("breedingColourTitle", "Pesintä")
+                .addElement("rect", {id: "colourBox4", class: "colourBox", x: 1, y: 38, width: 1, height: 1, fill: getColorForBreedingCategory(4), stroke: "black", "stroke-width": 0.1 }, "legend")
+                .addElement('text', { id: "colorTitle4", class: "colourTitle", x: 3, y: 39, "font-size": 2 }, 'legend')
+                .setText("colorTitle4", "varma pesintä")
+                .addElement("rect", {id: "colourBox3", class: "colourBox", x: 1, y: 42, width: 1, height: 1, fill: getColorForBreedingCategory(3), stroke: "black", "stroke-width": 0.1 }, "legend")
+                .addElement('text', { id: "colorTitle3", class: "colourTitle", x: 3, y: 43, "font-size": 2 }, 'legend')
+                .setText("colorTitle3", "todennäköinen pesintä")
+                .addElement("rect", {id: "colourBox2", class: "colourBox", x: 1, y: 46, width: 1, height: 1, fill: getColorForBreedingCategory(2), stroke: "black", "stroke-width": 0.1 }, "legend")
+                .addElement('text', { id: "colorTitle2", class: "colourTitle", x: 3, y: 47, "font-size": 2 }, 'legend')
+                .setText("colorTitle2", "mahdollinen pesintä")
         return svgImage
     }
 
