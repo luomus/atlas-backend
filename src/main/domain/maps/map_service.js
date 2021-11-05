@@ -41,7 +41,7 @@ function MapService(atlasMap, gridArray) {
                 return gridOverlay.serialize()
             }
         },
-        getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4) {
+        getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
             const gridOverlay = invisibleGridOverlay.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
@@ -54,7 +54,7 @@ function MapService(atlasMap, gridArray) {
             const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
             gridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
             gridOverlay.mergeSvg(baseMap)
-            setDefaultLegend(gridOverlay, species)
+            setLegend(gridOverlay, species, language)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
             } else {
@@ -141,12 +141,12 @@ function MapService(atlasMap, gridArray) {
                 .setText("atlasTitle", "Lintuatlas 3")
                 .addElement('text', { id: "speciesFI", class: "speciesName", x: 1, y: 10, "font-size": 2.5 }, 'legend')
                 .setText("speciesFI", "suomenkielinen nimi")
-                .addElement('text', { id: "speciesSV", class: "speciesName", x: 1, y: 15, "font-size": 2.5 }, 'legend')
-                .setText("speciesSV", "svenskt namn")
-                .addElement('text', { id: "speciesEN", class: "speciesName", x: 1, y: 20, "font-size": 2.5 }, 'legend')
-                .setText("speciesEN", "English name")
-                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 25, "font-size": 2.5, "font-style": "italic" }, 'legend')
+                .addElement('text', { id: "speciesSCI", class: "scientificName", x: 1, y: 15, "font-size": 2.5, "font-style": "italic" }, 'legend')
                 .setText("speciesSCI", "scientific name")
+                .addElement('text', { id: "speciesSV", class: "speciesName", x: 1, y: 10, "font-size": 2.5 }, 'legend')
+                .setText("speciesSV", "svenskt namn")
+                .addElement('text', { id: "speciesEN", class: "speciesName", x: 1, y: 10, "font-size": 2.5 }, 'legend')
+                .setText("speciesEN", "English name")
                 .addElement('text', { id: "breedingColourTitle", class: "title", x: 1, y: 35, "font-size": 3 }, 'legend')
                 .setText("breedingColourTitle", "Pesintä")
                 .addElement("rect", {id: "colourBox4", class: "colourBox", x: 1, y: 38, width: 1, height: 1, fill: getColorForBreedingCategory(4), stroke: "black", "stroke-width": 0.1 }, "legend")
@@ -161,11 +161,30 @@ function MapService(atlasMap, gridArray) {
         return svgImage
     }
 
-    function setDefaultLegend(gridOverlay, species) {
-        gridOverlay.setText("speciesFI", species.speciesFI)
+    function setLegend(gridOverlay, species, language) {
+        gridOverlay.setText("speciesSCI", species.speciesSCI)
+                .setText("speciesFI", species.speciesFI)
                 .setText("speciesSV", species.speciesSV)
                 .setText("speciesEN", species.speciesEN)
-                .setText("speciesSCI", species.speciesSCI)
+        if (language === 'fi')
+            gridOverlay.setAttributesOfElement('speciesEN', {display: "none"})
+                    .setAttributesOfElement('speciesSV', {display: "none"})
+        else if (language === 'sv')
+            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
+                    .setAttributesOfElement('speciesEN', {display: "none"})
+                    .setText("atlasTitle", "Fågelatlas 3")
+                    .setText("breedingColourTitle", "Häckning")
+                    .setText("colorTitle4", "säker häckning")
+                    .setText("colorTitle3", "trolig häckning")
+                    .setText("colorTitle2", "eventuell häckning")
+        else if (language === 'en')
+            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
+                    .setAttributesOfElement('speciesSV', {display: "none"})
+                    .setText("atlasTitle", "Bird Atlas 3")
+                    .setText("breedingColourTitle", "Nesting")
+                    .setText("colorTitle4", "sure nesting")
+                    .setText("colorTitle3", "probable nesting")
+                    .setText("colorTitle2", "possible nesting")
     }
 
     function getColorForBreedingCategory(breedingCategory) {

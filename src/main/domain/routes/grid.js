@@ -62,10 +62,10 @@ class Grid {
                     if (req.param('type') === 'png') {
                         const callback = png => res.send(png)
                         res.setHeader('Content-Type', 'image/png')
-                        this.#mapService.getSpeciesMap(data, species, callback, 'png', req.param('scaling'))
+                        this.#mapService.getSpeciesMap(data, species, callback, 'png', req.param('scaling'), req.param('language'))
                     } else {
                         res.setHeader('Content-Type', 'image/svg+xml')
-                        res.send(this.#mapService.getSpeciesMap(data, species, undefined, 'svg', req.param('scaling')))
+                        res.send(this.#mapService.getSpeciesMap(data, species, undefined, 'svg', req.param('scaling'), req.param('language')))
                     }
                 })
             })
