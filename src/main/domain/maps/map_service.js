@@ -181,10 +181,10 @@ function MapService(atlasMap, gridArray) {
             gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
                     .setAttributesOfElement('speciesSV', {display: "none"})
                     .setText("atlasTitle", "Bird Atlas 3")
-                    .setText("breedingColourTitle", "Nesting")
-                    .setText("colorTitle4", "sure nesting")
-                    .setText("colorTitle3", "probable nesting")
-                    .setText("colorTitle2", "possible nesting")
+                    .setText("breedingColourTitle", "Breeding")
+                    .setText("colorTitle4", "sure breeding")
+                    .setText("colorTitle3", "probable breeding")
+                    .setText("colorTitle2", "possible breeding")
     }
 
     function getColorForBreedingCategory(breedingCategory) {
