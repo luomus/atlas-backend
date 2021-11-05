@@ -1,3 +1,9 @@
+const oracledb = require('oracledb')
+const fs = require('fs');
+
+const pass = fs.readFileSync("pass.txt")
+const pw = pass.toString()
+
 function Querier(db) {
 
     return (methodName, query, params = []) => {
@@ -14,13 +20,52 @@ function Querier(db) {
             })
         })
 
+    // return (methodName, query, params = []) => {
+    //     return new Promise((resolve, reject) => {
+    //         try {
+    //             connection = await oracledb.getConnection({
+    //               user: "atlas_staging",
+    //               password: pw,
+    //               connectString: "oracle.luomus.fi:1521/oracle.luomus.fi"
+    //             });
+            
+    //             console.log('connected to database');
+    //             // run parametre query
+    //             result = await connection.execute(query, params);
+            
+    //           } catch (err) {
+    //             // error message
+    //             return reject(err.message);
+    //           } finally {
+    //             if (connection) {
+    //               try {
+    //                 // Always close connections
+    //                 await connection.close();
+    //                 console.log('close connection success');
+    //               } catch (err) {
+    //                 console.error(err.message);
+    //               }
+    //             }
+    //             if (result.rows.length == 0) {
+    //               //query return null
+    //               return resolve('query send no rows');
+    //             } else {
+    //               //send query results
+    //               correctMxFormating(result.rows)
+    //               return resolve(result.rows);
+    //             }
+            
+    //           }
+ 
+    //     })
+
         function correctMxFormating(data) {
             for (const val in data) {
-                if(data[val].hasOwnProperty('species_mxcode')){
+                if (data[val].hasOwnProperty('species_mxcode')) {
                     data[val].species_id = "MX." + data[val].species_mxcode
                     delete data[val].species_mxcode
                 }
-                if(data[val].hasOwnProperty('mxCode')){
+                if (data[val].hasOwnProperty('mxCode')) {
                     data[val].species_id = "MX." + data[val].mxCode
                     delete data[val].mxCode
                 }
