@@ -2,6 +2,7 @@
 Ominaisuus on Definition of Done -tasolla valmis, kun se täyttää seuraavat kriteerit:
 
 * koodattu
+* refaktoroitu
 * testattu manuaalisesti
 * automaatiotestit
 * dokumentoitu riittävällä tasolla
