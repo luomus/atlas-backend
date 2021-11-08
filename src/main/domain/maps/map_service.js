@@ -22,8 +22,6 @@ function MapService(atlasMap, gridArray) {
     const overlayPadding = 15
     const overlayCircleRadius = 0.5
     let converterOptions
-    let baseMapScaleFactor
-    let overlayTranslationCoords
     const baseMap = SvgImage()
     const invisibleGridOverlay = typeof atlasMap !== "undefined" ?
         SvgImage(atlasMap) : drawGrid(gridArray, SvgImage())
@@ -50,10 +48,8 @@ function MapService(atlasMap, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
-            // Moving the grid overlay should be done during initialization
-            const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
-            gridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
-            gridOverlay.mergeSvg(baseMap)
+            const mergeScaleFactor = getScaleFactorForMerge()
+            gridOverlay.mergeSvg(baseMap, mergeScaleFactor)
             setLegend(gridOverlay, species, language)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
@@ -90,12 +86,13 @@ function MapService(atlasMap, gridArray) {
                 svgStringArray.forEach(str => baseMap.addElementFromString(str, geoJsonObj.id))
             })
             const minMaxCoords = baseMap.getMinMaxCoords()
-            const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
-            const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
-            baseMapScaleFactor = 10 / (width / 8)
-            baseMap.setDimensions(baseMapScaleFactor * width, baseMapScaleFactor * height)
+            const width = Math.ceil(minMaxCoords.maxX - minMaxCoords.minX)
+            const height = Math.ceil(minMaxCoords.maxY - minMaxCoords.minY)
+            baseMap.setDimensions(width, height)
             baseMap.setViewBox(0, 0, width, height)
-            overlayTranslationCoords = calculateOverlayTranslationCoords()
+            const overlayTranslationCoords = getOverlayTranslationCoords()
+            const transformOptions = `translate\(${overlayTranslationCoords.x} ${overlayTranslationCoords.y}\)`
+            invisibleGridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth()
@@ -260,13 +257,20 @@ function MapService(atlasMap, gridArray) {
         }
     }
 
-    function calculateOverlayTranslationCoords() {
+    function getOverlayTranslationCoords() {
+        const baseMapScaleFactor = 10 / (baseMap.getWidth() / 8)
         const dataMapCoords = invisibleGridOverlay.getElementCoordsById(680320)
         const baseMapX = baseMap.getElementCoordsById(32).x * baseMapScaleFactor
         const baseMapY = baseMap.getElementCoordsById(68).y * baseMapScaleFactor
         const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
         const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
         return { x: translateX, y: translateY }
+    }
+
+    function getScaleFactorForMerge() {
+        const baseMapDistance = Math.abs(baseMap.getElementCoordsById(32).x - baseMap.getElementCoordsById(33).x)
+        const dataMapDistance = Math.abs(invisibleGridOverlay.getElementCoordsById(680320).x - invisibleGridOverlay.getElementCoordsById(680330).x)
+        return dataMapDistance / baseMapDistance
     }
 
 }

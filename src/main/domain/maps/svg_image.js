@@ -107,10 +107,13 @@ function SvgImage(svgDocument) {
                 return console.error('Element not found')
             return getElementCoords(element)
         },
-        // Instead of the root element all the immediate child elements of the root should be appended.
-        mergeSvg: function (other) {
-            const otherSvg = other.getSvgElement()
-            svg.appendChild(otherSvg)
+        mergeSvg: function (otherSvg, scaleFactor) {
+            const children = otherSvg.getSvgElement().childNodes
+            for (let i = 0; i < children.length; i++) {
+                const clone = children[i].cloneNode(true)
+                clone.setAttribute('transform', `scale\(${scaleFactor}\)`)
+                svg.appendChild(clone)
+            }
             return this
         }
     }

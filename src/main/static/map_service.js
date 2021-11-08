@@ -1,7 +1,3 @@
-const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
-const geojson2svg = require('geojson2svg')
-const { createCanvas, Image } = require('canvas')
-const svg64 = require('svg64')
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
@@ -22,8 +18,6 @@ function MapService(atlasMap, gridArray) {
     const overlayPadding = 15
     const overlayCircleRadius = 0.5
     let converterOptions
-    let baseMapScaleFactor
-    let overlayTranslationCoords
     const baseMap = SvgImage()
     const invisibleGridOverlay = typeof atlasMap !== "undefined" ?
         SvgImage(atlasMap) : drawGrid(gridArray, SvgImage())
@@ -50,10 +44,8 @@ function MapService(atlasMap, gridArray) {
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
-            // Moving the grid overlay should be done during initialization
-            const transformOptions = 'translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)'
-            gridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
-            gridOverlay.mergeSvg(baseMap)
+            const mergeScaleFactor = getScaleFactorForMerge()
+            gridOverlay.mergeSvg(baseMap, mergeScaleFactor)
             setLegend(gridOverlay, species, language)
             if (type === 'png') {
                 this.convertToPng(gridOverlay, callback, width, height)
@@ -90,12 +82,13 @@ function MapService(atlasMap, gridArray) {
                 svgStringArray.forEach(str => baseMap.addElementFromString(str, geoJsonObj.id))
             })
             const minMaxCoords = baseMap.getMinMaxCoords()
-            const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
-            const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
-            baseMapScaleFactor = 10 / (width / 8)
-            baseMap.setDimensions(baseMapScaleFactor * width, baseMapScaleFactor * height)
+            const width = Math.ceil(minMaxCoords.maxX - minMaxCoords.minX)
+            const height = Math.ceil(minMaxCoords.maxY - minMaxCoords.minY)
+            baseMap.setDimensions(width, height)
             baseMap.setViewBox(0, 0, width, height)
-            overlayTranslationCoords = calculateOverlayTranslationCoords()
+            const overlayTranslationCoords = getOverlayTranslationCoords()
+            const transformOptions = `translate\(${overlayTranslationCoords.x} ${overlayTranslationCoords.y}\)`
+            invisibleGridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth()
@@ -260,7 +253,8 @@ function MapService(atlasMap, gridArray) {
         }
     }
 
-    function calculateOverlayTranslationCoords() {
+    function getOverlayTranslationCoords() {
+        const baseMapScaleFactor = 10 / (baseMap.getWidth() / 8)
         const dataMapCoords = invisibleGridOverlay.getElementCoordsById(680320)
         const baseMapX = baseMap.getElementCoordsById(32).x * baseMapScaleFactor
         const baseMapY = baseMap.getElementCoordsById(68).y * baseMapScaleFactor
@@ -269,9 +263,14 @@ function MapService(atlasMap, gridArray) {
         return { x: translateX, y: translateY }
     }
 
+    function getScaleFactorForMerge() {
+        const baseMapDistance = Math.abs(baseMap.getElementCoordsById(32).x - baseMap.getElementCoordsById(33).x)
+        const dataMapDistance = Math.abs(invisibleGridOverlay.getElementCoordsById(680320).x - invisibleGridOverlay.getElementCoordsById(680330).x)
+        return dataMapDistance / baseMapDistance
+    }
+
 }
 
-const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 /**
  * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface
@@ -380,10 +379,13 @@ function SvgImage(svgDocument) {
                 return console.error('Element not found')
             return getElementCoords(element)
         },
-        // Instead of the root element all the immediate child elements of the root should be appended.
-        mergeSvg: function (other) {
-            const otherSvg = other.getSvgElement()
-            svg.appendChild(otherSvg)
+        mergeSvg: function (otherSvg, scaleFactor) {
+            const children = otherSvg.getSvgElement().childNodes
+            for (let i = 0; i < children.length; i++) {
+                const clone = children[i].cloneNode(true)
+                clone.setAttribute('transform', `scale\(${scaleFactor}\)`)
+                svg.appendChild(clone)
+            }
             return this
         }
     }
