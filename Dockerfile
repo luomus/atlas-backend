@@ -1,9 +1,11 @@
-FROM node:14-alpine
+FROM node:14-slim
 ENV NODE_ENV=production
-WORKDIR /app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN npm install --production --silent && mv node_modules ../
-COPY . .
+WORKDIR /opt/app
+RUN apt-get update && \
+    apt-get install -qq build-essential libcairo2-dev libpango1.0-dev libjpeg-dev librsvg2-dev
+COPY ["package.json", "package-lock.json*", "./"]
+RUN npm install --production --silent
+COPY --chown=node . .
 EXPOSE 3000
 USER node
-CMD ["node", "/app/src/main/start.js"]
+CMD ["node", "/opt/app/src/main/start.js"]
