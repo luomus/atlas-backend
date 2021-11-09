@@ -1,7 +1,7 @@
 const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
 const geojson2svg = require('geojson2svg')
-// const { createCanvas, Image } = require('canvas')
-// const svg64 = require('svg64')
+const { createCanvas, Image } = require('canvas')
+const svg64 = require('svg64')
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is

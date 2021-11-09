@@ -5,6 +5,7 @@
     "geojson2svg": "^1.2.8",
     "oracledb": "^5.3.0",
     "sqlite3": "^5.0.2",
+    "svg64": "^1.1.0",
     "swagger-ui-express": "^4.1.6",
     "xmldom": "^0.6.0",
     "yamljs": "^0.3.0"
