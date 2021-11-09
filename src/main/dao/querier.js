@@ -20,44 +20,41 @@ function Querier(db) {
             })
         })
 
-    // return (methodName, query, params = []) => {
-    //     return new Promise((resolve, reject) => {
-    //         try {
-    //             connection = await oracledb.getConnection({
-    //               user: "atlas_staging",
-    //               password: pw,
-    //               connectString: "oracle.luomus.fi:1521/oracle.luomus.fi"
-    //             });
-            
-    //             console.log('connected to database');
-    //             // run parametre query
-    //             result = await connection.execute(query, params);
-            
-    //           } catch (err) {
-    //             // error message
-    //             return reject(err.message);
-    //           } finally {
-    //             if (connection) {
-    //               try {
+    // return async (methodName, query, params = []) => {
+    //     try {
+    //         connection = await oracledb.getConnection({
+    //             user: "atlas_staging",
+    //             password: pw,
+    //             connectString: "oracle.luomus.fi:1521/oracle.luomus.fi"
+    //         });
+
+    //         console.log('connected to oracle database');
+    //         // run parametre query
+    //         result = await connection.execute(query, params);
+
+    //     } catch (err) {
+    //         // error message
+    //         return reject(err.message);
+    //     } finally {
+    //         if (connection) {
+    //             try {
     //                 // Always close connections
     //                 await connection.close();
-    //                 console.log('close connection success');
-    //               } catch (err) {
+    //                 console.log('close connection oracle success');
+    //             } catch (err) {
     //                 console.error(err.message);
-    //               }
     //             }
-    //             if (result.rows.length == 0) {
-    //               //query return null
-    //               return resolve('query send no rows');
-    //             } else {
-    //               //send query results
-    //               correctMxFormating(result.rows)
-    //               return resolve(result.rows);
-    //             }
-            
-    //           }
- 
-    //     })
+    //         }
+    //         if (result.rows.length == 0) {
+    //             //query return null
+    //             return resolve('oracle query send no rows');
+    //         } else {
+    //             //send query results
+    //             correctMxFormating(result.rows)
+    //             return result.rows;
+    //         }
+
+    //     }
 
         function correctMxFormating(data) {
             for (const val in data) {
