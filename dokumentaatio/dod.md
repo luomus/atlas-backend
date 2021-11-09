@@ -3,7 +3,7 @@ Ominaisuus on Definition of Done -tasolla valmis, kun se täyttää seuraavat kr
 
 * koodattu
 * refaktoroitu
-* tarkastettu koodianalyysityökalulla (ES lint)
+* tarkistettu koodianalyysityökalulla (ES lint)
 * testattu manuaalisesti
 * automaatiotestit
 * dokumentoitu riittävällä tasolla
