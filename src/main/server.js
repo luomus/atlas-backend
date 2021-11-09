@@ -12,6 +12,7 @@ const fs = require('fs')
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 const app = express()
+const createAtlasMap = require('./domain/maps/create_atlas_map')
 
 const path = __dirname + '/openAPI.yaml'
 try {
@@ -35,30 +36,29 @@ const birdGridDao = new BirdGridDao(querier)
 const birds = new Birds(birdDao, birdGridDao)
 
 app.readBaseMapFiles = function () {
-  const geoJsons = []
+  const geoJsonArray = []
   try {
     let baseMapGrid = fs.readFileSync(__dirname + '/geojson/YKJ100km.geojson')
     let finnishBorders = fs.readFileSync(__dirname + '/geojson/finnish_borders.geojson')
-    geoJsons.push({
+    geoJsonArray.push({
       geoJson: JSON.parse(baseMapGrid),
       id: 'YKJ100km'
     })
-    geoJsons.push({
+    geoJsonArray.push({
       geoJson: JSON.parse(finnishBorders),
       id: 'borders'
     })
   } catch (err) {
     console.error(err)
   }
-  return geoJsons
+  return geoJsonArray
 }
 
 gridDao.getAllGrids().then(gridArray => {
   gridArray = gridArray.map(rect => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-  const mapService = MapService(undefined, gridArray)
-  const grid = new Grid(gridDao, mapService, birdGridDao)
-  const geoJsons = app.readBaseMapFiles()
-  mapService.setBaseMap(geoJsons)
+  const geoJsonArray = app.readBaseMapFiles()
+  const mapService = MapService(createAtlasMap(gridArray, geoJsonArray))
+  const grid = new Grid(gridDao, mapService, birdGridDao, birdDao)
 
   app.get('/api/grid', grid.getAll())
   app.get('/api/grid/map', grid.getGrid())

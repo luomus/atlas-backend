@@ -4,7 +4,7 @@ class BirdDao {
     constructor(querier) {
         this.#querier = querier
     }
-
+    
     createTable() {
         const sql = `CREATE TABLE IF NOT EXISTS species (
             id INTEGER AUTOINCREMENT,

@@ -3,111 +3,78 @@ const geojson2svg = require('geojson2svg')
 // const { createCanvas, Image } = require('canvas')
 // const svg64 = require('svg64')
 
-function MapService(gridOverlaySvg, gridArray) {
-    const overlayPadding = 15
-    const overlayCircleRadius = 0.5
-    if (typeof gridArray === 'undefined' && typeof gridOverlaySvg === 'undefined')
-        return console.error("Wrong number of arguments: either gridOverlaySvg or gridArray should be defined")
-    const invisibleGridOverlay = typeof gridOverlaySvg !== "undefined" ?
-         SvgImage(gridOverlaySvg) : drawGrid(gridArray, SvgImage())
-    let converterOptions
-    let baseMapScaleFactor
-    let overlayTranslationCoords
-    const baseMap = SvgImage()
+/**
+ * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
+ * used as it stands as an archetypal atlas map. Otherwise, grid data must be given as an argument for a base map and
+ * grid overlay to be created during construction. The base map is created using specific GeoJSON files.
+ * @param {Object, string=} atlasMap - An archetypal atlas map that contains certain mandatory elements. It can be an
+ *     SVG XMLDocument (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.
+ * @param {{id: string, e: number, n: number}[]} gridArray - An object array containing grid objects with an id as well
+ *     as north and east coordinates in Finland Uniform Coordinate System (EPSG:2393).
+ * @returns {MapService}
+ * @constructor
+ */
+function MapService(atlasMap) {
+    if (typeof atlasMap === 'undefined')
+        return console.error("Wrong number of arguments: atlasMap should be defined")
 
     return {
-        getGrid: function (type = 'svg', callback, scaleFactor = 4) {
-            const gridOverlay = invisibleGridOverlay.copy()
-            gridOverlay.changeDisplayForAll(true)
-            const width = gridOverlay.getWidth() * scaleFactor
-            const height = gridOverlay.getHeight() * scaleFactor
-            gridOverlay.setDimensions(width, height)
-            if (type === 'png') {
-               this.convertToPng(gridOverlay, callback, gridOverlay.getWidth(), gridOverlay.getHeight())
-            } else {
-                return gridOverlay.serialize()
-            }
-        },
-        getSpeciesMap: function (data, callback, type = 'svg', scaleFactor = 4) {
-            const gridOverlay = invisibleGridOverlay.copy()
+        getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
+            const speciesMap = atlasMap.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                gridOverlay.setAttribute(datapoint.id, {fill: color, display: 'block'})
+                speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
             })
-            const width = gridOverlay.getWidth() * scaleFactor
-            const height = gridOverlay.getHeight() * scaleFactor
-            gridOverlay.setDimensions(width, height)
-            gridOverlay.setTransformForAll('translate\(' + overlayTranslationCoords.x + ',' + overlayTranslationCoords.y + '\)')
-            gridOverlay.mergeSvg(baseMap)
+            const width = speciesMap.getWidth() * scaleFactor
+            const height = speciesMap.getHeight() * scaleFactor
+            speciesMap.setDimensions(width, height)
+            setLegend(speciesMap, species, language)
             if (type === 'png') {
-                this.convertToPng(gridOverlay, callback, width, height)
+                convertToPng(speciesMap, callback, width, height)
             } else {
-                return gridOverlay.serialize()
+                return speciesMap.serialize()
             }
         },
-        convertToPng: function (svg, callback, width, height) {
-            // const image = new Image()
-            // const canvas = typeof createCanvas !== 'undefined' ?
-            //     createCanvas(width, height) : document.createElement('canvas')
-            // const context = canvas.getContext('2d')
-            // image.onload = () => {
-            //     context.drawImage(image, 0, 0, width, height)
-            //     const png = canvas.toBuffer('image/png')
-            //     callback(png)
-            // }
-            // image.onerror = err => { throw err }
-            // image.src = svg64(svg.serialize())
-        },
-        setBaseMap: function (geoJsons) {
-            setConverterOptions(geoJsons)
-            const converter = geojson2svg(converterOptions)
-            let color
-            geoJsons.forEach(obj => {
-                let svgStringArray = converter.convert(obj.geoJson)
-                if (obj.id === 'YKJ100km') {
-                    color = 'darkgrey'
-                } else {
-                    color = 'black'
-                }
-                const propertyMap = { id: obj.id, stroke: color, 'stroke-width':'0.15', 'fill-opacity': 0 }
-                baseMap.addGroupFromStrings(svgStringArray, propertyMap)
-            })
-            const minMaxCoords = baseMap.getMinMaxCoords()
-            const width = Math.abs(minMaxCoords.maxX - minMaxCoords.minX)
-            const height = Math.abs(minMaxCoords.maxY - minMaxCoords.minY)
-            baseMapScaleFactor = 10 / (width / 8)
-            baseMap.setDimensions(baseMapScaleFactor * width, baseMapScaleFactor * height)
-            baseMap.setViewBox(0, 0, width, height)
-            overlayTranslationCoords = calculateOverlayTranslationCoords()
-        },
-        getBaseMap: function (type, callback) {
-            const width = baseMap.getWidth()
-            const height = baseMap.getHeight()
-            baseMap.setDimensions(width, height)
-            if (type === 'png') {
-                this.convertToPng(baseMap, callback, width, height)
-            } else {
-                return baseMap.serialize()
-            }
-        }
     }
 
-    function drawGrid(gridArray, svgImage) {
-        const verticalFlipMatrix = [[-1, 0], [0, 1]]
-        const rotate180ccwMatrix = [[-1, 0], [0, -1]]
-        const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
-        const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-        const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
-            "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN})
-        const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
-        const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
-        const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
-        svgImage.setDimensions(width + overlayPadding, height + overlayPadding).setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
-        svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
-            return svgImage.addCircle(propertyMap)
-        })
-        return svgImage
+    function convertToPng(svg, callback, width, height) {
+        const image = new Image()
+        const canvas = typeof createCanvas !== 'undefined' ?
+            createCanvas(width, height) : document.createElement('canvas')
+        const context = canvas.getContext('2d')
+        image.onload = () => {
+            context.drawImage(image, 0, 0, width, height)
+            const png = canvas.toBuffer('image/png')
+            callback(png)
+        }
+        image.onerror = err => { throw err }
+        image.src = svg64(svg.serialize())
+    }
+
+    function setLegend(gridOverlay, species, language) {
+        gridOverlay.setText("speciesSCI", species.speciesSCI)
+                .setText("speciesFI", species.speciesFI)
+                .setText("speciesSV", species.speciesSV)
+                .setText("speciesEN", species.speciesEN)
+        if (language === 'fi')
+            gridOverlay.setAttributesOfElement('speciesEN', {display: "none"})
+                    .setAttributesOfElement('speciesSV', {display: "none"})
+        else if (language === 'sv')
+            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
+                    .setAttributesOfElement('speciesEN', {display: "none"})
+                    .setText("atlasTitle", "Fågelatlas 3 (2006-2010)")
+                    .setText("breedingColourTitle", "Häckning")
+                    .setText("colorTitle4", "säker häckning")
+                    .setText("colorTitle3", "trolig häckning")
+                    .setText("colorTitle2", "eventuell häckning")
+        else if (language === 'en')
+            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
+                    .setAttributesOfElement('speciesSV', {display: "none"})
+                    .setText("atlasTitle", "Bird Atlas 3 (2006-2010)")
+                    .setText("breedingColourTitle", "Breeding")
+                    .setText("colorTitle4", "sure breeding")
+                    .setText("colorTitle3", "probable breeding")
+                    .setText("colorTitle2", "possible breeding")
     }
 
     function getColorForBreedingCategory(breedingCategory) {
@@ -116,80 +83,6 @@ function MapService(gridOverlaySvg, gridArray) {
         else if (breedingCategory === 3) color = "yellowgreen"
         else if (breedingCategory === 2) color = "gold"
         return color
-    }
-
-    function transformCoordsByMatrix(coordArray, matrix) {
-        let [minE, minN] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
-        let [maxE, maxN] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
-        for (let i = 0; i < coordArray.length; i++) {
-            const coordMatrix = [[coordArray[i].e, coordArray[i].n]]
-            const transformedCoords = multiplyMatrices(coordMatrix, matrix)
-            coordArray[i].e = transformedCoords[0][0]
-            coordArray[i].n = transformedCoords[0][1]
-            if (coordArray[i].e < minE) minE = coordArray[i].e
-            if (coordArray[i].n < minN) minN = coordArray[i].n
-            if (coordArray[i].e > maxE) maxE = coordArray[i].e
-            if (coordArray[i].n > maxN) maxN = coordArray[i].n
-        }
-        return {minE, minN, maxE, maxN}
-    }
-
-    function multiplyMatrices(m1, m2) {
-        const result = [];
-        for (let i = 0; i < m1.length; i++) {
-            result[i] = [];
-            for (let j = 0; j < m2[0].length; j++) {
-                let sum = 0;
-                for (let k = 0; k < m1[0].length; k++) {
-                    sum += m1[i][k] * m2[k][j];
-                }
-                result[i][j] = sum;
-            }
-        }
-        return result;
-    }
-
-    function setConverterOptions(geoJsonArray) {
-        let [minN, minE] = [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]
-        let [maxN, maxE] = [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]
-        const geoJsons = geoJsonArray.map(obj => obj.geoJson)
-        geoJsons.forEach(geoJson => {
-            const features = geoJson.features
-            const n1 = features.map(f => f.properties.ETRS_N1)
-            n1.forEach(x => {
-                if (typeof x !== 'undefined' && x < minN) minN = x
-            })
-            const e1 = features.map(f => f.properties.ETRS_E1)
-            e1.forEach(x => {
-                if (typeof x !== 'undefined' && x < minE) minE = x
-            })
-            const n2 = features.map(f => f.properties.ETRS_N2)
-            n2.forEach(x => {
-                if (typeof x !== 'undefined' && x > maxN) maxN = x
-            })
-            const e2 = features.map(f => f.properties.ETRS_E2)
-            e2.forEach(x => {
-                if (typeof x !== 'undefined' && maxE) maxE = x
-            })
-        })
-        converterOptions = {
-            mapExtent: {
-                bottom: minN,
-                left: minE,
-                top: maxN,
-                right: maxE
-            },
-            attributes: [{ property: 'properties.lineID', type: 'dynamic', key: 'id' }, 'properties.typeID']
-        }
-    }
-
-    function calculateOverlayTranslationCoords() {
-        const dataMapCoords = invisibleGridOverlay.getCircleCoords(680320)
-        const baseMapX = baseMap.getPathX(32) * baseMapScaleFactor
-        const baseMapY = baseMap.getPathY(68) * baseMapScaleFactor
-        const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
-        const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
-        return { x: translateX, y: translateY }
     }
 
 }

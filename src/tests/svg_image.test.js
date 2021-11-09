@@ -8,6 +8,8 @@ beforeEach(() => {
     svgImage.setDimensions(10, 20)
 })
 
+test('An empty svg image is created', () => new SvgImage())
+
 test('initEmptyDocument creates svg with correct width & height', () => {
     svgImage.setDimensions(200, 300)
     const svg1 = svgImage.serialize()

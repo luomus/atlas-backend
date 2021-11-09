@@ -1,5 +1,13 @@
-const { DOMImplementation, XMLSerializer, DOMParser } = require('xmldom')
+const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
+/**
+ * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface
+ * internally, hiding it from the user of the SVG image.
+ * @param {Object, string=} svgDocument - Either an SVG XMLDocument
+ *     (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.
+ * @returns {SvgImage}
+ * @constructor
+ */
 function SvgImage(svgDocument) {
     const xmlSerializer = new XMLSerializer()
     const namespace = 'http://www.w3.org/2000/svg'
@@ -34,45 +42,41 @@ function SvgImage(svgDocument) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
-        addCircle: function (propertyMap) {
-            const circle = doc.createElementNS(namespace, 'circle')
-            mapPropertiesToAttributes(propertyMap, circle)
-            svg.appendChild(circle)
+        addElement: function (tagName, propertyMap, parentId) {
+            const element = doc.createElementNS(namespace, tagName)
+            const parent = typeof parentId !== 'undefined' ?
+                doc.getElementById(parentId) : svg
+            if (typeof propertyMap !== 'undefined')
+                mapPropertiesToAttributes(propertyMap, element)
+            parent.appendChild(element)
             return this
         },
-        addGroupFromStrings: function (svgStringArray, propertyMap) {
-            const group = doc.createElementNS(namespace, 'g')
-            mapPropertiesToAttributes(propertyMap, group)
-            svg.appendChild(group)
-            svgStringArray.forEach(str => {
-                svgElement = parseDocument(str)
-                group.appendChild(svgElement)
-            })
+        // Could use propertyMap as well
+        addElementFromString: function (svgString, parentId) {
+            const element = parseDocument(svgString)
+            const parent = typeof parentId !== 'undefined' ?
+                doc.getElementById(parentId) : svg
+            parent.appendChild(element)
             return this
         },
-        addElementFromString: function (svgString) {
-            const svgElement = parseDocument(svgString)
-            svg.appendChild(svgElement)
+        setAttributesOfElement: function (id, propertyMap) {
+            const element = doc.getElementById(id)
+            mapPropertiesToAttributes(propertyMap, element)
             return this
         },
-        setAttribute: function (id, propertyMap) {
-            const circle = doc.getElementById(id)
-            mapPropertiesToAttributes(propertyMap, circle)
-            return this
-        },
-        setTransformForAll: function (transformOptions) {
-            const allCircles = doc.getElementsByTagName('circle')
-            for (let i = 0; i < allCircles.length; i++) {
-                allCircles[i].setAttribute('transform', transformOptions)
+        setAttributesForAllElements: function (className, propertyMap) {
+            const allElements = doc.getElementsByClassName(className)
+            for (let i = 0; i < allElements.length; i++) {
+                mapPropertiesToAttributes(propertyMap, allElements[i])
             }
+            return this
         },
-        changeDisplayForAll: function (display) {
-            const allCircles = doc.getElementsByTagName('circle')
-            for (let i = 0; i < allCircles.length; i++) {
-                const element = allCircles[i];
-                if (display) { element.setAttribute('display', 'block') } 
-                else { element.setAttribute('display', 'none') }
-            }
+        getElementById: function (id) {
+            return doc.getElementById(id)
+        },
+        setText: function (id, text) {
+            doc.getElementById(id).textContent = text
+            return this
         },
         copy: function () {
             return SvgImage(doc.cloneNode(true))
@@ -86,49 +90,30 @@ function SvgImage(svgDocument) {
             const yArray = []
             const allPaths = doc.getElementsByTagName('path')
             for (let i = 0; i < allPaths.length; i++) {
-                const path = allPaths[i]
-                const d = path.getAttribute('d')
-                const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-                const coordArray = coordString.split(' ')
-                coordArray.forEach(coord => {
-                    xArray.push(parseFloat(coord.split(',')[0]))
-                    yArray.push(parseFloat(coord.split(',')[1]))
-                })
+                const coords = getElementCoords(allPaths[i])
+                xArray.push(coords.x)
+                yArray.push(coords.y)
             }
-            const coords = {
+            return coords = {
                 minX: Math.min.apply(null, xArray),
                 minY: Math.min.apply(null, yArray),
                 maxX: Math.max.apply(null, xArray),
                 maxY: Math.max.apply(null, yArray)
             }
-            return coords
         },
-        getCircleCoords: function (id) {
-            const circle = doc.getElementById(id)
-            if (circle === null) {
-                return { x: null, y: null }
+        getElementCoordsById: function (id) {
+            const element = doc.getElementById(id)
+            if (element === null)
+                return console.error('Element not found')
+            return getElementCoords(element)
+        },
+        mergeSvg: function (otherSvg, scaleFactor) {
+            const children = otherSvg.getSvgElement().childNodes
+            for (let i = 0; i < children.length; i++) {
+                const clone = children[i].cloneNode(true)
+                clone.setAttribute('transform', `scale\(${scaleFactor}\)`)
+                svg.appendChild(clone)
             }
-            const x = circle.getAttribute('cx')
-            const y = circle.getAttribute('cy')
-            return { x: x, y: y }
-        },
-        getPathX: function (id) {
-            const path = doc.getElementById(id)
-            const d = path.getAttribute('d')
-            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-            const x = parseFloat(coordString.split(',')[0])
-            return x
-        },
-        getPathY: function (id) {
-            const path = doc.getElementById(id)
-            const d = path.getAttribute('d')
-            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-            const y = parseFloat(coordString.split(',')[1])
-            return y
-        },
-        mergeSvg: function (other) {
-            const otherSvg = other.getSvgElement()
-            svg.appendChild(otherSvg)
             return this
         }
     }
@@ -136,6 +121,23 @@ function SvgImage(svgDocument) {
     function mapPropertiesToAttributes(propertyMap, svgElement) {
         for (const prop in propertyMap)
             svgElement.setAttributeNS(null, prop, propertyMap[prop])
+    }
+
+    function getElementCoords(element) {
+        let x, y
+        if (element.tagName === 'circle') {
+            x = element.getAttribute('cx')
+            y = element.getAttribute('cy')
+        } else if (element.tagName === 'path') {
+            const d = element.getAttribute('d')
+            const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
+            x = parseFloat(coordString.split(',')[0])
+            y = parseFloat(coordString.split(',')[1])
+        } else {
+            x = element.getAttribute('x')
+            y = element.getAttribute('y')
+        }
+        return {x: x, y: y}
     }
 
 }
