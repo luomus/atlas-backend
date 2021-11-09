@@ -1,3 +1,7 @@
+const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
+const geojson2svg = require('geojson2svg')
+const { createCanvas, Image } = require('canvas')
+const svg64 = require('svg64')
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
@@ -25,7 +29,7 @@ function MapService(atlasMap, gridArray) {
     return {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
-            gridOverlay.setAttributesForAllElements("gridCircle", { display: true })
+            gridOverlay.setAttributesForAllElements('gridCircle', { display: 'block' })
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
@@ -89,6 +93,7 @@ function MapService(atlasMap, gridArray) {
             const overlayTranslationCoords = getOverlayTranslationCoords()
             const transformOptions = `translate\(${overlayTranslationCoords.x} ${overlayTranslationCoords.y}\)`
             invisibleGridOverlay.setAttributesOfElement('overlay', {transform: transformOptions})
+                    .setAttributesOfElement('background', {transform: transformOptions})
         },
         getBaseMap: function (type, callback) {
             const width = baseMap.getWidth()
@@ -114,11 +119,15 @@ function MapService(atlasMap, gridArray) {
         const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
         svgImage.setDimensions(width + overlayPadding, height + overlayPadding)
                 .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
+                .addElement("g", {id: "background"})
                 .addElement("g", {id: "overlay"})
+                
         drawLegend(svgImage)
         svgGridArray.forEach(rect => {
-            const propertyMap = { id: rect.id, class: "gridCircle", cx: rect.e, cy: rect.n, fill: "black", r: overlayCircleRadius, display: "none" }
-            return svgImage.addElement('circle', propertyMap, 'overlay')
+            const circlePropertyMap = { id: rect.id, class: "gridCircle", cx: (rect.e), cy: (rect.n), fill: "black", r: overlayCircleRadius, display: "none" }
+            const backgroundPropertyMap = { id: (rect.id + "bg"), class: "gridBackground", x: (rect.e - 0.5), y: (rect.n - 0.5), width: 1, height: 1, fill: "lightgrey" }
+            return svgImage.addElement('rect', backgroundPropertyMap, 'background')
+                    .addElement('circle', circlePropertyMap, 'overlay')
         })
         return svgImage
     }
@@ -271,6 +280,7 @@ function MapService(atlasMap, gridArray) {
 
 }
 
+const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 /**
  * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface
