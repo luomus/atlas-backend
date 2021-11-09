@@ -30,6 +30,7 @@ function MapService(atlasMap, gridArray) {
         getGrid: function (type = 'svg', callback, scaleFactor = 4) {
             const gridOverlay = invisibleGridOverlay.copy()
             gridOverlay.setAttributesForAllElements('gridCircle', { display: 'block' })
+                    .setAttributesForAllElements('gridBackground', { display: 'block' })
             const width = gridOverlay.getWidth() * scaleFactor
             const height = gridOverlay.getHeight() * scaleFactor
             gridOverlay.setDimensions(width, height)
@@ -125,7 +126,7 @@ function MapService(atlasMap, gridArray) {
         drawLegend(svgImage)
         svgGridArray.forEach(rect => {
             const circlePropertyMap = { id: rect.id, class: "gridCircle", cx: (rect.e), cy: (rect.n), fill: "black", r: overlayCircleRadius, display: "none" }
-            const backgroundPropertyMap = { id: (rect.id + "bg"), class: "gridBackground", x: (rect.e - 0.5), y: (rect.n - 0.5), width: 1, height: 1, fill: "lightgrey" }
+            const backgroundPropertyMap = { id: (rect.id + "bg"), class: "gridBackground", x: (rect.e - 0.5), y: (rect.n - 0.5), width: 1, height: 1, fill: "lightgrey", display: "none" }
             return svgImage.addElement('rect', backgroundPropertyMap, 'background')
                     .addElement('circle', circlePropertyMap, 'overlay')
         })
