@@ -1,5 +1,5 @@
 /**
- * 
+ * Provides methods for accessing Bird Atlas database.
  */
 class BirdGridDao {
     #querier
@@ -15,7 +15,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Creates table for Atlas3 grids if that does not exist.
      * @returns {Promise}
      */
     createTableGridAtlas3() {
@@ -34,7 +34,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas3 grids with given grid id.
      * @param {number} grid_id
      * @returns {Promise}
      */
@@ -44,7 +44,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas3 grids.
      * @returns {Promise}
      */
     getAllGridsAtlas3() {
@@ -53,7 +53,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Creates table for Atlas3 bird data if that does not exist.
      * @returns {Promise}
      */
     createTableBirdDataAtlas3() {
@@ -68,7 +68,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas3 data with given species mx-code.
      * @param {number} species_mxcode 
      * @returns {Promise}
      */
@@ -78,7 +78,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas3 data.
      * @returns {Promise}
      */
     getAllDataFromBirdAtlas3() {
@@ -87,7 +87,8 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas3 data with given species mx-code with visibility of 1
+     * combined with Finnish name of the species, grid id, grid coordinates, and breeding category.
      * @param {number} species_mxcode 
      * @returns {Promise}
      */
@@ -103,7 +104,7 @@ class BirdGridDao {
     
 
     /**
-     * 
+     * Creates table for Atlas1-2 grids if that does not exist.
      * @returns {Promise}
      */
     createTableGridAtlas12() {
@@ -118,7 +119,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas1-2 grids with given grid id.
      * @param {number} grid_id
      * @returns {Promise}
      */
@@ -128,7 +129,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas1-2 grids.
      * @returns {Promise}
      */
     getAllGridsAtlas12() {
@@ -137,7 +138,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Creates table for Atlas1-2 bird data if that does not exist.
      * @returns {Promise}
      */
     createTableBirdDataAtlas12() {
@@ -153,7 +154,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas1-2 data with given species mx-code.
      * @param {number} species_mxcode 
      * @returns {Promise}
      */
@@ -163,7 +164,7 @@ class BirdGridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all Atlas1-2 data.
      * @returns {Promise}
      */
     getAllDataFromBirdAtlas12() {

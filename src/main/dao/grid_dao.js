@@ -1,5 +1,5 @@
 /**
- * 
+ * Provides methods for accessing grid and municipality databases.
  */
 class GridDao {
     #querier
@@ -15,7 +15,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Creates table Municipality if that does not exist.
      * @returns {Promise}
      */
     createTableMunicipality() {
@@ -30,7 +30,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Creates table Grid if that does not exist.
      * @returns {Promise}
      */
     createTableGrid() {
@@ -44,7 +44,7 @@ class GridDao {
     }
 
     /**
-     * 
+     * Updates in table Municipality the entry with given id.
      * @param {{id: number, name: string, societyNameFI: string, societyNameSV: string, regionNumber: number}} municipality 
      * @returns {Promise}
      */
@@ -61,7 +61,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Updates in table Grid the entry with given id.
      * @param {{id: number, coordinateN: number, coordinateE: number, municipality_id: number, gridName: string}} grid 
      * @returns {Promise}
      */
@@ -78,7 +78,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Deletes from table Municipality the entry with given id.
      * @param {number} id 
      * @returns {Promise}
      */
@@ -88,7 +88,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Deletes from table Grid the entry with given id.
      * @param {number} id 
      * @returns {Promise}
      */
@@ -98,7 +98,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Returns the database search result from table Municipality with given id.
      * @param {number} id 
      * @returns {Promise}
      */
@@ -108,7 +108,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Returns the database search result from table Grid with given id.
      * @param {number} id 
      * @returns {Promise}
      */
@@ -118,7 +118,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all data from table Municipality.
      * @returns {Promise}
      */
     getAllMunicipalities() {
@@ -127,7 +127,7 @@ class GridDao {
 
 
     /**
-     * 
+     * Returns the database search result for all data from table Grid.
      * @returns {Promise}
      */
     getAllGrids() {

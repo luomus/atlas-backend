@@ -1,5 +1,5 @@
 /**
- * 
+ * Provides methods for accessing bird species database.
  */
 class BirdDao {
     #querier
@@ -15,7 +15,7 @@ class BirdDao {
 
 
     /**
-     * 
+     * Creates table Species if that does not exist.
      * @returns {Promise}
      */
     createTable() {
@@ -34,7 +34,7 @@ class BirdDao {
 
     
     /**
-     * 
+     * Creates new entry with given info in table Species.
      * @param {{mxcode: number, abbr: string, nameSCI: string, nameFI: string, nameSV: string, nameEN: string, group_id: number}} species
      * @returns {Promise}
      */
@@ -48,7 +48,7 @@ class BirdDao {
 
 
     /**
-     * 
+     * Updates the entry with given mx-code in table Species.
      * @param {{mxcode: number, abbr: string, nameSCI: string, nameFI: string, nameSV: string, nameEN: string}} species
      * @returns {Promise}
      */
@@ -66,7 +66,7 @@ class BirdDao {
 
 
     /**
-     * 
+     * Deletes the entry with given mx-code from table Species.
      * @param {number} mxcode 
      * @returns {Promise}
      */
@@ -76,7 +76,7 @@ class BirdDao {
 
 
     /**
-     * 
+     * Returns the database search result from table Species with given mx-code.
      * @param {number} mxcode 
      * @returns {Promise}
      */
@@ -86,7 +86,7 @@ class BirdDao {
 
 
     /**
-     * 
+     * Returns the database search result from table Species with given species group id.
      * @param {number} speciesGroup_id
      * @returns {Promise}
      */
@@ -96,7 +96,7 @@ class BirdDao {
 
 
     /**
-     * 
+     * Returns the database search result for all data from table Species.
      * @returns {Promise}
      */
     getAll() {
