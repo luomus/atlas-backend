@@ -2,7 +2,7 @@ const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
 const geojson2svg = require('geojson2svg')
 
 /**
- * 
+ * Creates the Atlas map grid and map legend without data.
  * @returns {SvgImage} 
  * @constructor
  */
@@ -154,6 +154,11 @@ function createAtlasMap(gridArray, geoJsonArray) {
         }
     }
 
+    /**
+     * Draws map legend with default settings.
+     * @param {SvgImage} svgImage 
+     * @returns {SvgImage}
+     */
     function drawLegend(svgImage) {
         const legendWidth = svgImage.getWidth() * (2 / 5)
         const legendHeight = svgImage.getHeight() * (2 / 5)
