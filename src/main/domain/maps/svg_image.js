@@ -42,7 +42,15 @@ function SvgImage(svgDocument) {
             svg.setAttribute('height', height)
             return this
         },
+        /**
+         * Returns the width of this svg-image.
+         * @returns {number}
+         */
         getWidth: () => parseInt(svg.getAttribute('width')),
+        /**
+         * Returns the height of this svg-image.
+         * @returns {number}
+         */
         getHeight: () => parseInt(svg.getAttribute('height')),
         setViewBox: function (minX, minY, width, height) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
@@ -64,7 +72,12 @@ function SvgImage(svgDocument) {
             parent.appendChild(element)
             return this
         },
-        // Could use propertyMap as well
+        /**
+         * Adds new svg-element from string inside given parent element.
+         * @param {string} svgString 
+         * @param {string} parentId 
+         * @returns {SvgImage}
+         */
         addElementFromString: function (svgString, parentId) {
             const element = parseDocument(svgString)
             const parent = typeof parentId !== 'undefined' ?
@@ -125,6 +138,10 @@ function SvgImage(svgDocument) {
         serialize: function () {
             return xmlSerializer.serializeToString(svg)
         },
+        /**
+         * Returns the min and max coordinates of all path elements.
+         * @returns {Array}
+         */
         getMinMaxCoords: function () {
             const xArray = []
             const yArray = []
@@ -142,7 +159,7 @@ function SvgImage(svgDocument) {
             }
         },
         /**
-         * Returns svg-coordinates of given element.
+         * Returns svg-coordinates of the svg-element with given id.
          * @param {string} id 
          * @returns {Array}
          */
