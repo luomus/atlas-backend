@@ -9,16 +9,15 @@ const geojson2svg = require('geojson2svg')
 function createAtlasMap(gridArray, geoJsonArray) {
     const overlayPadding = 15
     const overlayCircleRadius = 0.5
-    const converterOptions = getConverterOptions(geoJsonArray)
     const baseMap = drawBaseMap(geoJsonArray, SvgImage())
     const overlay = drawGrid(gridArray, SvgImage())
     const scaleFactor = getScaleFactorForMerge(baseMap, overlay)
-    moveOverlay()
+    const atlasMap = moveOverlay(baseMap, overlay).mergeSvg(baseMap, scaleFactor)
 
-    return overlay.mergeSvg(baseMap, scaleFactor)
+    return atlasMap
 
     function drawBaseMap (geoJsonArray, svgImage) {
-        getConverterOptions(geoJsonArray)
+        const converterOptions = getConverterOptions(geoJsonArray)
         const converter = geojson2svg(converterOptions)
         let color
         geoJsonArray.forEach(geoJsonObj => {
@@ -75,14 +74,15 @@ function createAtlasMap(gridArray, geoJsonArray) {
         return converterOptions
     }
 
-    function moveOverlay() {
-        const overlayTranslationCoords = getOverlayTranslationCoords()
+    function moveOverlay(baseMap, overlay) {
+        const overlayTranslationCoords = getOverlayTranslationCoords(baseMap, overlay)
         const transformOptions = `translate\(${overlayTranslationCoords.x} ${overlayTranslationCoords.y}\)`
         overlay.setAttributesOfElement('overlay', {transform: transformOptions})
                 .setAttributesOfElement('background', {transform: transformOptions})
+        return overlay
     }
 
-    function getOverlayTranslationCoords() {
+    function getOverlayTranslationCoords(baseMap, overlay) {
         const baseMapScaleFactor = 10 / (baseMap.getWidth() / 8)
         const dataMapCoords = overlay.getElementCoordsById(680320)
         const baseMapX = baseMap.getElementCoordsById(32).x * baseMapScaleFactor
