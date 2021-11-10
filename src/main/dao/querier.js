@@ -1,3 +1,8 @@
+/**
+ * Provides a method for querying a SQLite database
+ * @param SQLite database
+ * @returns {Promise}
+ */
 function Querier(db) {
 
     return (methodName, query, params = []) => {
@@ -14,13 +19,17 @@ function Querier(db) {
             })
         })
 
+        /**
+        * Displays the MXcodes in the JSON file 
+        * @param {Object} 
+        */
         function correctMxFormating(data) {
             for (const val in data) {
-                if(data[val].hasOwnProperty('species_mxcode')){
+                if (data[val].hasOwnProperty('species_mxcode')) {
                     data[val].species_id = "MX." + data[val].species_mxcode
                     delete data[val].species_mxcode
                 }
-                if(data[val].hasOwnProperty('mxCode')){
+                if (data[val].hasOwnProperty('mxCode')) {
                     data[val].species_id = "MX." + data[val].mxCode
                     delete data[val].mxCode
                 }

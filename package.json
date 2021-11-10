@@ -1,6 +1,7 @@
 {
   "main": "server.js",
   "dependencies": {
+    "canvas": "^2.8.0",
     "express": "^4.17.1",
     "geojson2svg": "^1.2.8",
     "oracledb": "^5.3.0",
