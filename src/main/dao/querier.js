@@ -1,10 +1,9 @@
 /**
  * Provides a method for querying a SQLite database
- * @param SQLite database
+ * @param {Database} SQLite database
  * @returns {Promise}
  */
 function Querier(db) {
-
     return (methodName, query, params = []) => {
         return new Promise((resolve, reject) => {
             db[methodName](query, params, function (err, data) {
@@ -20,7 +19,7 @@ function Querier(db) {
         })
 
         /**
-        * Displays the MXcodes in the JSON file 
+        * Changes the displays of the MXcodes in the JSON file 
         * @param {Object} 
         */
         function correctMxFormating(data) {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: domain/maps/svg_image.js</title>
+    <title>JSDoc: Source: static/map_service.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: domain/maps/svg_image.js</h1>
+    <h1 class="page-title">Source: static/map_service.js</h1>
 
     
 
@@ -26,12 +26,96 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
+            <pre class="prettyprint source linenums"><code>
+/**
+ * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
+ * used as it stands as an archetypal atlas map. Otherwise, grid data must be given as an argument for a base map and
+ * grid overlay to be created during construction. The base map is created using specific GeoJSON files.
+ * @param {Object, string=} atlasMap - An archetypal atlas map that contains certain mandatory elements. It can be an
+ *     SVG XMLDocument (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.
+ * @param {{id: string, e: number, n: number}[]} gridArray - An object array containing grid objects with an id as well
+ *     as north and east coordinates in Finland Uniform Coordinate System (EPSG:2393).
+ * @returns {MapService}
+ * @constructor
+ */
+function MapService(atlasMap) {
+    if (typeof atlasMap === 'undefined')
+        return console.error("Wrong number of arguments: atlasMap should be defined")
+
+    return {
+        getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
+            const speciesMap = atlasMap.copy()
+            data.forEach(datapoint => {
+                const color = getColorForBreedingCategory(datapoint.breedingCategory)
+                speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
+            })
+            const width = speciesMap.getWidth() * scaleFactor
+            const height = speciesMap.getHeight() * scaleFactor
+            speciesMap.setDimensions(width, height)
+            setLegend(speciesMap, species, language)
+            if (type === 'png') {
+                convertToPng(speciesMap, callback, width, height)
+            } else {
+                return speciesMap.serialize()
+            }
+        },
+    }
+
+    function convertToPng(svg, callback, width, height) {
+        const image = new Image()
+        const canvas = typeof createCanvas !== 'undefined' ?
+            createCanvas(width, height) : document.createElement('canvas')
+        const context = canvas.getContext('2d')
+        image.onload = () => {
+            context.drawImage(image, 0, 0, width, height)
+            const png = canvas.toBuffer('image/png')
+            callback(png)
+        }
+        image.onerror = err => { throw err }
+        image.src = svg64(svg.serialize())
+    }
+
+    function setLegend(gridOverlay, species, language) {
+        gridOverlay.setText("speciesSCI", species.speciesSCI)
+                .setText("speciesFI", species.speciesFI)
+                .setText("speciesSV", species.speciesSV)
+                .setText("speciesEN", species.speciesEN)
+        if (language === 'fi')
+            gridOverlay.setAttributesOfElement('speciesEN', {display: "none"})
+                    .setAttributesOfElement('speciesSV', {display: "none"})
+        else if (language === 'sv')
+            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
+                    .setAttributesOfElement('speciesEN', {display: "none"})
+                    .setText("atlasTitle", "Fågelatlas 3 (2006-2010)")
+                    .setText("breedingColourTitle", "Häckning")
+                    .setText("colorTitle4", "säker häckning")
+                    .setText("colorTitle3", "trolig häckning")
+                    .setText("colorTitle2", "eventuell häckning")
+        else if (language === 'en')
+            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
+                    .setAttributesOfElement('speciesSV', {display: "none"})
+                    .setText("atlasTitle", "Bird Atlas 3 (2006-2010)")
+                    .setText("breedingColourTitle", "Breeding")
+                    .setText("colorTitle4", "sure breeding")
+                    .setText("colorTitle3", "probable breeding")
+                    .setText("colorTitle2", "possible breeding")
+    }
+
+    function getColorForBreedingCategory(breedingCategory) {
+        let color = "rgba(124,240,10,0.0)"
+        if (breedingCategory === 4) color = "cornflowerblue"
+        else if (breedingCategory === 3) color = "yellowgreen"
+        else if (breedingCategory === 2) color = "gold"
+        return color
+    }
+
+}
+
 
 /**
  * Represents an SVG image with methods to manipulate the image and get information about it. Uses DOM interface
  * internally, hiding it from the user of the SVG image.
- * @param {Object} svgDocument - Either an SVG XMLDocument
+ * @param {Object, string=} svgDocument - Either an SVG XMLDocument
  *     (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.
  * @returns {SvgImage}
  * @constructor
@@ -170,7 +254,7 @@ function SvgImage(svgDocument) {
 
 }
 
-module.exports = SvgImage</code></pre>
+</code></pre>
         </article>
     </section>
 
