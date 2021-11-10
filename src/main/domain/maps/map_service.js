@@ -19,12 +19,23 @@ function MapService(atlasMap) {
         return console.error("Wrong number of arguments: atlasMap should be defined")
 
     return {
+        /**
+         * Returns the SVGImage of species breeding map with given parameters.
+         * @param {Object} data 
+         * @param {Object} species 
+         * @param {Object} callback 
+         * @param {string} type 
+         * @param {number} scaleFactor 
+         * @param {string} language 
+         * @returns {SvgImage}
+         */
         getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
             const speciesMap = atlasMap.copy()
             data.forEach(datapoint => {
                 const color = getColorForBreedingCategory(datapoint.breedingCategory)
                 speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
             })
+            speciesMap.setAttributesForAllElements('gridBackground', {display: 'block'})
             const width = speciesMap.getWidth() * scaleFactor
             const height = speciesMap.getHeight() * scaleFactor
             speciesMap.setDimensions(width, height)

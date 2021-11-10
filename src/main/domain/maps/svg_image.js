@@ -31,6 +31,12 @@ function SvgImage(svgDocument) {
     }
 
     return {
+        /**
+         * Sets dimensions of this svg-image.
+         * @param {number} width 
+         * @param {number} height 
+         * @returns {SvgImage}
+         */
         setDimensions: function (width, height) {
             svg.setAttribute('width', width)
             svg.setAttribute('height', height)
@@ -42,6 +48,13 @@ function SvgImage(svgDocument) {
             svg.setAttribute('viewBox', `${minX} ${minY} ${width} ${height}`)
             return this
         },
+        /**
+         * Adds new svg-element with given tag name and given properties inside given parent element.
+         * @param {string} tagName 
+         * @param {Object} propertyMap 
+         * @param {string} parentId 
+         * @returns {SvgImage}
+         */
         addElement: function (tagName, propertyMap, parentId) {
             const element = doc.createElementNS(namespace, tagName)
             const parent = typeof parentId !== 'undefined' ?
@@ -59,11 +72,23 @@ function SvgImage(svgDocument) {
             parent.appendChild(element)
             return this
         },
+        /**
+         * Sets attributes of the svg-element with given id.
+         * @param {string} id 
+         * @param {Object} propertyMap 
+         * @returns {SvgImage}
+         */
         setAttributesOfElement: function (id, propertyMap) {
             const element = doc.getElementById(id)
             mapPropertiesToAttributes(propertyMap, element)
             return this
         },
+        /**
+         * Sets attributes of the svg-elements within given class.
+         * @param {string} className 
+         * @param {Object} propertyMap 
+         * @returns {SvgImage}
+         */
         setAttributesForAllElements: function (className, propertyMap) {
             const allElements = doc.getElementsByClassName(className)
             for (let i = 0; i < allElements.length; i++) {
@@ -71,13 +96,28 @@ function SvgImage(svgDocument) {
             }
             return this
         },
+        /**
+         * Returns svg-element with given id.
+         * @param {string} id 
+         * @returns {svgElement}
+         */
         getElementById: function (id) {
             return doc.getElementById(id)
         },
+        /**
+         * Sets given text to svg-text-element with given id.
+         * @param {string} id 
+         * @param {string} text 
+         * @returns {SvgImage}
+         */
         setText: function (id, text) {
             doc.getElementById(id).textContent = text
             return this
         },
+        /**
+         * Returns copy of this svg-image.
+         * @returns {SvgImage}
+         */
         copy: function () {
             return SvgImage(doc.cloneNode(true))
         },
@@ -101,6 +141,11 @@ function SvgImage(svgDocument) {
                 maxY: Math.max.apply(null, yArray)
             }
         },
+        /**
+         * Returns svg-coordinates of given element.
+         * @param {string} id 
+         * @returns {Array}
+         */
         getElementCoordsById: function (id) {
             const element = doc.getElementById(id)
             if (element === null)
