@@ -8,8 +8,4 @@ RUN npm install --production --silent
 COPY --chown=node . .
 EXPOSE 3000
 USER node
-<<<<<<< HEAD
-CMD ["node", "/app/src/main/start.js"]
-=======
 CMD ["node", "/opt/app/src/main/start.js"]
->>>>>>> map-service
