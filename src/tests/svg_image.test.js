@@ -52,6 +52,24 @@ test('addElement adds element with correct attributes', () => {
     expect(svg).toContain('<circle id="2" cx="5" cy="10" fill="red" r="1"/>')
 })
 
+test('addElement adds element to specified parent', () => {
+    svgImage.addElement('g', {id: 'parent'})
+    svgImage.addElement('circle', {id: 1}, 'parent')
+    const svg = svgImage.serialize()
+    
+    expect(svg).toContain('<g id="parent"><circle id="1"/></g>')
+})
+
+test('addElementFromString works correctly', () => {
+    svgImage.addElement('g', {id: 'parent'})
+    const string = '<rect id="1" width="20" height="10"/>'
+    svgImage.addElementFromString(string, 'parent')
+    svgImage.setAttributesOfElement(1, {width: 15})
+    const svg = svgImage.serialize()
+
+    expect(svg).toContain('<g id="parent"><rect id="1" width="15" height="10"/></g>')
+})
+
 test('copy works correctly', () => {
     svgImage.addElement('circle', {testProperty: 1})
     const copy = svgImage.copy()
