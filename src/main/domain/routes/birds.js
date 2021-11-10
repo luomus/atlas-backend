@@ -47,6 +47,8 @@ class Birds {
             .then(data => res.json(data), () => res.send(null))}
 
     }
+
+
     /**
      * A method that returns Atlas3 grid data for a certain bird specified by bird id (MX.code).
      * The following data is returned:
@@ -55,7 +57,7 @@ class Birds {
      * [{"speciesFI":"Silkkiuikku","id":663324,"coordinateN":663,"coordinateE":324,"breedingCategory":3},
      * {"speciesFI":"Silkkiuikku","id":664322,"coordinateN":664,"coordinateE":322,"breedingCategory":2},
      * {"speciesFI":"Silkkiuikku","id":664323,"coordinateN":664,"coordinateE":323,"breedingCategory":3}, ...]
-     * @returns {array}
+     * @returns {Array}
      */
     getGridAndBreedingdataForBird() {
         return (req, res) => {
