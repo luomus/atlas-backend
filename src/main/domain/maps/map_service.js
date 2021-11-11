@@ -1,6 +1,4 @@
-const SvgImage = require(__rootdir + "/domain/maps/svg_image.js")
-const geojson2svg = require('geojson2svg')
-const { createCanvas, Image } = require('canvas')
+const {createCanvas, Image} = require('canvas')
 const svg64 = require('svg64')
 
 /**
@@ -15,87 +13,85 @@ const svg64 = require('svg64')
  * @constructor
  */
 function MapService(atlasMap) {
-    if (typeof atlasMap === 'undefined')
-        return console.error("Wrong number of arguments: atlasMap should be defined")
+  if (typeof atlasMap === 'undefined')
+    return console.error('Wrong number of arguments: atlasMap should be defined')
 
-    return {
-        /**
+  return {
+    /**
          * Returns the SVGImage of species breeding map with given parameters.
-         * @param {Object} data 
-         * @param {Object} species 
-         * @param {Object} callback 
-         * @param {string} type 
-         * @param {number} scaleFactor 
-         * @param {string} language 
+         * @param {Object} data
+         * @param {Object} species
+         * @param {Object} callback
+         * @param {string} type
+         * @param {number} scaleFactor
+         * @param {string} language
          * @returns {SvgImage}
          */
-        getSpeciesMap: function (data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
-            const speciesMap = atlasMap.copy()
-            data.forEach(datapoint => {
-                const color = getColorForBreedingCategory(datapoint.breedingCategory)
-                speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
-            })
-            speciesMap.setAttributesForAllElements('gridBackground', {display: 'block'})
-            const width = speciesMap.getWidth() * scaleFactor
-            const height = speciesMap.getHeight() * scaleFactor
-            speciesMap.setDimensions(width, height)
-            setLegend(speciesMap, species, language)
-            if (type === 'png') {
-                convertToPng(speciesMap, callback, width, height)
-            } else {
-                return speciesMap.serialize()
-            }
-        },
-    }
+    getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
+      const speciesMap = atlasMap.copy()
+      data.forEach((datapoint) => {
+        const color = getColorForBreedingCategory(datapoint.breedingCategory)
+        speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
+      })
+      speciesMap.setAttributesForAllElements('gridBackground', {display: 'block'})
+      const width = speciesMap.getWidth() * scaleFactor
+      const height = speciesMap.getHeight() * scaleFactor
+      speciesMap.setDimensions(width, height)
+      setLegend(speciesMap, species, language)
+      if (type === 'png')
+        convertToPng(speciesMap, callback, width, height)
+      else
+        return speciesMap.serialize()
+    },
+  }
 
-    function convertToPng(svg, callback, width, height) {
-        const image = new Image()
-        const canvas = typeof createCanvas !== 'undefined' ?
+  function convertToPng(svg, callback, width, height) {
+    const image = new Image()
+    const canvas = typeof createCanvas !== 'undefined' ?
             createCanvas(width, height) : document.createElement('canvas')
-        const context = canvas.getContext('2d')
-        image.onload = () => {
-            context.drawImage(image, 0, 0, width, height)
-            const png = canvas.toBuffer('image/png')
-            callback(png)
-        }
-        image.onerror = err => { throw err }
-        image.src = svg64(svg.serialize())
+    const context = canvas.getContext('2d')
+    image.onload = () => {
+      context.drawImage(image, 0, 0, width, height)
+      const png = canvas.toBuffer('image/png')
+      callback(png)
     }
+    image.onerror = (err) => {throw err}
+    image.src = svg64(svg.serialize())
+  }
 
-    function setLegend(gridOverlay, species, language) {
-        gridOverlay.setText("speciesSCI", species.speciesSCI)
-                .setText("speciesFI", species.speciesFI)
-                .setText("speciesSV", species.speciesSV)
-                .setText("speciesEN", species.speciesEN)
-        if (language === 'fi')
-            gridOverlay.setAttributesOfElement('speciesEN', {display: "none"})
-                    .setAttributesOfElement('speciesSV', {display: "none"})
-        else if (language === 'sv')
-            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
-                    .setAttributesOfElement('speciesEN', {display: "none"})
-                    .setText("atlasTitle", "Fågelatlas 3 (2006-2010)")
-                    .setText("breedingColourTitle", "Häckning")
-                    .setText("colorTitle4", "säker häckning")
-                    .setText("colorTitle3", "trolig häckning")
-                    .setText("colorTitle2", "eventuell häckning")
-        else if (language === 'en')
-            gridOverlay.setAttributesOfElement('speciesFI', {display: "none"})
-                    .setAttributesOfElement('speciesSV', {display: "none"})
-                    .setText("atlasTitle", "Bird Atlas 3 (2006-2010)")
-                    .setText("breedingColourTitle", "Breeding")
-                    .setText("colorTitle4", "sure breeding")
-                    .setText("colorTitle3", "probable breeding")
-                    .setText("colorTitle2", "possible breeding")
-    }
+  function setLegend(gridOverlay, species, language) {
+    gridOverlay.setText('speciesSCI', species.speciesSCI)
+        .setText('speciesFI', species.speciesFI)
+        .setText('speciesSV', species.speciesSV)
+        .setText('speciesEN', species.speciesEN)
+    if (language === 'fi')
+      gridOverlay.setAttributesOfElement('speciesEN', {display: 'none'})
+          .setAttributesOfElement('speciesSV', {display: 'none'})
+    else if (language === 'sv')
+      gridOverlay.setAttributesOfElement('speciesFI', {display: 'none'})
+          .setAttributesOfElement('speciesEN', {display: 'none'})
+          .setText('atlasTitle', 'Fågelatlas 3 (2006-2010)')
+          .setText('breedingColourTitle', 'Häckning')
+          .setText('colorTitle4', 'säker häckning')
+          .setText('colorTitle3', 'trolig häckning')
+          .setText('colorTitle2', 'eventuell häckning')
+    else if (language === 'en')
+      gridOverlay.setAttributesOfElement('speciesFI', {display: 'none'})
+          .setAttributesOfElement('speciesSV', {display: 'none'})
+          .setText('atlasTitle', 'Bird Atlas 3 (2006-2010)')
+          .setText('breedingColourTitle', 'Breeding')
+          .setText('colorTitle4', 'sure breeding')
+          .setText('colorTitle3', 'probable breeding')
+          .setText('colorTitle2', 'possible breeding')
+  }
 
-    function getColorForBreedingCategory(breedingCategory) {
-        let color = "rgba(124,240,10,0.0)"
-        if (breedingCategory === 4) color = "cornflowerblue"
-        else if (breedingCategory === 3) color = "yellowgreen"
-        else if (breedingCategory === 2) color = "gold"
-        return color
-    }
-
+  function getColorForBreedingCategory(breedingCategory) {
+    let color = 'rgba(124,240,10,0.0)'
+    if (breedingCategory === 4) color = 'cornflowerblue'
+    else if (breedingCategory === 3) color = 'yellowgreen'
+    else if (breedingCategory === 2) color = 'gold'
+    return color
+  }
 }
 
 module.exports = MapService
