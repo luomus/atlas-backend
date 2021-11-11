@@ -27,40 +27,6 @@ describe('Bird API', () => {
 
 })
 
-describe('Grid API', () => {
-
-    test('GET /api/grid responds with JSON', () => {
-        return request(app)
-            .get('/api/grid')
-            .expect(200)
-            .expect('content-type', /application\/json/)
-    })
-
-    test('GET /api/grid responds with all grid data', async () => {
-        return request(app)
-            .get('/api/grid')
-            .then((response) => {
-                expect(response.text).toContain('661312')
-                expect(response.text).toContain('663318')
-                expect(response.text).toContain('663319')
-                expect(response.text).toContain('663320')
-                expect(response.text).toContain('663321')
-            })
-    })
-
-})
-
-describe('Map API', () => {
-
-    test('GET /api/grid/map responds with SVG', () => {
-        return request(app)
-            .get('/api/grid/map')
-            .expect(200)
-            .expect('content-type', /svg/)
-    })
-
-})
-
 describe('Bird species API', () => {
 
     test('GET /api/species responds with JSON', (done) => {
