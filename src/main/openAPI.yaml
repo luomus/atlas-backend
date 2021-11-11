@@ -95,26 +95,3 @@ paths:
             image/*:
               schema:
                 type: string
-
-  /api/grid/map:
-    get:
-      summary: Map with all possible datapoints
-      description: Retrieves a map of Finland with all possible datapoints
-      parameters:
-        - name: type
-          in: query
-          schema: 
-            type: string
-          example: 'png'
-        - name: scaling
-          in: query
-          schema: 
-            type: string
-          example: '6'
-      responses:
-        '200':
-          description: Svg or png image
-          content: 
-            image/*:
-              schema:
-                type: string

@@ -60,8 +60,6 @@ gridDao.getAllGrids().then((gridArray) => {
   const mapService = MapService(createAtlasMap(gridArray, geoJsonArray))
   const grid = new Grid(gridDao, mapService, birdGridDao, birdDao)
 
-  app.get('/api/grid', grid.getAll())
-  app.get('/api/grid/map', grid.getGrid())
   app.get('/api/grid/map/data', grid.createGridForBirdData())
   app.get('/api/grid/basemap', grid.getBaseMap())
 })
@@ -93,7 +91,7 @@ app.compileMapServiceForDelivery = function() {
 
 const compiledMapService = app.compileMapServiceForDelivery()
 
-fs.writeFile(__dirname + '/static/map_service.js', compiledMapService, (err) => {
+fs.writeFile(__dirname + '/static/map_service.js', compiledMapService, (err) => { 
   if (err) console.error(err)
   else console.log('Map service successfully compiled for delivery')
 })
