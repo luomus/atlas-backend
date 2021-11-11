@@ -100,29 +100,29 @@ function createAtlasMap(gridArray, geoJsonArray) {
     return dataMapDistance / baseMapDistance
   }
 
-// eslint-disable-next-line max-lines-per-function
+  // eslint-disable-next-line max-lines-per-function
   function drawGrid(gridArray, svgImage) {
     const verticalFlipMatrix = [[-1, 0], [0, 1]]
     const rotate180ccwMatrix = [[-1, 0], [0, -1]]
     const transformationMatrix = multiplyMatrices(verticalFlipMatrix, rotate180ccwMatrix)
     const minMaxValues = transformCoordsByMatrix(gridArray, transformationMatrix)
-    const shiftCoordsToStartFromZero = (rect) => ({"id": rect.id,
-        "e": rect.e - minMaxValues.minE, "n": rect.n - minMaxValues.minN})
+    const shiftCoordsToStartFromZero = (rect) => ({'id': rect.id,
+      'e': rect.e - minMaxValues.minE, 'n': rect.n - minMaxValues.minN})
     const svgGridArray = gridArray.map(shiftCoordsToStartFromZero)
     const width = Math.abs(minMaxValues.maxE - minMaxValues.minE)
     const height = Math.abs(minMaxValues.maxN - minMaxValues.minN)
     svgImage.setDimensions(width + overlayPadding, height + overlayPadding)
-            .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
-            .addElement("g", {id: "background"})
-            .addElement("g", {id: "overlay"})
-            
+        .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
+        .addElement('g', {id: 'background'})
+        .addElement('g', {id: 'overlay'})
+
     drawLegend(svgImage)
-    svgGridArray.forEach(rect => {
-        const circlePropertyMap = { id: rect.id, class: "gridCircle", cx: (rect.e), cy: (rect.n), fill: "black", r: overlayCircleRadius, display: "none" }
-        const backgroundPropertyMap = { id: (rect.id + "bg"), class: "gridBackground", x: (rect.e - 0.5),
-            y: (rect.n - 0.5), width: 1, height: 1, fill: "#ebebeb", "shape-rendering": "optimizeSpeed" }
-        return svgImage//.addElement('rect', backgroundPropertyMap, 'background')
-                .addElement('circle', circlePropertyMap, 'overlay')
+    svgGridArray.forEach((rect) => {
+      const circlePropertyMap = {id: rect.id, class: 'gridCircle', cx: (rect.e), cy: (rect.n), fill: 'black', r: overlayCircleRadius, display: 'none'}
+      const backgroundPropertyMap = {'id': (rect.id + 'bg'), 'class': 'gridBackground', 'x': (rect.e - 0.5),
+        'y': (rect.n - 0.5), 'width': 1, 'height': 1, 'fill': '#ebebeb', 'shape-rendering': 'optimizeSpeed'}
+      return svgImage// .addElement('rect', backgroundPropertyMap, 'background')
+          .addElement('circle', circlePropertyMap, 'overlay')
     })
     return svgImage
 
