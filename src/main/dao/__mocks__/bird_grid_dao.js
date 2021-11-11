@@ -1,78 +1,77 @@
 class BirdGridDao {
-    #data
+  #data
 
-    constructor() {
-        this.#data = [
-            {
-                "id":725693,
-                "species_mxcode":25836,
-                "grid_id":664329,
-                "breedingIndex":10,
-                "breedingCategory":1
-            },
-            {
-                "id":725694,
-                "species_mxcode":25836,
-                "grid_id":664331,
-                "breedingIndex":10,
-                "breedingCategory":1
-            },
-            {
-                "id":725695,
-                "species_mxcode":25836,
-                "grid_id":666328,
-                "breedingIndex":20,
-                "breedingCategory":2
-            },
-            {
-                "id":726848,
-                "species_mxcode":25837,
-                "grid_id":664328,
-                "breedingIndex":75,
-                "breedingCategory":4
-            },
-            {
-                "id":726849,
-                "species_mxcode":25837,
-                "grid_id":664329,
-                "breedingIndex":30,
-                "breedingCategory":2
-            },
-            {
-                "id":726850,
-                "species_mxcode":25837,
-                "grid_id":664331,
-                "breedingIndex":20,
-                "breedingCategory":2
-            },
-            {
-                "id":729270,
-                "species_mxcode":25844,
-                "grid_id":666324,
-                "breedingIndex":40,
-                "breedingCategory":3
-            },
-            {
-                "id":729271,
-                "species_mxcode":25844,
-                "grid_id":666331,
-                "breedingIndex":40,
-                "breedingCategory":3
-            },
-            {
-                "id":729272,
-                "species_mxcode":25844,
-                "grid_id":667337,
-                "breedingIndex":40,
-                "breedingCategory":3
-            }
-        ]
-    }
+  constructor() {
+    this.#data = [
+      {
+        'id': 725693,
+        'species_mxcode': 25836,
+        'grid_id': 664329,
+        'breedingIndex': 10,
+        'breedingCategory': 1,
+      },
+      {
+        'id': 725694,
+        'species_mxcode': 25836,
+        'grid_id': 664331,
+        'breedingIndex': 10,
+        'breedingCategory': 1,
+      },
+      {
+        'id': 725695,
+        'species_mxcode': 25836,
+        'grid_id': 666328,
+        'breedingIndex': 20,
+        'breedingCategory': 2,
+      },
+      {
+        'id': 726848,
+        'species_mxcode': 25837,
+        'grid_id': 664328,
+        'breedingIndex': 75,
+        'breedingCategory': 4,
+      },
+      {
+        'id': 726849,
+        'species_mxcode': 25837,
+        'grid_id': 664329,
+        'breedingIndex': 30,
+        'breedingCategory': 2,
+      },
+      {
+        'id': 726850,
+        'species_mxcode': 25837,
+        'grid_id': 664331,
+        'breedingIndex': 20,
+        'breedingCategory': 2,
+      },
+      {
+        'id': 729270,
+        'species_mxcode': 25844,
+        'grid_id': 666324,
+        'breedingIndex': 40,
+        'breedingCategory': 3,
+      },
+      {
+        'id': 729271,
+        'species_mxcode': 25844,
+        'grid_id': 666331,
+        'breedingIndex': 40,
+        'breedingCategory': 3,
+      },
+      {
+        'id': 729272,
+        'species_mxcode': 25844,
+        'grid_id': 667337,
+        'breedingIndex': 40,
+        'breedingCategory': 3,
+      },
+    ]
+  }
 
-    getBySpeciesFromAtlas3(species_mxcode) {
-        return Promise.resolve(this.#data.filter(x => x.species_mxcode == species_mxcode))
-    }
-    
+  getBySpeciesFromAtlas3(speciesMxcode) {
+    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesMxcode))
+  }
 }
 
 module.exports = BirdGridDao

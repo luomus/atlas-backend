@@ -8,6 +8,7 @@ const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
  * @returns {SvgImage}
  * @constructor
  */
+// eslint-disable-next-line max-lines-per-function
 function SvgImage(svgDocument) {
   const xmlSerializer = new XMLSerializer()
   const namespace = 'http://www.w3.org/2000/svg'
