@@ -29,4 +29,5 @@ rules:
     - 2
     - 1tbs
     - allowSingleLine: true
+  linebreak-style: 0
   

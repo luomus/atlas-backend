@@ -12,6 +12,7 @@ const svg64 = require('svg64')
  * @returns {MapService}
  * @constructor
  */
+// eslint-disable-next-line max-lines-per-function
 function MapService(atlasMap) {
   if (typeof atlasMap === 'undefined')
     return console.error('Wrong number of arguments: atlasMap should be defined')
