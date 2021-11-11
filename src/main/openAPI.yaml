@@ -3,6 +3,8 @@ info:
   title: API for Bird Atlas
   version: ALPHA
 servers:
+  - url: https://atlas-staging.rahtiapp.fi
+    description: Production server (uses live data)
   - url: http://localhost:3000
     description: Development server
 paths:
