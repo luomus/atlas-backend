@@ -61,7 +61,6 @@ gridDao.getAllGrids().then((gridArray) => {
   const grid = new Grid(gridDao, mapService, birdGridDao, birdDao)
 
   app.get('/api/grid/map/data', grid.createGridForBirdData())
-  app.get('/api/grid/basemap', grid.getBaseMap())
 })
 
 app.use(express.static(__rootdir + '/ui'))
@@ -69,9 +68,6 @@ app.use(express.static(__rootdir + '/ui'))
 app.get('/api/birds', birds.getAll())
 app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 app.get('/api/species/data', birds.getGridAndBreedingdataForBird())
-app.get('/api/map', function(req, res) {
-  res.sendFile(__rootdir + '/ui/bird_atlas/map_of_finland.svg')
-})
 
 app.compileMapServiceForDelivery = function() {
   const requireRegEx = /^\s*const\s[{\s\w\d,_$}]+\s*=\s*require\(.*?\).*\n/gm

@@ -33,7 +33,6 @@ function MapService(atlasMap) {
         const color = getColorForBreedingCategory(datapoint.breedingCategory)
         speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
       })
-      speciesMap.setAttributesForAllElements('gridBackground', {display: 'block'})
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
       speciesMap.setDimensions(width, height)
@@ -87,9 +86,9 @@ function MapService(atlasMap) {
 
   function getColorForBreedingCategory(breedingCategory) {
     let color = 'rgba(124,240,10,0.0)'
-    if (breedingCategory === 4) color = 'cornflowerblue'
-    else if (breedingCategory === 3) color = 'yellowgreen'
-    else if (breedingCategory === 2) color = 'gold'
+    if (breedingCategory === 4) color = '#228ae6'
+    else if (breedingCategory === 3) color = '#66cc7a'
+    else if (breedingCategory === 2) color = '#d6e573'
     return color
   }
 }
