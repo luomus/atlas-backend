@@ -111,14 +111,6 @@ function SvgImage(svgDocument) {
       return this
     },
     /**
-     * Returns svg-element with given id.
-     * @param {string} id
-     * @returns {svgElement}
-     */
-    getElementById: function(id) {
-      return doc.getElementById(id)
-    },
-    /**
      * Sets given text to svg-text-element with given id.
      * @param {string} id
      * @param {string} text
