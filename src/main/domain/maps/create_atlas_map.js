@@ -1,5 +1,6 @@
 const SvgImage = require(__rootdir + '/domain/maps/svg_image.js')
 const geojson2svg = require('geojson2svg')
+const fs = require('fs')
 
 /**
  * Creates the Atlas map grid and map legend without data.
@@ -11,9 +12,12 @@ function createAtlasMap(gridArray, geoJsonArray) {
   const overlayPadding = 15
   const overlayCircleRadius = 0.5
   const baseMap = drawBaseMap(geoJsonArray, SvgImage())
+  const configFile = fs.readFileSync('atlas-config.json')
+  const configObject = JSON.parse(configFile)
   const overlay = drawGrid(gridArray, SvgImage())
   const scaleFactor = getScaleFactorForMerge(baseMap, overlay)
   const atlasMap = moveOverlay(baseMap, overlay).mergeSvg(baseMap, scaleFactor)
+
 
   return atlasMap
 
@@ -115,12 +119,11 @@ function createAtlasMap(gridArray, geoJsonArray) {
         .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
         .addElement('g', {id: 'background'})
         .addElement('g', {id: 'overlay'})
-
+    console.log(configObject.gridCircle)
     drawLegend(svgImage)
     svgGridArray.forEach((rect) => {
-      const circlePropertyMap = {id: rect.id, class: 'gridCircle', cx: (rect.e), cy: (rect.n), fill: 'black', r: overlayCircleRadius, display: 'none'}
-      const backgroundPropertyMap = {'id': (rect.id + 'bg'), 'class': 'gridBackground', 'x': (rect.e - 0.5),
-        'y': (rect.n - 0.5), 'width': 1, 'height': 1, 'fill': '#ebebeb', 'shape-rendering': 'optimizeSpeed'}
+      const circlePropertyMap = Object.assign(configObject.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
+      const backgroundPropertyMap = Object.assign(configObject.gridBackground, {'id': (rect.id + 'bg'), 'x': (rect.e - 0.5), 'y': (rect.n - 0.5)})
       return svgImage// .addElement('rect', backgroundPropertyMap, 'background')
           .addElement('circle', circlePropertyMap, 'overlay')
     })
@@ -174,60 +177,18 @@ function createAtlasMap(gridArray, geoJsonArray) {
       'fill': 'white', 'fill-opacity': 0, 'stroke': 'black', 'stroke-width': 0.15,
     }
     svgImage.addElement('rect', boxPropertyMap, 'legendBox')
-        .addElement('text',
-            {'id': 'atlasTitle', 'class': 'title', 'x': 1, 'y': 5, 'font-size': 3.5},
-            'legend')
-        .setText('atlasTitle', 'Lintuatlas 3 (2006-2010)')
-        .addElement('text',
-            {'id': 'speciesFI', 'class': 'speciesName', 'x': 1, 'y': 24, 'font-size': 2.5},
-            'legend')
-        .setText('speciesFI', 'suomenkielinen nimi')
-        .addElement('text',
-            {'id': 'speciesSCI', 'class': 'scientificName', 'x': 1, 'y': 28, 'font-size': 2.5, 'font-style': 'italic'},
-            'legend')
-        .setText('speciesSCI', 'scientific name')
-        .addElement('text',
-            {'id': 'speciesSV', 'class': 'speciesName', 'x': 1, 'y': 24, 'font-size': 2.5},
-            'legend')
-        .setText('speciesSV', 'svenskt namn')
-        .addElement('text',
-            {'id': 'speciesEN', 'class': 'speciesName', 'x': 1, 'y': 24, 'font-size': 2.5},
-            'legend')
-        .setText('speciesEN', 'English name')
-        .addElement('text',
-            {'id': 'breedingColourTitle', 'class': 'title', 'x': 1, 'y': 45, 'font-size': 3},
-            'legend')
-        .setText('breedingColourTitle', 'Pesintä')
-        .addElement('rect',
-            {
-              'id': 'colourBox4', 'class': 'colourBox', 'x': 1, 'y': 48, 'width': 1, 'height': 1,
-              'fill': 'cornflowerblue', 'stroke': 'black', 'stroke-width': 0.1,
-            },
-            'legend')
-        .addElement('text',
-            {'id': 'colorTitle4', 'class': 'colourTitle', 'x': 3, 'y': 49, 'font-size': 2},
-            'legend')
-        .setText('colorTitle4', 'varma pesintä')
-        .addElement('rect',
-            {
-              'id': 'colourBox3', 'class': 'colourBox', 'x': 1, 'y': 52, 'width': 1, 'height': 1,
-              'fill': 'yellowgreen', 'stroke': 'black', 'stroke-width': 0.1,
-            },
-            'legend')
-        .addElement('text',
-            {'id': 'colorTitle3', 'class': 'colourTitle', 'x': 3, 'y': 53, 'font-size': 2},
-            'legend')
-        .setText('colorTitle3', 'todennäköinen pesintä')
-        .addElement('rect',
-            {
-              'id': 'colourBox2', 'class': 'colourBox', 'x': 1, 'y': 56, 'width': 1, 'height': 1,
-              'fill': 'gold', 'stroke': 'black', 'stroke-width': 0.1,
-            },
-            'legend')
-        .addElement('text',
-            {'id': 'colorTitle2', 'class': 'colourTitle', 'x': 3, 'y': 57, 'font-size': 2},
-            'legend')
-        .setText('colorTitle2', 'mahdollinen pesintä')
+        .addElement('text', configObject.legend.atlasTitle, 'legend')
+        .addElement('text', configObject.legend.speciesFI, 'legend')
+        .addElement('text', configObject.legend.speciesSCI, 'legend')
+        .addElement('text', configObject.legend.speciesSV, 'legend')
+        .addElement('text', configObject.legend.speciesEN, 'legend')
+        .addElement('text', configObject.legend.breedingColourTitle, 'legend')
+        .addElement('rect', configObject.legend.colourBox4, 'legend')
+        .addElement('text', configObject.legend.colourTitle4, 'legend')
+        .addElement('rect', configObject.legend.colourBox3, 'legend')
+        .addElement('text', configObject.legend.colourTitle3, 'legend')
+        .addElement('rect', configObject.legend.colourBox2, 'legend')
+        .addElement('text', configObject.legend.colourTitle2, 'legend')
     return svgImage
   }
 }

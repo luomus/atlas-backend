@@ -17,7 +17,7 @@ const createAtlasMap = require('./domain/maps/create_atlas_map')
 const path = __dirname + '/openAPI.yaml'
 try {
   if (fs.existsSync(path)) {
-    const swaggerDocument = YAML.load(path);
+    const swaggerDocument = YAML.load(path)
     app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
     app.get('/', (req, res) => res.redirect('/doc') )
   }
