@@ -119,7 +119,6 @@ function createAtlasMap(gridArray, geoJsonArray) {
         .setViewBox(0, 0, width + overlayPadding, height + overlayPadding)
         .addElement('g', {id: 'background'})
         .addElement('g', {id: 'overlay'})
-    console.log(configObject.gridCircle)
     drawLegend(svgImage)
     svgGridArray.forEach((rect) => {
       const circlePropertyMap = Object.assign(configObject.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
@@ -167,16 +166,10 @@ function createAtlasMap(gridArray, geoJsonArray) {
    * @returns {SvgImage}
    */
   function drawLegend(svgImage) {
-    const legendWidth = svgImage.getWidth() * (2 / 5)
-    const legendHeight = svgImage.getHeight() * (2 / 5)
-    svgImage.addElement('g', {id: 'legend'})
-        .addElement('g', {id: 'legendBox', display: 'none'})
-    const boxPropertyMap = {
-      'id': 'legendBox', 'class': 'legendBox', 'x': 0, 'y': 0,
-      'width': legendWidth, 'height': legendHeight,
-      'fill': 'white', 'fill-opacity': 0, 'stroke': 'black', 'stroke-width': 0.15,
-    }
-    svgImage.addElement('rect', boxPropertyMap, 'legendBox')
+    svgImage.addElement('g', {id: 'legendBox'})
+        .addElement('g', {id: 'legend'})
+        .addElement('rect', configObject.legendBox.textBox, 'legendBox')
+        .addElement('rect', configObject.legendBox.breedingColourBox, 'legendBox')
         .addElement('text', configObject.legend.atlasTitle, 'legend')
         .addElement('text', configObject.legend.speciesFI, 'legend')
         .addElement('text', configObject.legend.speciesSCI, 'legend')

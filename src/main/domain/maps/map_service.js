@@ -34,8 +34,8 @@ function MapService(atlasMap) {
     getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
-        const color = getColorForBreedingCategory(datapoint.breedingCategory)
-        speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
+        const colour = getColorForBreedingCategory(datapoint.breedingCategory)
+        speciesMap.setAttributesOfElement(datapoint.id, {fill: colour, display: 'block'})
       })
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
