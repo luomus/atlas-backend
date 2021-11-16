@@ -85698,7 +85698,9 @@ response_body_ResponseBody = /*#__PURE__*/function (_React$PureComponent) {inher
         // Image
       } else if (/^image\//i.test(contentType)) {
           if (includes_default()(contentType).call(contentType, "svg")) {
-              bodyEl = /*#__PURE__*/react_default.a.createElement("div", null, " ", content, " ");
+              const blob = new Blob([content], {type: 'image/svg+xml'})
+              const url = URL.createObjectURL(blob)
+              bodyEl = /*#__PURE__*/react_default.a.createElement("img", { src: url });
           } else {
               bodyEl = /*#__PURE__*/react_default.a.createElement("img", { src: url_default.a.createObjectURL(content) });
           }

@@ -75,5 +75,5 @@ paths:
         '200':
           description: Svg or png image
           content:
-            image/svg:
+            image/*:
               schema:
