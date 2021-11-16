@@ -17,31 +17,6 @@ class Grid {
     this.#birdGridDao = birdGridDao
     this.#birdDao = birdDao
   }
-  /**
-     * A method that returns the observation grid.
-     * @returns {Array}
-     */
-  getAll() {
-    return (req, res) => this.#gridDao.getAllGrids()
-        .then((data) => res.json(data), () => res.send(null))
-  }
-
-  /**
-     * A method that returns an image of the grid.
-     * @returns {SVGElement}
-     */
-  getGrid() {
-    return (req, res) => {
-      if (req.param('type') === 'png') {
-        res.setHeader('Content-Type', 'image/png')
-        const callback = (png) => res.send(png)
-        res.send(this.#mapService.getGrid('png', callback))
-      } else {
-        res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(this.#mapService.getGrid('svg', undefined))
-      }
-    }
-  }
 
   /**
      * A method that creates an image of the grid with a bird's breeding data.
@@ -66,22 +41,6 @@ class Grid {
     }
   }
 
-  /**
-     * A method that returns an image of the base map with YKJ100km grid and borders of Finland.
-     * @returns {SVGElement}
-     */
-  getBaseMap() {
-    return (req, res) => {
-      if (req.param('type') === 'png') {
-        res.setHeader('Content-Type', 'image/png')
-        const callback = (png) => res.send(png)
-        res.send(this.#mapService.getBaseMap('png', callback))
-      } else {
-        res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(this.#mapService.getBaseMap('svg', undefined))
-      }
-    }
-  }
 }
 
 module.exports = Grid

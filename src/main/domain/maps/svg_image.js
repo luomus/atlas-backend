@@ -32,6 +32,14 @@ function SvgImage(svgDocument) {
   }
 
   return {
+    removeDisplayNones: function () {
+      const circles = svg.getElementsByTagName("circle")
+      for (let i = 0; i < circles.length; i++) {
+        const circle = circles.item(i);
+        if (circle.getAttribute("display") === "none")
+          circle.parentNode.removeChild(circle)
+      }
+    },
     /**
      * Sets dimensions of this svg-image.
      * @param {number} width

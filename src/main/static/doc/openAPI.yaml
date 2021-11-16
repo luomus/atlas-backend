@@ -3,8 +3,6 @@ info:
   title: API for Bird Atlas
   version: ALPHA
 servers:
-  - url: https://atlas-staging.rahtiapp.fi
-    description: Production server (uses live data)
   - url: http://localhost:3000
     description: Development server
 paths:
@@ -70,14 +68,12 @@ paths:
           example: '25836'
         - name: type
           in: query
-          schema: 
+          schema:
             type: string
-          example: 'png'
+          example: 'svg'
       responses:
         '200':
-          description: PNG image
-          content: 
-            image/*:
+          description: Svg or png image
+          content:
+            image/svg:
               schema:
-                type: string
-
