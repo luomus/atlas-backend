@@ -173,9 +173,13 @@ function SvgImage(svgDocument) {
     mergeSvg: function(otherSvg, scaleFactor) {
       const children = otherSvg.getSvgElement().childNodes
       for (let i = 0; i < children.length; i++) {
-        const clone = children[i].cloneNode(true)
-        clone.setAttribute('transform', `scale\(${scaleFactor}\)`)
-        svg.appendChild(clone)
+        const newNode = children[i].cloneNode(true)
+        const transform = newNode.getAttribute('transform')
+        const scale = `scale\(${scaleFactor}\)`
+        const delimiter = transform === '' ? '' : ' '
+        const newTransform = scale.concat(delimiter, transform)
+        newNode.setAttribute('transform', newTransform)
+        svg.appendChild(newNode)
       }
       return this
     },
