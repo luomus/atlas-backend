@@ -85695,6 +85695,14 @@ response_body_ResponseBody = /*#__PURE__*/function (_React$PureComponent) {inher
 
         bodyEl = /*#__PURE__*/react_default.a.createElement(HighlightCode, { language: language, downloadable: true, fileName: "".concat(downloadName, ".json"), value: body, getConfigs: getConfigs, canCopy: true });
 
+        // Image
+      } else if (/^image\//i.test(contentType)) {
+          if (includes_default()(contentType).call(contentType, "svg")) {
+              bodyEl = /*#__PURE__*/react_default.a.createElement("div", null, " ", content, " ");
+          } else {
+              bodyEl = /*#__PURE__*/react_default.a.createElement("img", { src: url_default.a.createObjectURL(content) });
+          }
+
         // XML
       } else if (/xml/i.test(contentType)) {
         body = xml_but_prettier_dist_default()(content, {
@@ -85711,16 +85719,8 @@ response_body_ResponseBody = /*#__PURE__*/function (_React$PureComponent) {inher
       } else if (toLower_default()(contentType) === "text/csv" || /text\/csv/.test(contentType)) {
         bodyEl = /*#__PURE__*/react_default.a.createElement(HighlightCode, { downloadable: true, fileName: "".concat(downloadName, ".csv"), value: content, getConfigs: getConfigs, canCopy: true });
 
-        // Image
-      } else if (/^image\//i.test(contentType)) {
-        if (includes_default()(contentType).call(contentType, "svg")) {
-          bodyEl = /*#__PURE__*/react_default.a.createElement("div", null, " ", content, " ");
-        } else {
-          bodyEl = /*#__PURE__*/react_default.a.createElement("img", { src: url_default.a.createObjectURL(content) });
-        }
-
         // Audio
-      } else if (/^audio\//i.test(contentType)) {
+      }  else if (/^audio\//i.test(contentType)) {
         bodyEl = /*#__PURE__*/react_default.a.createElement("pre", { className: "microlight" }, /*#__PURE__*/react_default.a.createElement("audio", { controls: true }, /*#__PURE__*/react_default.a.createElement("source", { src: url, type: contentType })));
       } else if (typeof content === "string") {
         bodyEl = /*#__PURE__*/react_default.a.createElement(HighlightCode, { downloadable: true, fileName: "".concat(downloadName, ".txt"), value: content, getConfigs: getConfigs, canCopy: true });
