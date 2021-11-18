@@ -24,16 +24,17 @@ async function checkConnection() {
       });
       console.log("Connected to Oracle Database")
       
-   
-      let result = await connection.execute("SELECT * FROM species", [], { resultSet: true, outFormat: oracledb.OUT_FORMAT_OBJECT});
+      params = [ '27850' ]
+      let result = await connection.execute(`SELECT mxCode AS "mxCode", speciesFI AS "speciesFI",
+      speciesSV AS "speciesSV", speciesEN AS "speciesEN", speciesSCI AS "speciesSCI",
+      speciesAbbr AS "speciesAbbr", speciesGroup_id AS "speciesGroup_id", visibility 
+      AS "visibility" FROM species WHERE mxcode = :mxcode`, params, { resultSet: true, outFormat: oracledb.OUT_FORMAT_OBJECT});
       const rs = result.resultSet;
       
       let row;
 
       while ((row = await rs.getRow())) {
-        if (row.VISIBILITY === 1 && row.MXCODE > 40000) {
-          console.log(row.MXCODE, row.SPECIESFI)
-        }
+          console.log(row)
       }
       
     await rs.close();

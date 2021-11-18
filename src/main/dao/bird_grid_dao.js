@@ -67,7 +67,8 @@ class BirdGridDao {
    * @returns {Promise}
    */
   getBySpeciesFromAtlas3(speciesMxcode) {
-    return this.#querier('all', `SELECT * FROM bird_data_atlas3 WHERE species_mxcode = ?`, [speciesMxcode])
+    return this.#querier('all', `SELECT id AS "id", species_mxcode AS "species_mxcode",
+            grid_id AS "grid_id", breedingIndex AS "breedingIndex", breedingCategory AS "breedingCategory" FROM bird_data_atlas3 WHERE species_mxcode = ?`, [speciesMxcode])
   }
 
   /**
@@ -85,13 +86,14 @@ class BirdGridDao {
    * @returns {Promise}
    */
   getGridAndBreedingdataForBird(speciesMxcode) {
-    return this.#querier('all', `SELECT species.speciesFI, grid.id, grid.coordinateN, grid.coordinateE,
-            bird_data_atlas3.breedingCategory 
+    return this.#querier('all', `SELECT species.speciesFI AS "speciesFI", grid.id AS "id",
+            grid.coordinateN AS "coordinateN", grid.coordinateE AS "coordinateE",
+            bird_data_atlas3.breedingCategory AS "breedingCategory"
             FROM bird_data_atlas3 JOIN grid 
             ON grid.id = bird_data_atlas3.grid_id 
             JOIN species 
             ON species.mxCode = bird_data_atlas3.species_mxcode 
-            WHERE species.mxcode=? 
+            WHERE species.mxcode = :mxcode 
             AND species.visibility=1`, [speciesMxcode])
   }
 

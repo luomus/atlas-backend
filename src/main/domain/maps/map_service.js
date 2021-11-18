@@ -60,10 +60,10 @@ function MapService(atlasMap) {
   }
 
   function setLegend(gridOverlay, species, language) {
-    gridOverlay.setText('speciesSCI', species.speciesSCI)
-        .setText('speciesFI', species.speciesFI)
-        .setText('speciesSV', species.speciesSV)
-        .setText('speciesEN', species.speciesEN)
+    gridOverlay.setText('speciesSCI', species[0].speciesSCI)
+        .setText('speciesFI', species[0].speciesFI)
+        .setText('speciesSV', species[0].speciesSV)
+        .setText('speciesEN', species[0].speciesEN)
     if (language === 'fi')
       gridOverlay.setAttributesOfElement('speciesEN', {display: 'none'})
           .setAttributesOfElement('speciesSV', {display: 'none'})
