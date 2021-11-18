@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: dao/querier.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,50 +17,61 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: dao/querier.js</h1>
 
     
 
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article><h1>Atlas</h1>
-<p><img src="https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/node.js.yml/badge.svg" alt="actions badge"></p>
-<p>In this project, Luomus Bird and Plant Atlas are developed.</p>
-<h2>Documentation</h2>
-<h3>Classes</h3>
-<h4>Routing</h4>
-<ul>
-<li><a href="https://atlas-ohtuprojekti.github.io/ATLAS/Birds.html">Birds</a></li>
-</ul>
-<h2>Project management</h2>
-<ul>
-<li><a href="https://docs.google.com/spreadsheets/d/19Y2sjV4hNleklp-nDP_OXDvz_ATXy6dcdp0JDMt3L9Q/edit#gid=1182794126">Working Hours</a></li>
-<li><a href="https://docs.google.com/spreadsheets/d/19Y2sjV4hNleklp-nDP_OXDvz_ATXy6dcdp0JDMt3L9Q/edit#gid=1236889651">Product Backlog</a></li>
-<li><a href="https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/dod.md">Definition of Done</a></li>
-</ul></article>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Provides a method for querying a SQLite database
+ * @param {Database} SQLite database
+ * @returns {Promise}
+ */
+function Querier(db) {
+    return (methodName, query, params = []) => {
+        return new Promise((resolve, reject) => {
+            db[methodName](query, params, function (err, data) {
+                correctMxFormating(data)
+                if (err) {
+                    console.log('Error running sql: ' + query)
+                    console.log(err)
+                    reject(err)
+                } else {
+                    resolve(data || this.lastID)
+                }
+            })
+        })
+
+        /**
+        * Changes the displays of the MXcodes in the JSON file 
+        * @param {Object} 
+        */
+        function correctMxFormating(data) {
+            for (const val in data) {
+                if (data[val].hasOwnProperty('species_mxcode')) {
+                    data[val].species_id = "MX." + data[val].species_mxcode
+                    delete data[val].species_mxcode
+                }
+                if (data[val].hasOwnProperty('mxCode')) {
+                    data[val].species_id = "MX." + data[val].mxCode
+                    delete data[val].mxCode
+                }
+            }
+        }
+    }
+
+}
+
+module.exports = Querier
+
+
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

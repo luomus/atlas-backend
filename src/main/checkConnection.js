@@ -39,19 +39,16 @@ async function checkConnection() {
     await rs.close();
   
   } catch (err) {
-    console.error(err.message);
-
-    } finally {
-      if (connection) {
-        try {
-          await connection.close();
-          console.log("Database connection closed")
-        } catch (err) {
-          console.error(err.message);
-        }
+    console.error(err.message)
+  } finally {
+    if (connection)
+      try {
+        await connection.close()
+        console.log('Database connection closed')
+      } catch (err) {
+        console.error(err.message);
       }
-  
-     }
-    }
-   
-  checkConnection();
+  }
+}
+
+checkConnection()

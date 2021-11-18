@@ -1,0 +1,127 @@
+{
+  "gridCircle": {
+    "r": 1,
+    "fill": "black",
+    "display": "none"
+  },
+  "gridBackground": {
+    "width": 1,
+    "height": 1,
+    "fill": "white",
+    "display": "block"
+  },
+  "legend": {
+    "atlasTitle": { 
+      "class": "title",
+      "x": 1,
+      "y": 5,
+      "font-size": 3.5,
+      "textFI": "Lintuatlas 3 (2006-2010)",
+      "textSV": "Fågelatlas 3 (2006-2010)",
+      "textEN": "Bird Atlas 3 (2006-2010)",
+      "display": "none"
+    },
+    "speciesFI": { 
+      "class": "speciesName",
+      "x": 1,
+      "y": 24,
+      "font-size": 2.5,
+      "display": "none"
+    },
+    "speciesSV": { 
+      "class": "speciesName",
+      "x": 1,
+      "y": 24,
+      "font-size": 2.5,
+      "display": "none"
+    },
+    "speciesEN": { 
+      "class": "speciesName",
+      "x": 1,
+      "y": 24,
+      "font-size": 2.5,
+      "display": "none"
+    },
+    "speciesSCI": { 
+      "class": "speciesName",
+      "x": 1,
+      "y": 28,
+      "font-size": 2.5,
+      "font-style": "italic",
+      "display": "none"
+    },
+    "breedingColourTitle": { 
+      "class": "title",
+      "x": 1,
+      "y": 45,
+      "font-size": 3,
+      "textFI": "Pesintä",
+      "textSV": "Häckning",
+      "textEN": "Breeding",
+      "display": "none"
+    },
+    "colourBox4": { 
+      "class": "colourBox",
+      "x": 1,
+      "y": 48,
+      "width": 1,
+      "height": 1,
+      "fill": "cornflowerblue",
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "none"
+    },
+    "colourTitle4": { 
+      "class": "colourTitle",
+      "x": 3,
+      "y": 49,
+      "font-size": 2,
+      "textFI": "varma pesintä",
+      "textSV": "säker häckning",
+      "textEN": "sure breeding",
+      "display": "none"
+    },
+    "colourBox3": { 
+      "class": "colourBox",
+      "x": 1,
+      "y": 52,
+      "width": 1,
+      "height": 1,
+      "fill": "cornflowerblue",
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "none"
+    },
+    "colourTitle3": { 
+      "class": "colourTitle",
+      "x": 3,
+      "y": 53,
+      "font-size": 2,
+      "textFI": "todennäköinen pesintä",
+      "textSV": "trolig häckning",
+      "textEN": "probable breeding",
+      "display": "none"
+    },
+    "colourBox2": { 
+      "class": "colourBox",
+      "x": 1,
+      "y": 56,
+      "width": 1,
+      "height": 1,
+      "fill": "cornflowerblue",
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "none"
+    },
+    "colourTitle2": { 
+      "class": "colourTitle",
+      "x": 3,
+      "y": 57,
+      "font-size": 2,
+      "textFI": "mahdollinen pesintä",
+      "textSV": "eventuell häckning",
+      "textEN": "possible breeding",
+      "display": "none"
+    }
+  }
+}

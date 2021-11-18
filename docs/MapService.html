@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: MapService</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: MapService</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>MapService<span class="signature">(atlasMap, gridArray)</span><span class="type-signature"> &rarr; {<a href="MapService.html">MapService</a>}</span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    
+    <h4 class="name" id="MapService"><span class="type-signature"></span>new MapService<span class="signature">(atlasMap, gridArray)</span><span class="type-signature"> &rarr; {<a href="MapService.html">MapService</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it isused as it stands as an archetypal atlas map. Otherwise, grid data must be given as an argument for a base map andgrid overlay to be created during construction. The base map is created using specific GeoJSON files.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>atlasMap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An archetypal atlas map that contains certain mandatory elements. It can be an    SVG XMLDocument (https://developer.mozilla.org/en-US/docs/Web/API/XMLDocument) or an SVG string.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gridArray</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object array containing grid objects with an id as well    as north and east coordinates in Finland Uniform Coordinate System (EPSG:2393).</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="domain_maps_map_service.js.html">domain/maps/map_service.js</a>, <a href="domain_maps_map_service.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MapService.html">MapService</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BirdDao.html">BirdDao</a></li><li><a href="BirdGridDao.html">BirdGridDao</a></li><li><a href="Birds.html">Birds</a></li><li><a href="createAtlasMap.html">createAtlasMap</a></li><li><a href="Grid.html">Grid</a></li><li><a href="GridDao.html">GridDao</a></li><li><a href="MapService.html">MapService</a></li><li><a href="SvgImage.html">SvgImage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addElement">addElement</a></li><li><a href="global.html#addElementFromString">addElementFromString</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#getElementById">getElementById</a></li><li><a href="global.html#getElementCoordsById">getElementCoordsById</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getMinMaxCoords">getMinMaxCoords</a></li><li><a href="global.html#getSpeciesMap">getSpeciesMap</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#Querier">Querier</a></li><li><a href="global.html#setAttributesForAllElements">setAttributesForAllElements</a></li><li><a href="global.html#setAttributesOfElement">setAttributesOfElement</a></li><li><a href="global.html#setDimensions">setDimensions</a></li><li><a href="global.html#setText">setText</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 16:45:55 GMT+0200 (Itä-Euroopan normaaliaika)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

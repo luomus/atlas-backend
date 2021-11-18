@@ -87,7 +87,7 @@
             <td class="type">
             
                 
-<span class="param-type">BirdDao</span>
+<span class="param-type"><a href="BirdDao.html">BirdDao</a></span>
 
 
             
@@ -110,7 +110,7 @@
             <td class="type">
             
                 
-<span class="param-type">BirdGridDao</span>
+<span class="param-type"><a href="BirdGridDao.html">BirdGridDao</a></span>
 
 
             
@@ -161,7 +161,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="birds.js.html">birds.js</a>, <a href="birds.js.html#line13">line 13</a>
+        <a href="domain_routes_birds.js.html">domain/routes/birds.js</a>, <a href="domain_routes_birds.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -225,8 +225,7 @@
 
 
 <div class="description">
-    A method that returns all birds in the database. The data for each bird includes:
-mxCode, speciesFI, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id, visibility, speciesSV, id
+    A method that returns all birds in the database. The data for each bird includes:mxCode, speciesFI, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id, visibility, speciesSV, id
 </div>
 
 
@@ -270,7 +269,7 @@ mxCode, speciesFI, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id, visibili
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="birds.js.html">birds.js</a>, <a href="birds.js.html#line27">line 27</a>
+        <a href="domain_routes_birds.js.html">domain/routes/birds.js</a>, <a href="domain_routes_birds.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -319,9 +318,7 @@ mxCode, speciesFI, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id, visibili
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>/api/birds:
-[{"mxCode":25836,"speciesFI":"Kaakkuri","speciesEN":"Red-throated Diver","speciesSCI":"Gavia stellata","speciesAbbr":"GAVSTE","speciesGroup_id":1,"visibility":1,"speciesSV":"Smålom","id":36},
-{"mxCode":25837,"speciesFI":"Kuikka","speciesEN":"Black-throated Diver","speciesSCI":"Gavia arctica","speciesAbbr":"GAVARC","speciesGroup_id":1,"visibility":1,"speciesSV":"Storlom","id":37}, ...]</code></pre>
+    <pre class="prettyprint"><code>/api/birds:[{"mxCode":25836,"speciesFI":"Kaakkuri","speciesEN":"Red-throated Diver","speciesSCI":"Gavia stellata","speciesAbbr":"GAVSTE","speciesGroup_id":1,"visibility":1,"speciesSV":"Smålom","id":36},{"mxCode":25837,"speciesFI":"Kuikka","speciesEN":"Black-throated Diver","speciesSCI":"Gavia arctica","speciesAbbr":"GAVARC","speciesGroup_id":1,"visibility":1,"speciesSV":"Storlom","id":37}, ...]</code></pre>
 
 
 
@@ -339,9 +336,7 @@ mxCode, speciesFI, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id, visibili
 
 
 <div class="description">
-    A method that returns all Atlas3 observations of a certain bird specified by bird id (MX.code).
-The following data is returned:
-id, species MX.code, grid id, species breeding index, species breeding category
+    A method that returns all Atlas3 observations of a certain bird specified by bird id (MX.code).The following data is returned:id, species MX.code, grid id, species breeding index, species breeding category
 </div>
 
 
@@ -385,7 +380,7 @@ id, species MX.code, grid id, species breeding index, species breeding category
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="birds.js.html">birds.js</a>, <a href="birds.js.html#line43">line 43</a>
+        <a href="domain_routes_birds.js.html">domain/routes/birds.js</a>, <a href="domain_routes_birds.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -434,10 +429,7 @@ id, species MX.code, grid id, species breeding index, species breeding category
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>/api/species?id=25860:
-[{"id":729298,"species_mxcode":25860,"grid_id":663324,"breedingIndex":50,"breedingCategory":3},
-{"id":729299,"species_mxcode":25860,"grid_id":664322,"breedingIndex":30,"breedingCategory":2},
-{"id":729300,"species_mxcode":25860,"grid_id":664323,"breedingIndex":50,"breedingCategory":3}, ...]</code></pre>
+    <pre class="prettyprint"><code>/api/species?id=25860:[{"id":729298,"species_mxcode":25860,"grid_id":663324,"breedingIndex":50,"breedingCategory":3},{"id":729299,"species_mxcode":25860,"grid_id":664322,"breedingIndex":30,"breedingCategory":2},{"id":729300,"species_mxcode":25860,"grid_id":664323,"breedingIndex":50,"breedingCategory":3}, ...]</code></pre>
 
 
 
@@ -455,9 +447,7 @@ id, species MX.code, grid id, species breeding index, species breeding category
 
 
 <div class="description">
-    A method that returns Atlas3 grid data for a certain bird specified by bird id (MX.code).
-The following data is returned:
-speciesFI, grid id, grid coordinateN, grid coordinateE, atlas3 breedingCategory.
+    A method that returns Atlas3 grid data for a certain bird specified by bird id (MX.code).The following data is returned:speciesFI, grid id, grid coordinateN, grid coordinateE, atlas3 breedingCategory.
 </div>
 
 
@@ -501,7 +491,7 @@ speciesFI, grid id, grid coordinateN, grid coordinateE, atlas3 breedingCategory.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="birds.js.html">birds.js</a>, <a href="birds.js.html#line60">line 60</a>
+        <a href="domain_routes_birds.js.html">domain/routes/birds.js</a>, <a href="domain_routes_birds.js.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -550,10 +540,7 @@ speciesFI, grid id, grid coordinateN, grid coordinateE, atlas3 breedingCategory.
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>/api/species/data?id=25860:
-[{"speciesFI":"Silkkiuikku","id":663324,"coordinateN":663,"coordinateE":324,"breedingCategory":3},
-{"speciesFI":"Silkkiuikku","id":664322,"coordinateN":664,"coordinateE":322,"breedingCategory":2},
-{"speciesFI":"Silkkiuikku","id":664323,"coordinateN":664,"coordinateE":323,"breedingCategory":3}, ...]</code></pre>
+    <pre class="prettyprint"><code>/api/species/data?id=25860:[{"speciesFI":"Silkkiuikku","id":663324,"coordinateN":663,"coordinateE":324,"breedingCategory":3},{"speciesFI":"Silkkiuikku","id":664322,"coordinateN":664,"coordinateE":322,"breedingCategory":2},{"speciesFI":"Silkkiuikku","id":664323,"coordinateN":664,"coordinateE":323,"breedingCategory":3}, ...]</code></pre>
 
 
 
@@ -573,13 +560,13 @@ speciesFI, grid id, grid coordinateN, grid coordinateE, atlas3 breedingCategory.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Birds.html">Birds</a></li><li><a href="Grid.html">Grid</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BirdDao.html">BirdDao</a></li><li><a href="BirdGridDao.html">BirdGridDao</a></li><li><a href="Birds.html">Birds</a></li><li><a href="createAtlasMap.html">createAtlasMap</a></li><li><a href="Grid.html">Grid</a></li><li><a href="GridDao.html">GridDao</a></li><li><a href="MapService.html">MapService</a></li><li><a href="SvgImage.html">SvgImage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addElement">addElement</a></li><li><a href="global.html#addElementFromString">addElementFromString</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#getElementById">getElementById</a></li><li><a href="global.html#getElementCoordsById">getElementCoordsById</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getMinMaxCoords">getMinMaxCoords</a></li><li><a href="global.html#getSpeciesMap">getSpeciesMap</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#Querier">Querier</a></li><li><a href="global.html#setAttributesForAllElements">setAttributesForAllElements</a></li><li><a href="global.html#setAttributesOfElement">setAttributesOfElement</a></li><li><a href="global.html#setDimensions">setDimensions</a></li><li><a href="global.html#setText">setText</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Oct 14 2021 14:25:39 GMT+0300 (Eastern European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 16:45:55 GMT+0200 (Itä-Euroopan normaaliaika)
 </footer>
 
 <script> prettyPrint(); </script>

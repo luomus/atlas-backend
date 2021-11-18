@@ -1,0 +1,7 @@
+docs
+dokumentaatio
+src/main/geojson
+src/main/openAPI.yaml
+src/main/static/**
+src/main/dao/__mocks__/
+src/main/checkConnection.js

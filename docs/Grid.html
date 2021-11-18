@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Grid<span class="signature">(gridDao, mapService, birdGridDao)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Grid<span class="signature">(gridDao, mapService, birdGridDao, birdDao)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="Grid"><span class="type-signature"></span>new Grid<span class="signature">(gridDao, mapService, birdGridDao)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Grid"><span class="type-signature"></span>new Grid<span class="signature">(gridDao, mapService, birdGridDao, birdDao)</span><span class="type-signature"></span></h4>
     
 
     
@@ -87,7 +87,7 @@
             <td class="type">
             
                 
-<span class="param-type">GridDao</span>
+<span class="param-type"><a href="GridDao.html">GridDao</a></span>
 
 
             
@@ -110,7 +110,7 @@
             <td class="type">
             
                 
-<span class="param-type">MapService</span>
+<span class="param-type"><a href="MapService.html">MapService</a></span>
 
 
             
@@ -133,7 +133,30 @@
             <td class="type">
             
                 
-<span class="param-type">BirdGridDao</span>
+<span class="param-type"><a href="BirdGridDao.html">BirdGridDao</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>birdDao</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="GridDao.html">GridDao</a></span>
 
 
             
@@ -184,7 +207,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">grid.js</a>, <a href="grid.js.html#line14">line 14</a>
+        <a href="domain_routes_grid.js.html">domain/routes/grid.js</a>, <a href="domain_routes_grid.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -292,7 +315,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">grid.js</a>, <a href="grid.js.html#line48">line 48</a>
+        <a href="domain_routes_grid.js.html">domain/routes/grid.js</a>, <a href="domain_routes_grid.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -354,9 +377,7 @@
 
 
 <div class="description">
-    A method that returns the observation grid. Data contains
-id, coordinateN, coordinateE, municipality_id, gridName
-for each square of the grid.
+    A method that returns the observation grid. Data containsid, coordinateN, coordinateE, municipality_id, gridNamefor each square of the grid.
 </div>
 
 
@@ -400,7 +421,7 @@ for each square of the grid.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">grid.js</a>, <a href="grid.js.html#line28">line 28</a>
+        <a href="domain_routes_grid.js.html">domain/routes/grid.js</a>, <a href="domain_routes_grid.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
@@ -449,9 +470,113 @@ for each square of the grid.
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>/api/grid:
-[{"id":661312,"coordinateN":661,"coordinateE":312,"municipality_id":147,"gridName":"Bogskär"},
-{"id":663318,"coordinateN":663,"coordinateE":318,"municipality_id":181,"gridName":"Alu"}, ...]</code></pre>
+    <pre class="prettyprint"><code>/api/grid:[{"id":661312,"coordinateN":661,"coordinateE":312,"municipality_id":147,"gridName":"Bogskär"},{"id":663318,"coordinateN":663,"coordinateE":318,"municipality_id":181,"gridName":"Alu"}, ...]</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getBaseMap"><span class="type-signature"></span>getBaseMap<span class="signature">()</span><span class="type-signature"> &rarr; {SVGElement}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    A method that returns an image of the base map with YKJ100km grid and borders of Finland.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="domain_routes_grid.js.html">domain/routes/grid.js</a>, <a href="domain_routes_grid.js.html#line79">line 79</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">SVGElement</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
 
 
@@ -513,7 +638,7 @@ for each square of the grid.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grid.js.html">grid.js</a>, <a href="grid.js.html#line37">line 37</a>
+        <a href="domain_routes_grid.js.html">domain/routes/grid.js</a>, <a href="domain_routes_grid.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -577,13 +702,13 @@ for each square of the grid.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Birds.html">Birds</a></li><li><a href="Grid.html">Grid</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BirdDao.html">BirdDao</a></li><li><a href="BirdGridDao.html">BirdGridDao</a></li><li><a href="Birds.html">Birds</a></li><li><a href="createAtlasMap.html">createAtlasMap</a></li><li><a href="Grid.html">Grid</a></li><li><a href="GridDao.html">GridDao</a></li><li><a href="MapService.html">MapService</a></li><li><a href="SvgImage.html">SvgImage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addElement">addElement</a></li><li><a href="global.html#addElementFromString">addElementFromString</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#getElementById">getElementById</a></li><li><a href="global.html#getElementCoordsById">getElementCoordsById</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getMinMaxCoords">getMinMaxCoords</a></li><li><a href="global.html#getSpeciesMap">getSpeciesMap</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#Querier">Querier</a></li><li><a href="global.html#setAttributesForAllElements">setAttributesForAllElements</a></li><li><a href="global.html#setAttributesOfElement">setAttributesOfElement</a></li><li><a href="global.html#setDimensions">setDimensions</a></li><li><a href="global.html#setText">setText</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Oct 14 2021 14:25:39 GMT+0300 (Eastern European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 16:45:55 GMT+0200 (Itä-Euroopan normaaliaika)
 </footer>
 
 <script> prettyPrint(); </script>

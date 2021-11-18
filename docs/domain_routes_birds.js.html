@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: domain/routes/birds.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: domain/routes/birds.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const BirdDao = require("../../dao/bird_dao")
+const BirdGridDao = require("../../dao/bird_grid_dao")
+
+class Birds {
+    #birdDao
+    #birdGridDao
+    
+    /**
+     * @constructor
+     * @param {BirdDao} birdDao 
+     * @param {BirdGridDao} birdGridDao 
+     */
+    constructor(birdDao, birdGridDao) {
+        this.#birdDao = birdDao
+        this.#birdGridDao = birdGridDao
+    }
+   
+   
+    /**
+     * A method that returns all birds in the database. The data for each bird includes:
+     * mxCode, speciesFI, speciesEN, speciesSCI, speciesAbbr, speciesGroup_id, visibility, speciesSV, id
+     * @example /api/birds:
+     * [{"mxCode":25836,"speciesFI":"Kaakkuri","speciesEN":"Red-throated Diver","speciesSCI":"Gavia stellata","speciesAbbr":"GAVSTE","speciesGroup_id":1,"visibility":1,"speciesSV":"Smålom","id":36},
+     * {"mxCode":25837,"speciesFI":"Kuikka","speciesEN":"Black-throated Diver","speciesSCI":"Gavia arctica","speciesAbbr":"GAVARC","speciesGroup_id":1,"visibility":1,"speciesSV":"Storlom","id":37}, ...]
+     * @returns {Array}
+     */
+    getAll() {
+        return (req, res) => this.#birdDao.getAll()
+            .then(data => res.json(data), () => res.send(null))
+    }
+    
+    
+    /**
+     * A method that returns all Atlas3 observations of a certain bird specified by bird id (MX.code).
+     * The following data is returned:
+     * id, species MX.code, grid id, species breeding index, species breeding category
+     * @example /api/species?id=25860:
+     * [{"id":729298,"species_mxcode":25860,"grid_id":663324,"breedingIndex":50,"breedingCategory":3},
+     * {"id":729299,"species_mxcode":25860,"grid_id":664322,"breedingIndex":30,"breedingCategory":2},
+     * {"id":729300,"species_mxcode":25860,"grid_id":664323,"breedingIndex":50,"breedingCategory":3}, ...]
+     * @returns {Array}
+     */
+    getAllAtlas3DataBySpecies() {
+        return (req, res) => {
+            console.log(req.param("id"))
+        return this.#birdGridDao.getBySpeciesFromAtlas3(req.param("id"))
+            .then(data => res.json(data), () => res.send(null))}
+
+    }
+    /**
+     * A method that returns Atlas3 grid data for a certain bird specified by bird id (MX.code).
+     * The following data is returned:
+     * speciesFI, grid id, grid coordinateN, grid coordinateE, atlas3 breedingCategory.
+     * @example /api/species/data?id=25860:
+     * [{"speciesFI":"Silkkiuikku","id":663324,"coordinateN":663,"coordinateE":324,"breedingCategory":3},
+     * {"speciesFI":"Silkkiuikku","id":664322,"coordinateN":664,"coordinateE":322,"breedingCategory":2},
+     * {"speciesFI":"Silkkiuikku","id":664323,"coordinateN":664,"coordinateE":323,"breedingCategory":3}, ...]
+     * @returns {array}
+     */
+    getGridAndBreedingdataForBird() {
+        return (req, res) => {
+            console.log(req.param("id"))
+        return this.#birdGridDao.getGridAndBreedingdataForBird(req.param("id"))
+            .then(data => res.send(JSON.stringify(data)), () => res.send(null))}
+    }
+
+}
+
+module.exports = Birds</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BirdDao.html">BirdDao</a></li><li><a href="BirdGridDao.html">BirdGridDao</a></li><li><a href="Birds.html">Birds</a></li><li><a href="createAtlasMap.html">createAtlasMap</a></li><li><a href="Grid.html">Grid</a></li><li><a href="GridDao.html">GridDao</a></li><li><a href="MapService.html">MapService</a></li><li><a href="SvgImage.html">SvgImage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addElement">addElement</a></li><li><a href="global.html#addElementFromString">addElementFromString</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#getElementById">getElementById</a></li><li><a href="global.html#getElementCoordsById">getElementCoordsById</a></li><li><a href="global.html#getHeight">getHeight</a></li><li><a href="global.html#getMinMaxCoords">getMinMaxCoords</a></li><li><a href="global.html#getSpeciesMap">getSpeciesMap</a></li><li><a href="global.html#getWidth">getWidth</a></li><li><a href="global.html#Querier">Querier</a></li><li><a href="global.html#setAttributesForAllElements">setAttributesForAllElements</a></li><li><a href="global.html#setAttributesOfElement">setAttributesOfElement</a></li><li><a href="global.html#setDimensions">setDimensions</a></li><li><a href="global.html#setText">setText</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 16:45:55 GMT+0200 (Itä-Euroopan normaaliaika)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

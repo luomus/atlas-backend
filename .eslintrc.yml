@@ -1,0 +1,33 @@
+env:
+  browser: true
+  commonjs: true
+  es2021: true
+extends:
+  - google
+parserOptions:
+  ecmaVersion: 13
+rules: 
+  semi: 0
+  max-len:
+    - 2
+    - 120
+  new-cap:
+    - 2    
+    - capIsNewExceptions: 
+      - "Querier"
+      - "SvgImage" 
+      - "MapService"
+  curly:
+    - 2
+    - multi
+  valid-jsdoc: 0
+  require-jsdoc: 1
+  max-lines-per-function:
+    - 2
+    - 20
+  brace-style:
+    - 2
+    - 1tbs
+    - allowSingleLine: true
+  linebreak-style: 0
+  
