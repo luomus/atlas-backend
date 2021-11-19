@@ -198,14 +198,14 @@ function SvgImage(svgDocument) {
       y = element.getAttribute('cy')
     } else if (element.tagName === 'path') {
       const d = element.getAttribute('d')
-      const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-      x = parseFloat(coordString.split(',')[0])
-      y = parseFloat(coordString.split(',')[1])
+      const coordString = d.replace(/[a-zA-Z]/g, '')
+      x = coordString.split(',')[0]
+      y = coordString.split(',')[1]
     } else {
       x = element.getAttribute('x')
       y = element.getAttribute('y')
     }
-    return {x: x, y: y}
+    return {x: parseFloat(x), y: parseFloat(y)}
   }
 }
 
