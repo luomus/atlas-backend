@@ -1,8 +1,9 @@
 const oracledb = require('oracledb')
-const fs = require('fs');
+const config = require('./dbConfig.js');
 
-const pass = fs.readFileSync("pass.txt")
-const pw = pass.toString()
+// const fs = require('fs');
+// const pass = fs.readFileSync("pass.txt")
+// const pw = pass.toString()
 
 /**
  * Provides a method for querying a SQLite database
@@ -10,51 +11,49 @@ const pw = pass.toString()
  * @returns {Promise}
  */
 // eslint-disable-next-line max-lines-per-function
- function Querier(db) {
+function Querier() {
 
-//   return (methodName, query, params = []) => {
-//     return new Promise((resolve, reject) => {
-//       db[methodName](query, params, function(err, data) {
-//         // console.log(data)
-//         // correctMxFormatting(data)
-//         if (err) {
-//           console.log('Error running sql: ' + query)
-//           console.log(err)
-//           reject(err)
-//         } else
-//           resolve(data || this.lastID)
-//       })
-//     })
+    //   return (methodName, query, params = []) => {
+    //     return new Promise((resolve, reject) => {
+    //       db[methodName](query, params, function(err, data) {
+    //         // console.log(data)
+    //         // correctMxFormatting(data)
+    //         if (err) {
+    //           console.log('Error running sql: ' + query)
+    //           console.log(err)
+    //           reject(err)
+    //         } else
+    //           resolve(data || this.lastID)
+    //       })
+    //     })
 
-return async (methodName, query, params = []) => {
-    try {
-        connection = await oracledb.getConnection({
-            user: "atlas_staging",
-            password: pw,
-            connectString: "oracle.luomus.fi:1521/oracle.luomus.fi"
-        });
+    
+    return async (methodName, query, params = []) => {
+        try {
+            connection = await oracledb.getConnection(config);
+            console.log('Connected to Oracle database');
 
-        console.log('connected to oracle database');
+            // run query
+            result = await connection.execute(query, params, { outFormat: oracledb.OBJECT });
+            console.log('SQL query executed')
 
-        // run parametre query
-        result = await connection.execute(query, params, { outFormat: oracledb.OBJECT});
+        } catch (err) {
+            return reject(err.message);
 
-    } catch (err) {
-        // error message
-        return reject(err.message);
-    } finally {
-        if (connection) {
-            try {
-                // Always close connections
-                await connection.close();
-                console.log('close connection oracle success');
-            } catch (err) {
-                console.error(err.message);
+        } finally {
+            if (connection) {
+                try {
+                    await connection.close();
+                    console.log('Oracle connection closed');
+                } catch (err) {
+                    console.error(err.message);
+                }
             }
         }
+
         if (result.rows.length == 0) {
             //query return null
-            return resolve('oracle query send no rows');
+            return resolve('Query returned no rows');
         } else {
             //send query results
             correctMxFormating(result.rows)
@@ -75,10 +74,8 @@ return async (methodName, query, params = []) => {
             }
         }
     }
-  }
-
 }
 
+
+
 module.exports = Querier
-
-

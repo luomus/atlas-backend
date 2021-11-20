@@ -24,12 +24,12 @@ try {
 } catch (ignore) {}
 
 
-const db = new sqlite3.Database('./birds.db', (err) => {
-  if (err) console.log('Could not connect to database', err)
-  else console.log('Connected to database')
-})
+// const db = new sqlite3.Database('./birds.db', (err) => {
+//   if (err) console.log('Could not connect to database', err)
+//   else console.log('Connected to database')
+// })
 
-const querier = Querier(db)
+const querier = Querier()
 const birdDao = new BirdDao(querier)
 const gridDao = new GridDao(querier)
 const birdGridDao = new BirdGridDao(querier)
