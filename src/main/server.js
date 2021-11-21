@@ -9,20 +9,13 @@ const Birds = require('./domain/routes/birds.js')
 const Grid = require('./domain/routes/grid')
 const MapService = require('./domain/maps/map_service')
 const fs = require('fs')
-const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 const app = express()
 const createAtlasMap = require('./domain/maps/create_atlas_map')
 
 const path = __dirname + '/openAPI.yaml'
-try {
-  if (fs.existsSync(path)) {
-    const swaggerDocument = YAML.load(path);
-    app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-    app.get('/', (req, res) => res.redirect('/doc') )
-  }
-} catch (ignore) {}
 
+app.get('/', (req, res) => res.redirect('/doc'))
 
 const db = new sqlite3.Database('./birds.db', (err) => {
   if (err) console.log('Could not connect to database', err)
@@ -63,7 +56,7 @@ gridDao.getAllGrids().then((gridArray) => {
   app.get('/api/grid/map/data', grid.createGridForBirdData())
 })
 
-app.use(express.static(__rootdir + '/ui'))
+app.use(express.static(__rootdir + '/static'))
 
 app.get('/api/birds', birds.getAll())
 app.get('/api/species', birds.getAllAtlas3DataBySpecies())
