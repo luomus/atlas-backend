@@ -33,6 +33,7 @@ function MapService(atlasMap) {
       data.forEach((datapoint) => {
         const color = getColorForBreedingCategory(datapoint.breedingCategory)
         speciesMap.setAttributesOfElement(datapoint.id, {fill: color, display: 'block'})
+        console.log(color)
       })
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor

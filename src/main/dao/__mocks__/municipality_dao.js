@@ -4,6 +4,13 @@ class MunicipalityDao {
   constructor() {
     this.#data = [
       {
+        'id': 13,
+        'regionNumber': 23,
+        'birdSocietyNameFI': 'Lapin lintutieteellinen yhdistys',
+        'birdSocietyNameSV': 'Lapin lintutieteellinen yhdistys',
+        'municipalityName': 'Enontekiö',
+      },
+      {
         'id': 39,
         'regionNumber': 3,
         'birdSocietyNameFI': 'Helsingin Seudun Lintutieteellinen Yhdistys Tringa',
@@ -16,6 +23,13 @@ class MunicipalityDao {
         'birdSocietyNameFI': 'Ålands Fågelskyddsförening. Ahvenanmaa',
         'birdSocietyNameSV': 'Ålands Fågelskyddsförening',
         'municipalityName': 'Kökar',
+      },
+      {
+        'id': 180,
+        'regionNumber': 11,
+        'birdSocietyNameFI': 'Porin Lintutieteellinen Yhdistys',
+        'birdSocietyNameSV': 'Porin Lintutieteellinen Yhdistys',
+        'municipalityName': 'Luvia',
       },
       {
         'id': 181,
@@ -31,7 +45,13 @@ class MunicipalityDao {
         'birdSocietyNameSV': 'Turun Lintutieteellinen Yhdistys',
         'municipalityName': 'Turku',
       },
-
+      {
+        'id': 360,
+        'regionNumber': 23,
+        'birdSocietyNameFI': 'Lapin lintutieteellinen yhdistys',
+        'birdSocietyNameSV': 'Lapin lintutieteellinen yhdistys',
+        'municipalityName': 'Utsjoki',
+      },
     ]
   }
 
