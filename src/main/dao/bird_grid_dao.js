@@ -1,7 +1,7 @@
 /**
  * Provides methods for accessing Bird Atlas database.
  */
-class BirdGridDao {
+ class BirdGridDao {
   #querier
 
   /**
@@ -68,7 +68,7 @@ class BirdGridDao {
    */
   getBySpeciesFromAtlas3(speciesMxcode) {
     return this.#querier('all', `SELECT id AS "id", species_mxcode AS "species_mxcode",
-            grid_id AS "grid_id", breedingIndex AS "breedingIndex", breedingCategory AS "breedingCategory" FROM bird_data_atlas3 WHERE species_mxcode = ?`, [speciesMxcode])
+            grid_id AS "grid_id", breedingIndex AS "breedingIndex", breedingCategory AS "breedingCategory" FROM bird_data_atlas3 WHERE species_mxcode = :mxcode`, [speciesMxcode])
   }
 
   /**

@@ -29,7 +29,7 @@ class Birds {
      */
   getAllAtlas3DataBySpecies() {
     return (req, res) => {
-      console.log(req.param('id'))
+      console.log('api/species', req.param('id'))
       return this.#birdGridDao.getBySpeciesFromAtlas3(req.param('id'))
           .then((data) => res.json(data), () => res.send(null))
     }
@@ -40,7 +40,7 @@ class Birds {
      */
   getGridAndBreedingdataForBird() {
     return (req, res) => {
-      console.log(req.param('id'))
+      console.log('api/species/data', req.param('id'))
       return this.#birdGridDao.getGridAndBreedingdataForBird(req.param('id'))
           .then((data) => res.send(JSON.stringify(data)), () => res.send(null))
     }
