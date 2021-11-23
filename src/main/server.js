@@ -1,5 +1,6 @@
 global.__rootdir = __dirname
 const express = require('express')
+const cors = require('cors')
 const sqlite3 = require('sqlite3')
 const Querier = require('./dao/querier')
 const BirdDao = require('./dao/bird_dao')
@@ -14,6 +15,8 @@ const app = express()
 const createAtlasMap = require('./domain/maps/create_atlas_map')
 
 const path = __dirname + '/openAPI.yaml'
+
+app.use(cors())
 
 app.get('/', (req, res) => res.redirect('/doc'))
 
