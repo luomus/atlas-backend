@@ -1,0 +1,52 @@
+html
+{
+    box-sizing: border-box;
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}
+
+*,
+*:before,
+*:after
+{
+    box-sizing: inherit;
+}
+
+body
+{
+    margin:0;
+    background: #fafafa;
+}
+
+.swagger-ui .topbar {
+    padding: 10px 0;
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+    display: none;
+}
+
+.swagger-ui .topbar-wrapper img {
+    height: 60px;
+}
+
+.swagger-ui .info .title small.version-stamp {
+    background-color: #3a6789;
+}
+
+.swagger-ui .topbar a {
+    flex: none;
+}
+
+.luomus-link {
+    margin-left: auto !important;
+    filter: brightness(0.5) sepia(1) hue-rotate(150deg) saturate(0.2) brightness(1.5);
+}
+
+.swagger-ui .topbar a {
+    flex: none !important;
+}
+
+.luomus-logo {
+    height: 45px !important;
+}

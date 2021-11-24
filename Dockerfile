@@ -16,7 +16,7 @@ RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantcli
 
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --production --silent
-COPY --chown=node . .
+COPY . .
 EXPOSE 3000
 USER node
 CMD ["node", "/opt/app/src/main/start.js"]
