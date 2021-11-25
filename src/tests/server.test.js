@@ -51,14 +51,3 @@ describe('Bird species API', () => {
     expect(res2.text).toEqual(expect.not.stringContaining('25844'))
   })
 })
-
-describe('Map service compiles correctly', () => {
-  test('Map service can be run on a website', async () => {
-    const compiledMapService = app.compileMapServiceForDelivery()
-    const page = await browser.newPage()
-    const html = '<!DOCTYPE html><head><title></title></head><body></body></html>'
-    await page.setContent(html)
-    await page.evaluate(compiledMapService)
-    await page.evaluate(() => MapService())
-  })
-})
