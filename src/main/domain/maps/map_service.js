@@ -1,8 +1,5 @@
 const {createCanvas, Image} = require('canvas')
 const svg64 = require('svg64')
-const fs = require('fs')
-const configFile = fs.readFileSync('atlas-config.json')
-const configObject = JSON.parse(configFile)
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
@@ -16,7 +13,7 @@ const configObject = JSON.parse(configFile)
  * @constructor
  */
 // eslint-disable-next-line max-lines-per-function
-function MapService(atlasMap) {
+function MapService(atlasMap, configObject) {
   if (typeof atlasMap === 'undefined')
     return console.error('Wrong number of arguments: atlasMap should be defined')
 

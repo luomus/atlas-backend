@@ -1,6 +1,5 @@
 const SvgImage = require(__rootdir + '/domain/maps/svg_image.js')
 const geojson2svg = require('geojson2svg')
-const fs = require('fs')
 
 /**
  * Creates the Atlas map grid and map legend without data.
@@ -8,12 +7,11 @@ const fs = require('fs')
  * @constructor
  */
 // eslint-disable-next-line max-lines-per-function
-function createAtlasMap(gridArray, geoJsonArray) {
+function createAtlasMap(gridArray, geoJsonArray, configObject) {
   const overlayPadding = 15
   const overlayCircleRadius = 0.5
   const baseMap = drawBaseMap(geoJsonArray, SvgImage())
-  const configFile = fs.readFileSync('atlas-config.json')
-  const configObject = JSON.parse(configFile)
+
   const overlay = drawGrid(gridArray, SvgImage())
   const scaleFactor = getScaleFactorForMerge(baseMap, overlay)
   const atlasMap = moveOverlay(baseMap, overlay).mergeSvg(baseMap, scaleFactor)

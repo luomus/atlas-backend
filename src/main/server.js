@@ -14,6 +14,10 @@ const YAML = require('yamljs')
 const app = express()
 const createAtlasMap = require('./domain/maps/create_atlas_map')
 
+const configFile = fs.readFileSync('atlas-config.json')
+const configObject = JSON.parse(configFile)
+
+
 const path = __dirname + '/openAPI.yaml'
 try {
   if (fs.existsSync(path)) {
@@ -57,7 +61,7 @@ app.readBaseMapFiles = function() {
 gridDao.getAllGrids().then((gridArray) => {
   gridArray = gridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
   const geoJsonArray = app.readBaseMapFiles()
-  const mapService = MapService(createAtlasMap(gridArray, geoJsonArray))
+  const mapService = MapService(createAtlasMap(gridArray, geoJsonArray, configObject), configObject)
   const grid = new Grid(gridDao, mapService, birdGridDao, birdDao)
 
   app.get('/api/grid/map/data', grid.createGridForBirdData())
