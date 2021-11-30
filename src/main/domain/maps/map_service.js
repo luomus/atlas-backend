@@ -32,6 +32,7 @@ function MapService(atlasMap, configObject) {
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
         const colour = getColorForBreedingCategory(datapoint.breedingCategory)
+        console.log("mapservicen datapoint.id: ", datapoint.id)
         speciesMap.setAttributesOfElement(datapoint.id, {fill: colour, display: 'block'})
         console.log(colour)
       })

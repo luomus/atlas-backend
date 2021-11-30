@@ -27,11 +27,10 @@ beforeEach(() => {
     birdGridDao.getBySpeciesFromAtlas3(27697).then((data) => {
       birdDao.getSpeciesById(27697).then((species) => {
         gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-        atlasMap = createAtlasMap(gridArray, geoJsonArray)
-        console.log("id: ", atlasMap.getElementById("768326").getAttribute("id"))
-        mapService = new MapService(atlasMap)
+        d = data.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
+        atlasMap = createAtlasMap(gridArray, geoJsonArray, configObject)
+        mapService = new MapService(atlasMap, configObject)
         s = species
-        d = data
       })
     })
   })  
@@ -39,17 +38,14 @@ beforeEach(() => {
 
 
 describe('Map is drawn correctly', () => {
-  test('Image type is correct', () => {
-    const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
-    expect(image).toBeInstanceOf('image/svg')
-  })
+  // test('Image type is correct', () => {
+  //   const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
+  //   expect(image).toBeInstanceOf('image/svg')
+  // })
   test('Correct data points are visible', () => {
     const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
-    const datapointColour = image.getElementById("768326").getAttribute("fill")
-    expect(datapointColour).toBe(configObject.legend.colourBox4.fill)
-    console.log("fill: ", datapointColour)
-  })
-  
+    expect(image).toContain(`fill="${configObject.legend.colourBox4.fill}" display="block" id="768326"`)
+  })  
 })
 
 

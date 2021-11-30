@@ -46,6 +46,13 @@ class GridDao {
         'gridName': 'Utö',
       },
       {
+        'id': 664329,
+        'coordinateN': 664,
+        'coordinateE': 329,
+        'municipality_id': 279,
+        'gridName': 'Älgö',
+      },
+      {
         'id': 667317,
         'coordinateN': 667,
         'coordinateE': 317,

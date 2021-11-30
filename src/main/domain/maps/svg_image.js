@@ -94,6 +94,7 @@ function SvgImage(svgDocument) {
      */
     setAttributesOfElement: function(id, propertyMap) {
       const element = doc.getElementById(id)
+      // console.log("elementti svg-imagessa: ", element)
       mapPropertiesToAttributes(propertyMap, element)
       return this
     },
@@ -119,6 +120,14 @@ function SvgImage(svgDocument) {
     setText: function(id, text) {
       doc.getElementById(id).textContent = text
       return this
+    },
+    /**
+     * Returns svg-element with given id.
+     * @param {string} id
+     * @returns {svgElement}
+     */
+     returnElementById: function(id) {
+      return doc.getElementById(id)
     },
     /**
      * Returns copy of this svg-image.
@@ -178,6 +187,7 @@ function SvgImage(svgDocument) {
   }
 
   function mapPropertiesToAttributes(propertyMap, svgElement) {
+    // console.log("mapPropertiesin elementti: ", svgElement)
     // eslint-disable-next-line guard-for-in
     for (const prop in propertyMap)
       svgElement.setAttributeNS(null, prop, propertyMap[prop])

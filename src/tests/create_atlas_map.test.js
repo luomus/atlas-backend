@@ -1,6 +1,7 @@
 const createAtlasMap = require('../main/domain/maps/create_atlas_map')
 jest.mock('../main/dao/grid_dao')
 const GridDao = require('../main/dao/grid_dao')
+const fs = require('fs')
 
 let atlasMap
 let serializedMap
@@ -9,16 +10,18 @@ const alignmentCoordE = 32
 const alignmentCoordN = 68
 
 beforeEach(() => {
+  const configFile = fs.readFileSync('atlas-config.json')
+  const configObject = JSON.parse(configFile)
   const gridDao = new GridDao()
   gridDao.getAllGrids().then((returnedGridArray) => {
     gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-    atlasMap = createAtlasMap(gridArray, geoJsonArray)
+    atlasMap = createAtlasMap(gridArray, geoJsonArray, configObject)
     serializedMap = atlasMap.serialize()
   })
 })
 
 test('Created map contains a circle element for each square in gridArray', () => {
-  gridArray.forEach((rect) => expect(serializedMap).toContain(`circle id="${rect.id}"`))
+  gridArray.forEach((rect) => expect(serializedMap).toContain(`id="${rect.id}"`))
 })
 
 test('Created map contains all elements from geoJsons', () => {
@@ -39,13 +42,13 @@ test('Overlay and base map are aligned correctly', () => {
   const overlayY = atlasMap.getElementCoordsById(alignmentCircleId).y
   const baseMapX = atlasMap.getElementCoordsById(alignmentCoordE).x
   const baseMapY = atlasMap.getElementCoordsById(alignmentCoordN).y
-  const overlayGroup = atlasMap.getElementById('overlay')
+  const overlayGroup = atlasMap.returnElementById('overlay')
   const transform = overlayGroup.getAttribute('transform')
   const scale = parseFloat(transform.split('(')[1].replace(/[a-zA-Z()]/g, ''))
   const translate = transform.split('(')[2].replace(/[a-zA-Z()]/g, '')
   const translateX = parseFloat(translate.split(' ')[0])
   const translateY = parseFloat(translate.split(' ')[1])
-  const circleRadius = parseFloat(atlasMap.getElementById(alignmentCircleId).getAttribute('r'))
+  const circleRadius = parseFloat(atlasMap.returnElementById(alignmentCircleId).getAttribute('r'))
 
   const overlayGlobalX = (overlayX + translateX - circleRadius) * scale
   const overlayGlobalY = (overlayY + translateY + circleRadius) * scale
