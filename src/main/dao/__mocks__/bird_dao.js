@@ -5,47 +5,57 @@ class BirdDao {
     this.#data = [
       {
         'mxCode': 25836,
-        'speciesFI': 'GAVSTE',
-        'speciesEN': 'Gavia stellata',
-        'speciesSCI': 'Kaakkuri',
-        'speciesAbbr': 'Smålom',
-        'speciesGroup_id': null,
+        'speciesFI': 'Kaakkuri',
+        'speciesSV': 'Smålom',
+        'speciesSCI': 'Gavia stellata',
+        'speciesAbbr': 'GAVSTE',
+        'speciesGroup_id': 1,
         'visibility': 1,
       },
       {
         'mxCode': 25837,
-        'speciesFI': 'GAVARC',
-        'speciesEN': 'Gavia arctica',
-        'speciesSCI': 'Kuikka',
-        'speciesAbbr': 'Storlom',
-        'speciesGroup_id': null,
+        'speciesFI': 'Kuikka',
+        'speciesSV': 'Storlom',
+        'speciesSCI': 'Gavia arctica',
+        'speciesAbbr': 'GAVARC',
+        'speciesGroup_id': 1,
         'visibility': 1,
       },
       {
         'mxCode': 25844,
-        'speciesFI': 'TACRUF',
-        'speciesEN': 'Tachybaptus ruficollis',
-        'speciesSCI': 'Pikku-uikku',
-        'speciesAbbr': 'Smådopping',
-        'speciesGroup_id': null,
+        'speciesFI': 'Pikku-uikku',
+        'speciesSV': 'Smådopping',
+        'speciesSCI': 'Tachybaptus ruficollis',
+        'speciesAbbr': 'TACRUF',
+        'speciesGroup_id': 1,
         'visibility': 1,
       },
       {
         'mxCode': 25859,
-        'speciesFI': 'PODGRI',
-        'speciesEN': 'Podiceps grisegena',
-        'speciesSCI': 'Härkälintu',
-        'speciesAbbr': 'Gråhakedopping',
-        'speciesGroup_id': null,
+        'speciesFI': 'Härkälintu',
+        'speciesSV': 'Gråhakedopping',
+        'speciesSCI': 'Podiceps grisegena', 
+        'speciesAbbr': 'PODGRI',
+        'speciesGroup_id': 1,
         'visibility': 1,
       },
       {
         'mxCode': 25860,
-        'speciesFI': 'PODCRI',
-        'speciesEN': 'Podiceps cristatus',
-        'speciesSCI': 'Silkkiuikku',
-        'speciesAbbr': 'Skäggdopping',
-        'speciesGroup_id': null,
+        'speciesFI': 'Silkkiuikku',
+        'speciesSV': 'Skäggdopping',
+        'speciesSCI': 'Podiceps cristatus',
+        'speciesAbbr': 'PODCRI',
+        'speciesGroup_id': 1,
+        'visibility': 1,
+      },
+      {
+        'mxCode': 27697,
+        'speciesFI': 'Merisirri',
+        'speciesSV': 'Skärsnäppa',
+        'speciesEN': 'Purple Sandpiper',
+        'speciesSCI': 'Calidris maritima',
+        'speciesAbbr': 'CALMAR',
+        'speciesGroup_id': 1,
         'visibility': 1,
       },
     ]
@@ -53,6 +63,10 @@ class BirdDao {
 
   getAll() {
     return Promise.resolve(this.#data)
+  }
+
+  getSpeciesById(id) {
+    return Promise.resolve(this.#data.filter((x) => x.mxCode == id))
   }
 }
 

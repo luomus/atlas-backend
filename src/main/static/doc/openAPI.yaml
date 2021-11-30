@@ -1,17 +1,19 @@
 openapi: 3.0.0
 info:
   title: API for Bird Atlas
-  version: ALPHA
+  version: BETA
 servers:
-  - url: https://atlas-staging.rahtiapp.fi
-    description: Production server (uses live data)
   - url: http://localhost:3000
     description: Development server
+  - url: https://atlas-staging.rahtiapp.fi
+    description: Staging server
 paths:
   /api/birds/:
     get:
       summary: Retrieve a list of birds.
       description: Can be used to populate a list or table element.
+      tags:
+        - bird
       responses:
         200:
           description: A list of birds.
@@ -57,6 +59,8 @@ paths:
     get:
       summary: Map with datapoints for birds
       description: Retrieves a map showing the breeding data of a spesified bird.
+      tags:
+        - map
       parameters:
         - name: scaling
           in: query
@@ -70,14 +74,12 @@ paths:
           example: '25836'
         - name: type
           in: query
-          schema: 
+          schema:
             type: string
-          example: 'png'
+          example: 'svg'
       responses:
         '200':
-          description: PNG image
-          content: 
+          description: Svg or png image
+          content:
             image/*:
               schema:
-                type: string
-

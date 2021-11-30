@@ -20,4 +20,8 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/dokumentaatio
+birds.db
+pass.txt
 README.md
+.env

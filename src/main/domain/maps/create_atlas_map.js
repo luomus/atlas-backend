@@ -1,4 +1,4 @@
-const SvgImage = require(__rootdir + '/domain/maps/svg_image.js')
+const SvgImage = require('./svg_image.js')
 const geojson2svg = require('geojson2svg')
 
 /**
@@ -14,7 +14,7 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
 
   const overlay = drawGrid(gridArray, SvgImage())
   const scaleFactor = getScaleFactorForMerge(baseMap, overlay)
-  const atlasMap = moveOverlay(baseMap, overlay).mergeSvg(baseMap, scaleFactor)
+  const atlasMap = baseMap.mergeSvg(moveOverlay(baseMap, overlay), scaleFactor)
 
 
   return atlasMap
@@ -50,29 +50,16 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
     geoJsons.forEach((geoJson) => {
       const features = geoJson.features
       const n1 = features.map((f) => f.properties.ETRS_N1)
-      n1.forEach((x) => {
-        if (typeof x !== 'undefined' && x < minN) minN = x
-      })
+      n1.forEach((n) => {minN = (typeof n !== 'undefined' && n < minN) ? n : minN})
       const e1 = features.map((f) => f.properties.ETRS_E1)
-      e1.forEach((x) => {
-        if (typeof x !== 'undefined' && x < minE) minE = x
-      })
+      e1.forEach((e) => {minE = (typeof e !== 'undefined' && e < minE) ? e : minE})
       const n2 = features.map((f) => f.properties.ETRS_N2)
-      n2.forEach((x) => {
-        if (typeof x !== 'undefined' && x > maxN) maxN = x
-      })
+      n2.forEach((n) => {maxN = (typeof n !== 'undefined' && n > maxN) ? n : maxN})
       const e2 = features.map((f) => f.properties.ETRS_E2)
-      e2.forEach((x) => {
-        if (typeof x !== 'undefined' && maxE) maxE = x
-      })
+      e2.forEach((e) => {maxE = (typeof e !== 'undefined' && e > maxE) ? e : maxE})
     })
     const converterOptions = {
-      mapExtent: {
-        bottom: minN,
-        left: minE,
-        top: maxN,
-        right: maxE,
-      },
+      mapExtent: {bottom: minN, left: minE, top: maxN, right: maxE},
       attributes: [{property: 'properties.lineID', type: 'dynamic', key: 'id'}, 'properties.typeID'],
     }
     return converterOptions
@@ -89,17 +76,17 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
   function getOverlayTranslationCoords(baseMap, overlay) {
     const baseMapScaleFactor = 10 / (baseMap.getWidth() / 8)
     const dataMapCoords = overlay.getElementCoordsById(680320)
-    const baseMapX = baseMap.getElementCoordsById(32).x * baseMapScaleFactor
-    const baseMapY = baseMap.getElementCoordsById(68).y * baseMapScaleFactor
+    const baseMapX = Math.ceil(baseMap.getElementCoordsById(32).x * baseMapScaleFactor)
+    const baseMapY = Math.ceil(baseMap.getElementCoordsById(68).y * baseMapScaleFactor)
     const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
     const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
     return {x: translateX, y: translateY}
   }
 
-  function getScaleFactorForMerge(svgImage, overlay) {
-    const baseMapDistance = Math.abs(svgImage.getElementCoordsById(32).x - svgImage.getElementCoordsById(33).x)
+  function getScaleFactorForMerge(baseMap, overlay) {
+    const baseMapDistance = Math.abs(baseMap.getElementCoordsById(32).x - baseMap.getElementCoordsById(33).x)
     const dataMapDistance = Math.abs(overlay.getElementCoordsById(680320).x - overlay.getElementCoordsById(680330).x)
-    return dataMapDistance / baseMapDistance
+    return baseMapDistance / dataMapDistance
   }
 
   // eslint-disable-next-line max-lines-per-function

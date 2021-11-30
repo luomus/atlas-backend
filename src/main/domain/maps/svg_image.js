@@ -165,9 +165,13 @@ function SvgImage(svgDocument) {
     mergeSvg: function(otherSvg, scaleFactor) {
       const children = otherSvg.getSvgElement().childNodes
       for (let i = 0; i < children.length; i++) {
-        const clone = children[i].cloneNode(true)
-        clone.setAttribute('transform', `scale\(${scaleFactor}\)`)
-        svg.appendChild(clone)
+        const newNode = children[i].cloneNode(true)
+        const transform = newNode.getAttribute('transform')
+        const scale = `scale\(${scaleFactor}\)`
+        const delimiter = transform === '' ? '' : ' '
+        const newTransform = scale.concat(delimiter, transform)
+        newNode.setAttribute('transform', newTransform)
+        svg.appendChild(newNode)
       }
       return this
     },
@@ -186,14 +190,14 @@ function SvgImage(svgDocument) {
       y = element.getAttribute('cy')
     } else if (element.tagName === 'path') {
       const d = element.getAttribute('d')
-      const coordString = d.substring(1).replace(/[\[\]&]+|M/g, '')
-      x = parseFloat(coordString.split(',')[0])
-      y = parseFloat(coordString.split(',')[1])
+      const coordString = d.replace(/[a-zA-Z]/g, '')
+      x = coordString.split(',')[0]
+      y = coordString.split(',')[1]
     } else {
       x = element.getAttribute('x')
       y = element.getAttribute('y')
     }
-    return {x: x, y: y}
+    return {x: parseFloat(x), y: parseFloat(y)}
   }
 }
 
