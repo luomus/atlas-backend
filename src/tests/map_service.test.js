@@ -4,6 +4,8 @@ const GridDao = require('../main/dao/grid_dao')
 const BirdDao = require('../main/dao/bird_dao')
 const BirdGridDao = require('../main/dao/bird_grid_dao')
 const fs = require('fs')
+const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
+
 
 jest.mock('../main/dao/grid_dao')
 jest.mock('../main/dao/bird_dao')
@@ -30,7 +32,7 @@ beforeEach(() => {
         d = data.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
         atlasMap = createAtlasMap(gridArray, geoJsonArray, configObject)
         mapService = new MapService(atlasMap, configObject)
-        s = species
+        s = species.map((datapoint) => ({...datapoint}))
       })
     })
   })  
@@ -38,10 +40,11 @@ beforeEach(() => {
 
 
 describe('Map is drawn correctly', () => {
-  // test('Image type is correct', () => {
-  //   const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
-  //   expect(image).toBeInstanceOf('image/svg')
-  // })
+  test('Image type is correct', () => {
+    const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
+    expect(image).toContain(`</svg>`)
+    // expect(image).toBeInstanceOf('image/svg')
+  })
   test('Correct data points are visible', () => {
     const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
     expect(image).toContain(`fill="${configObject.legend.colourBox4.fill}" display="block" id="768326"`)
@@ -49,19 +52,25 @@ describe('Map is drawn correctly', () => {
 })
 
 
-// describe('Map legend is shown correctly', () => {
-//   test('Legend has correct species name', () => {
-    
-//   })
+describe('Map legend is shown correctly', () => {
+  test('Legend has correct species name', () => {
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'fi')
+    const image = parseDocument(imageText)
+    expect(image.getElementById('speciesFI').textContent).toEqual(s[0].speciesFI)
+  })
 
-//   test('Legend has correct language', () => {
-    
-//   })
+   test('Legend has correct language', () => {
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'en')
+    const image = parseDocument(imageText)
+    expect(image.getElementById('atlasTitle').textContent).toEqual(configObject.legend.atlasTitle.textEN)
+  })
 
-//   test('Legend box is shown', () => {
-    
-//   })
-// })
+  test('Legend box is shown', () => {
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
+    const image = parseDocument(imageText)
+    expect(image.getElementById('breedingColourBox').getAttribute("display")).toEqual("block")
+  })
+})
 
 
 readBaseMapFiles = function() {
@@ -81,4 +90,9 @@ readBaseMapFiles = function() {
     console.error(err)
   }
   return geoJsonArray
+}
+
+function parseDocument(svgDoc) {
+  const domParser = new DOMParser()
+  return domParser.parseFromString(svgDoc, 'image/svg+xml')
 }

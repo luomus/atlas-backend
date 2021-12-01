@@ -15,7 +15,7 @@
   },
   "legendBox": {
     "textBox": {
-      "id": "legendBox",
+      "id": "textBox",
       "class": "legendBox",
       "x": 0,
       "y": 0,
@@ -28,7 +28,7 @@
       "display": "none"
     },
     "breedingColourBox": {
-      "id": "legendBox",
+      "id": "breedingColourBox",
       "class": "legendBox",
       "x": 0.5,
       "y": 41,
