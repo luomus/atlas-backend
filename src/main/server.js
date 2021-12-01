@@ -13,6 +13,9 @@ const fs = require('fs')
 const YAML = require('yamljs')
 const app = express()
 const createAtlasMap = require('./domain/maps/create_atlas_map')
+const gridRouter = require('./controllers/grid_router')
+const mapRouter = require('./controllers/map_router')
+const taxonRouter = require('./controllers/taxon_router')
 
 const configFile = fs.readFileSync('atlas-config.json')
 const configObject = JSON.parse(configFile)
@@ -72,8 +75,10 @@ gridDao.getAllGrids().then((gridArray) => {
 
 app.use(express.static(__rootdir + '/static'))
 
-app.get('/api/birds', birds.getAll())
-app.get('/api/species', birds.getAllAtlas3DataBySpecies())
+// app.get('/api/birds', birds.getAll())
+// app.get('/api/species', birds.getAllAtlas3DataBySpecies())
 app.get('/api/species/data', birds.getGridAndBreedingdataForBird())
+app.use('/api/v1/taxon', taxonRouter)
+app.use('/api/v1/grid', gridRouter)
 
 module.exports = app
