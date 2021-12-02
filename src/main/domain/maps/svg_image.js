@@ -126,7 +126,7 @@ function SvgImage(svgDocument) {
      * @param {string} id
      * @returns {svgElement}
      */
-     returnElementById: function(id) {
+    returnElementById: function(id) {
       return doc.getElementById(id)
     },
     /**

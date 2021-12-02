@@ -35,6 +35,4 @@ app.use('/api/v1/grid', gridRouter)
 app.use('/api/v1/map', mapRouter)
 
 
-
-
 module.exports = app

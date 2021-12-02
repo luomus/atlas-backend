@@ -1,7 +1,7 @@
 /**
  * Provides methods for accessing bird species database.
  */
-class BirdDao {
+class SpeciesDao {
   #querier
 
   /**
@@ -101,6 +101,14 @@ class BirdDao {
       SPECIESABBR AS "speciesAbbr", SPECIESGROUP_ID AS "speciesGroup_id", VISIBILITY 
       AS "visibility" FROM species`)
   }
+
+  countAll() {
+    return this.#querier('get', `SELECT COUNT(mxcode) * FROM species`)
+  }
+
+  countByGroup(speciesGroupId) {
+    return this.#querier('get', `SELECT COUNT(mxcode) * FROM species WHERE speciesGroup_id = ?`, [speciesGroupId])
+  }
 }
 
-module.exports = BirdDao;
+module.exports = SpeciesDao;

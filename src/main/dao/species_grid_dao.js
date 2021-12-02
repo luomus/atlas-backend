@@ -1,7 +1,7 @@
 /**
  * Provides methods for accessing Bird Atlas database.
  */
- class BirdGridDao {
+class SpeciesGridDao {
   #querier
 
   /**
@@ -159,6 +159,11 @@
   getAllDataFromBirdAtlas12() {
     return this.#querier('all', `SELECT * FROM bird_data_atlas12`)
   }
+
+
+  getAllDataBySpecies(speciesMxcode) {
+    return this.#querier('all', `SELECT * FROM bird_data_atlas WHERE species_mxcode = ?`, [speciesMxcode])
+  }
 }
 
-module.exports = BirdGridDao;
+module.exports = SpeciesGridDao;

@@ -1,13 +1,11 @@
-const express = require('express')
-const app = express()
-const Birds = require('../controllers/birds')
+const Taxon = require('../controllers/taxon.js')
 const Map = require('../controllers/map')
-const birds = new Birds()
+const taxon = new Taxon()
 const map = new Map()
 
 const mapRouter = require('express').Router()
-  
-mapRouter.get('/', birds.getAll())
+
+mapRouter.get('/', taxon.getAll())
 mapRouter.get('/:speciesId')
 mapRouter.get('/:speciesId/atlas')
 

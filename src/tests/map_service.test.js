@@ -35,7 +35,7 @@ beforeEach(() => {
         s = species.map((datapoint) => ({...datapoint}))
       })
     })
-  })  
+  })
 })
 
 
@@ -48,7 +48,7 @@ describe('Map is drawn correctly', () => {
   test('Correct data points are visible', () => {
     const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
     expect(image).toContain(`fill="${configObject.legend.colourBox4.fill}" display="block" id="768326"`)
-  })  
+  })
 })
 
 
@@ -59,7 +59,7 @@ describe('Map legend is shown correctly', () => {
     expect(image.getElementById('speciesFI').textContent).toEqual(s[0].speciesFI)
   })
 
-   test('Legend has correct language', () => {
+  test('Legend has correct language', () => {
     const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'en')
     const image = parseDocument(imageText)
     expect(image.getElementById('atlasTitle').textContent).toEqual(configObject.legend.atlasTitle.textEN)
@@ -68,13 +68,13 @@ describe('Map legend is shown correctly', () => {
   test('Legend box is shown', () => {
     const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
     const image = parseDocument(imageText)
-    expect(image.getElementById('breedingColourBox').getAttribute("display")).toEqual("block")
+    expect(image.getElementById('breedingColourBox').getAttribute('display')).toEqual('block')
   })
 })
 
 
 readBaseMapFiles = function() {
-  let geoJsonArray = []
+  const geoJsonArray = []
   try {
     const baseMapGrid = fs.readFileSync('src/main/geojson/YKJ100km.geojson')
     const finnishBorders = fs.readFileSync('src/main/geojson/finnish_borders.geojson')

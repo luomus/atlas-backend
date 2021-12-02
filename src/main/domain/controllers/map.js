@@ -4,13 +4,14 @@ const MapService = require('../maps/map_service')
 const configFile = fs.readFileSync('atlas-config.json')
 const configObject = JSON.parse(configFile)
 const Querier = require('../../dao/querier')
-const BirdDao = require('../../dao/bird_dao')
+const SpeciesDao = require('../../dao/species_dao')
 const GridDao = require('../../dao/grid_dao')
-const BirdGridDao = require('../../dao/bird_grid_dao')
+const SpeciesGridDao = require('../../dao/species_grid_dao')
 const querier = Querier()
-const birdGridDao = new BirdGridDao(querier)
-const birdDao = new BirdDao(querier)
+const speciesGridDao = new SpeciesGridDao(querier)
+const speciesDao = new SpeciesDao(querier)
 const gridDao = new GridDao(querier)
+
 let mapService
 
 class Map {
@@ -22,16 +23,14 @@ class Map {
   }
 
   createBaseMap() {
-    console.log('täällä! createBaseMap()')
     gridDao.getAllGrids().then((gridArray) => {
       gridArray = gridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
       const geoJsonArray = this.readBaseMapFiles()
       mapService = MapService(createAtlasMap(gridArray, geoJsonArray, configObject), configObject)
     })
   }
-  
+
   readBaseMapFiles() {
-    console.log('täällä! createBaseMap()')
     const geoJsonArray = []
     try {
       const baseMapGrid = fs.readFileSync('src/main/geojson/YKJ100km.geojson')
@@ -75,7 +74,6 @@ class Map {
       })
     }
   }
-
 }
 
 module.exports = Map
