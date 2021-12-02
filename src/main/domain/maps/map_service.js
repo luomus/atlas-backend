@@ -37,7 +37,7 @@ function MapService(atlasMap, configObject) {
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
       speciesMap.setDimensions(width, height)
-      setLegend(speciesMap, species, language)
+      setLegend(speciesMap, species[0], language)
       if (type === 'png')
         convertToPng(speciesMap, callback, width, height)
       else

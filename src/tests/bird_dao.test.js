@@ -24,5 +24,5 @@ test('getAll calls querier correctly', () => {
   birdDao.getAll()
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
-  expect(querier.mock.calls[0][1]).toContain('SELECT * FROM')
+  expect(querier.mock.calls[0][1]).toContain('SELECT')
 })

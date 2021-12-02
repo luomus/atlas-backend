@@ -1,4 +1,4 @@
-class Grid {
+class Map {
   #mapService
   #gridDao
   #birdGridDao
@@ -18,6 +18,7 @@ class Grid {
     this.#birdDao = birdDao
   }
 
+
   /**
      * A method that creates an image of the grid with a bird's breeding data.
      * @returns {SVGElement}
@@ -25,9 +26,9 @@ class Grid {
   createGridForBirdData() {
 
     return (req, res) => {
-      console.log('kysytään lintua: ', req.param('id'))
-      this.#birdGridDao.getGridAndBreedingdataForBird(req.param('id')).then((data) => {
-        this.#birdDao.getById(req.param('id')).then((species) => {
+      console.log('kysytään lintua: ', req.param('speciesId'))
+      this.#birdGridDao.getGridAndBreedingdataForBird(req.param('speciesId')).then((data) => {
+        this.#birdDao.getById(req.param('speciesId')).then((species) => {
           console.log('lintu grid.js:ssä: ', species)
           if (req.param('type') === 'png') {
             const callback = (png) => res.send(png)
@@ -46,4 +47,4 @@ class Grid {
 
 }
 
-module.exports = Grid
+module.exports = Map

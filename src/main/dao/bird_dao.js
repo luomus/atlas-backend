@@ -76,7 +76,10 @@ class BirdDao {
    * @returns {Promise}
    */
   getById(mxcode) {
-    return this.#querier('get', `SELECT * FROM species WHERE mxcode = ?`, [mxcode])
+    return this.#querier('get', `SELECT mxCode AS "mxCode", speciesFI AS "speciesFI",
+    speciesSV AS "speciesSV", speciesEN AS "speciesEN", speciesSCI AS "speciesSCI",
+    speciesAbbr AS "speciesAbbr", speciesGroup_id AS "speciesGroup_id", visibility 
+    AS "visibility" FROM species WHERE mxcode = :mxcode`, [mxcode])
   }
 
   /**
@@ -93,7 +96,10 @@ class BirdDao {
    * @returns {Promise}
    */
   getAll() {
-    return this.#querier('all', `SELECT * FROM species`)
+    return this.#querier('all', `SELECT MXCODE AS "mxCode", SPECIESFI AS "speciesFI",
+      SPECIESSV AS "speciesSV", SPECIESEN AS "speciesEN", SPECIESSCI AS "speciesSCI",
+      SPECIESABBR AS "speciesAbbr", SPECIESGROUP_ID AS "speciesGroup_id", VISIBILITY 
+      AS "visibility" FROM species`)
   }
 }
 

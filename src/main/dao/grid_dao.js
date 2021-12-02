@@ -120,7 +120,9 @@ class GridDao {
    * @returns {Promise}
    */
   getAllGrids() {
-    return this.#querier('all', `SELECT * FROM grid`)
+    return this.#querier('all', `SELECT ID AS "id", COORDINATEN AS 
+      "coordinateN", COORDINATEE AS "coordinateE", MUNICIPALITY_ID 
+      AS "municipality_id", GRIDNAME AS "gridName" FROM grid`)
   }
 }
 
