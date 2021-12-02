@@ -4,9 +4,9 @@ const cors = require('cors')
 const fs = require('fs')
 const YAML = require('yamljs')
 const app = express()
-const gridRouter = require('./controllers/grid_router')
-const mapRouter = require('./controllers/map_router')
-const taxonRouter = require('./controllers/taxon_router')
+const gridRouter = require('./domain/routers/grid_router')
+const mapRouter = require('./domain/routers/map_router')
+const taxonRouter = require('./domain/routers/taxon_router')
 
 
 const path = __dirname + '/openAPI.yaml'
@@ -30,11 +30,11 @@ app.get('/', (req, res) => res.redirect('/doc'))
 
 app.use(express.static(__rootdir + '/static'))
 
-// app.get('/api/birds', birds.getAll())
-// app.get('/api/species', birds.getAllAtlas3DataBySpecies())
-// app.get('/api/species/data', birds.getGridAndBreedingdataForBird())
 app.use('/api/v1/taxon', taxonRouter)
-// app.use('/api/v1/grid', gridRouter)
+app.use('/api/v1/grid', gridRouter)
 app.use('/api/v1/map', mapRouter)
+
+
+
 
 module.exports = app

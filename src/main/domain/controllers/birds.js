@@ -1,17 +1,13 @@
+const Querier = require('../../dao/querier')
+const BirdDao = require('../../dao/bird_dao')
+const GridDao = require('../../dao/grid_dao')
+const BirdGridDao = require('../../dao/bird_grid_dao')
+const querier = Querier()
+const birdGridDao = new BirdGridDao(querier)
+const birdDao = new BirdDao(querier)
+const gridDao = new GridDao(querier)
+
 class Birds {
-  #birdDao
-  #birdGridDao
-
-  /**
-     * @constructor
-     * @param {BirdDao} birdDao
-     * @param {BirdGridDao} birdGridDao
-     */
-  constructor(birdDao, birdGridDao) {
-    this.#birdDao = birdDao
-    this.#birdGridDao = birdGridDao
-  }
-
 
   /**
      * Returns all birds in the database.
@@ -19,7 +15,7 @@ class Birds {
      */
   getAll() {
     console.log("getAll()")
-    return (req, res) => this.#birdDao.getAll()
+    return (req, res) => birdDao.getAll()
         .then((data) => res.json(data), () => res.send(null))
   }
 
@@ -31,7 +27,7 @@ class Birds {
   getAllAtlas3DataBySpecies() {
     return (req, res) => {
       console.log('api/species', req.param('id'))
-      return this.#birdGridDao.getBySpeciesFromAtlas3(req.param('id'))
+      return birdGridDao.getBySpeciesFromAtlas3(req.param('id'))
           .then((data) => res.json(data), () => res.send(null))
     }
   }
@@ -42,7 +38,7 @@ class Birds {
   getGridAndBreedingdataForBird() {
     return (req, res) => {
       console.log('api/species/data', req.param('id'))
-      return this.#birdGridDao.getGridAndBreedingdataForBird(req.param('id'))
+      return birdGridDao.getGridAndBreedingdataForBird(req.param('id'))
           .then((data) => res.send(JSON.stringify(data)), () => res.send(null))
     }
   }
