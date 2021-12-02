@@ -32,7 +32,7 @@
       "class": "legendBox",
       "x": 0.5,
       "y": 41,
-      "width": 24,
+      "width": 28,
       "height": 18,
       "fill": "#ebebeb",
       "fill-opacity": 1,
@@ -42,12 +42,13 @@
     }
   },
   "legend": {
+    "fontFamily": "monospace",
     "atlasTitle": { 
       "id": "atlasTitle",
       "class": "title",
       "x": 1,
       "y": 5,
-      "font-size": 3.5,
+      "font-size": 3.2,
       "textFI": "Lintuatlas 3 (2006-2010)",
       "textSV": "Fågelatlas 3 (2006-2010)",
       "textEN": "Bird Atlas 3 (2006-2010)",

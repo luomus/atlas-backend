@@ -152,7 +152,7 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
    */
   function drawLegend(svgImage) {
     svgImage.addElement('g', {id: 'legendBox'})
-        .addElement('g', {id: 'legend'})
+        .addElement('g', {id: 'legend', 'font-family': configObject.legend.fontFamily})
         .addElement('rect', configObject.legendBox.textBox, 'legendBox')
         .addElement('rect', configObject.legendBox.breedingColourBox, 'legendBox')
         .addElement('text', configObject.legend.atlasTitle, 'legend')
