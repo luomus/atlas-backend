@@ -16,7 +16,22 @@ components:
       schema:
         type: integer
       description: MX code of the wanted species.
+    gridId:  
+      in: path
+      name: gridId
+      required: true
+      schema:
+        type: integer
+      description: Location of the wanted grid. Six digits, first three digits are degrees north and last three are degrees east.
+    atlasId:  
+      in: path
+      name: atlasId
+      required: true
+      schema:
+        type: integer
+      description: NUmber of the atlas.
 paths:
+
   /taxon:
     get:
       summary: Retrieve a list of species.
@@ -74,6 +89,7 @@ paths:
                           type: integer
                           description: Group ID
                           example: 0
+
   /taxon/{speciesId}:
     get:
       tags:
@@ -81,6 +97,7 @@ paths:
       summary:
       parameters:
         - $ref: '#/components/parameters/speciesId'
+
   /api/v1/map/{speciesId}/atlas/3?language=fi:
     get:
       summary: Map with datapoints for birds
@@ -88,7 +105,11 @@ paths:
       tags:
         - map
       parameters:
-    
+        - name: language
+          in: query
+          schema:
+            type: string
+          example: 'fi'
         - name: scaling
           in: query
           schema:
@@ -105,6 +126,7 @@ paths:
           content:
             image/*:
               schema:
+
   /map/:
     get:
       summary: List of species with datapoints on maps.
@@ -128,10 +150,11 @@ paths:
                           type: integer
                           description: MX-code of the bird.
                           example: 25836
-                        map_endpoint:
+                        mapEndpoint:
                           type: string
                           description: URL address of the species' map endpoint.
                           example: /api/v1/map/25836/atlas/3?language=fi
+
   /map/{speciesId}:
     get:
       summary: List of different subcollections for maps
@@ -157,7 +180,7 @@ paths:
                           type: string
                           description: Name of the subcollection
                           example: Atlas
-                        subcollection_endpoint:
+                        subcollectionEndpoint:
                           type: string
                           description: URL address for the subcollection endpoint.
                           example: /api/v1/map/25836/atlas/
@@ -165,13 +188,43 @@ paths:
     get:
       parameters:
         - $ref: '#/components/parameters/speciesId'
-      summary: List of different subcollections for maps
-      description: Retrieves a list of subcollections of maps; atlas maps and their comparison maps.
+      summary: List of different atlases that are available for the species.
+      description: Retrieves a list of different atlases that are available for the species.
       tags: 
         - map
       responses:
         '200':
-          description: A list of all birds with datapoints on maps.
+          description: A list of all available atlases.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        subcollection:
+                          type: string
+                          description: Name of the atlas
+                          example: '3'
+                        subcollectionEndpoint:
+                          type: string
+                          description: URL address for the atlas endpoint.
+                          example: /api/v1/map/25836/atlas/3
+
+  /grid/{gridId}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/gridId'
+      summary: List of different subcollections for grids
+      description: Retrieves a list of subcollections of grids; stats for a grid and data of a grid.
+      tags: 
+        - grid
+      responses:
+        '200':
+          description: A list of all subcollections.
           content:
             application/json:
               schema:
@@ -185,8 +238,93 @@ paths:
                         subcollection:
                           type: string
                           description: Name of the subcollection
-                          example: Atlas
-                        subcollection_endpoint:
+                          example: stats
+                        subcollectionEndpoint:
                           type: string
                           description: URL address for the subcollection endpoint.
-                          example: /api/v1/map/25836/atlas/3?
+                          example: /api/v1/grid/{gridId}/stats/
+
+  /grid/{gridId}/atlas:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/gridId'
+      summary: Lists all atlases that have data for this grid.
+      description: Retrieves a list of all atlases that has data for this grid.
+      tags: 
+        - grid
+      responses:
+        '200':
+          description: A list of all available atlases.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        subcollection:
+                          type: string
+                          description: Number of the atlas
+                          example: '3'
+                        subcollectionEndpoint:
+                          type: string
+                          description: URL address for the atlas endpoint.
+                          example: /api/v1/grid/{gridId}/stats/3
+
+  /grid/{gridId}/atlas/{atlasId}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/gridId'
+        - $ref: '#/components/parameters/atlasId'
+      summary: All data for a grid from the given atlas.
+      description: Retrieves all data for one grid in one atlas.
+      tags: 
+        - grid
+      responses:
+        '200':
+          description: A list of all datapoints in a in a grid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        datapointId:
+                          type: integer
+                          description: Datapoint id
+                          example: '681944'
+                        speciesMxCode:
+                          type: integer
+                          description: Mx code for the species.
+                          example: 26277
+                        gridId:
+                          type: integer
+                          description: Id if the grid
+                          example: 663319
+                        breedingIndex:
+                          type: integer
+                          description: Breeding index of the species in the grid.
+                          example: 50
+                        breedingCategory:
+                          type: integer
+                          description: Breeding category of the species in the grid.
+                          example: 3
+
+  /grid/{gridId}/stats/:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/gridId'
+      summary: Statistic for the grid.
+      description: Retrieves statistic for the grid; sum of datapoints, number of different species, number of atlases with datapoints.
+      tags: 
+        - grid
+      responses:
+        '200':
+          description: ''
