@@ -1,0 +1,183 @@
+parameters:
+
+  speciesId:
+    in: path
+    name: speciesId
+    required: true
+    schema:
+      type: integer
+    description: MX code of the wanted species.
+
+  gridId:
+    in: path
+    name: gridId
+    required: true
+    schema:
+      type: integer
+    description: Location of the wanted grid. Six digits, first three digits are degrees north and last three are degrees east.
+
+  atlasId:
+    in: path
+    name: atlasId
+    required: true
+    schema:
+      type: integer
+    description: ID of the atlas.
+
+
+schemas:
+
+  links:
+    type: array
+    items:
+      type: object
+      properties:
+        rel:
+          type: string
+          description: Defines the type of link relationship between the current resource and the resource which the link points to.
+          # https://www.iana.org/assignments/link-relations/link-relations.xhtml
+        href:
+          type: string
+          description: Hypertext reference
+    description: An array of link objects each identifying a relationship for the resource.
+
+  Species:
+    type: object
+    properties:
+      speciesFI:
+        type: string
+        description: Finnish name
+      speciesEN:
+        type: string
+        description: English name
+      speciesSCI:
+        type: string
+        description: Scientific name
+      speciesAbbr:
+        type: string
+        description: Abbreviation of the scientific name
+      speciesGroup_id:
+        type: integer
+        description: Group ID
+      visibility:
+        type: integer
+        description: Visibility of the species.
+      speciesSV:
+        type: string
+        description: Swedish name
+      id:
+        type: integer
+        description: ID of the species.
+      species_id:
+        type: integer
+        description: MX-code of the species.
+      links:
+        $ref: "#/schemas/links"
+    example:
+      - speciesFI: Kaakkuri
+        speciesEN: Red-throated Diver
+        speciesSCI: Gavia stellata
+        speciesAbbr: GAVSTE
+        speciesGroup_id: 1
+        visibility: 1
+        speciesSV: Smålom
+        id: 36
+        species_id: MX.25836
+        links:
+          - rel: collection
+            href: "/taxon/25836/atlas"
+
+  AtlasCollection:
+    type: object
+    properties:
+      speciesId:
+        type: integer
+        description: ID of the species.
+      collection:
+        type: array
+        items:
+          $ref: 'components.yaml#/schemas/Atlas'
+    example:
+      - speciesId: 25836
+        collection:
+          - id: 1
+            period:
+              from: 1974
+              to: 1979
+          - id: 2
+            period:
+              from: 1986
+              to: 1989
+        links:
+          - rel: item
+            id: 1
+            href: '/taxon/25836/atlas/1'
+          - rel: item
+            id: 2
+            href: '/taxon/25836/atlas/2'
+
+  AtlasStatisticsCollection:
+    type: object
+    properties:
+      speciesId:
+        type: integer
+        description: ID of the species.
+      collection:
+        type: array
+        items:
+          $ref: 'components.yaml#/schemas/Statistics'
+    example:
+      - speciesId: 25836
+        collection:
+          - id: 1
+          - id: 2
+        links:
+          - rel: item
+            id: 1
+            href: '/taxon/25836/stats/1'
+          - rel: item
+            id: 2
+            href: '/taxon/25836/stats/2'
+
+  Statistics:
+    type: object
+    properties:
+      statistic:
+        description: Some sort of statistic
+
+  Atlas:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the atlas.
+      period:
+        type: object
+        properties:
+          from:
+            type: integer
+            description: Start year
+          to:
+            type: integer
+            description: End year
+
+  SpeciesAreaData:
+    type: object
+    properties:
+      gridId:
+        type: integer
+        description: ID of a rectangular area.
+      coordinateN:
+        type: integer
+        description: Nort coordinate.
+      coordinateE:
+        type: integer
+        description: East coordinate.
+      breedingCategory:
+        type: integer
+        description: Breeding category of the species for the area.
+    example:
+      gridId: 664329
+      coordinateN: 664
+      coordinateE: 329
+      breedingCategory: 1

@@ -3,129 +3,203 @@ info:
   title: Atlas API
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api/v1
-    description: Development server
-  - url: https://atlas-staging.rahtiapp.fi/api/v1
-    description: Staging server
-components:
-  parameters:
-    speciesId:  
-      in: path
-      name: speciesId
-      required: true
-      schema:
-        type: integer
-      description: MX code of the wanted species.
-    gridId:  
-      in: path
-      name: gridId
-      required: true
-      schema:
-        type: integer
-      description: Location of the wanted grid. Six digits, first three digits are degrees north and last three are degrees east.
-    atlasId:  
-      in: path
-      name: atlasId
-      required: true
-      schema:
-        type: integer
-      description: NUmber of the atlas.
+  - url: /api/v1
+    description: at current host
 paths:
-
   /taxon:
     get:
-      summary: Retrieve a list of species.
-      description: Can be used to populate a list or table element.
+      summary: Get a collection of species.
+      description: Can be used to populate a list or table.
       tags:
         - taxon
       parameters:
-        - in: query
-          name: group
-          description: Name of the species group
+        - name: group
+          in: query
+          description: Name of the species group. If omitted a collection of all species is returned.
+          required: false
+          explode: true
           schema:
-            type: array
-            items:
-              type: string
-              enum:
-                - birds
+            type: string
+            default: ""
+            enum:
+              - birds
       responses:
         200:
-          description: A list of queried species.
+          description: A collection of species.
+          content:
+            application/x-collection+json:
+              schema:
+                type: array
+                items:
+                  $ref: 'components.yaml#/schemas/Species'
+                example:
+                  - speciesFI: "Kaakkuri"
+                    speciesEN: "Red-throated Diver"
+                    speciesSCI: "Gavia stellata"
+                    speciesAbbr: "GAVSTE"
+                    speciesGroup_id: 1
+                    visibility: 1
+                    speciesSV: "Smålom"
+                    id: 36
+                    species_id: "MX.25836"
+                    links:
+                      - rel: collection
+                        href: "/taxon/25836/atlas"
+                  - speciesFI: "Kuikka"
+                    speciesEN: "Black-throated Diver"
+                    speciesSCI: "Gavia arctica"
+                    speciesAbbr: "GAVARC"
+                    speciesGroup_id: 1
+                    visibility: 1
+                    speciesSV: "Storlom"
+                    id: 37
+                    species_id: "MX.25837"
+                    links:
+                      - rel: collection
+                        href: "/taxon/25837/atlas"
+
+  /taxon/findBy:
+    get:
+      parameters:
+        - name: name
+          in: query
+          description: A substring of a name of some species
+          required: false
+          schema:
+            type: string
+      summary: Find species by different features
+      tags:
+        - taxon
+      responses:
+        '200':
+          description: A collection of found species
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        species_id:
-                          type: integer
-                          description: MX-code of the species.
-                          example: 25836
-                        speciesFI:
-                          type: string
-                          description: Finnish name
-                          example: Kaakkuri
-                        speciesEN:
-                          type: string
-                          description: English name
-                          example: Red-throated Diver
-                        speciesSV:
-                          type: string
-                          description: Swedish name
-                          example: Smålom
-                        speciesSCI:
-                          type: string
-                          description: Scientific name
-                          example: Gavia stellata
-                        speciesAbbr:
-                          type: string
-                          description: Abbreviation of the scientific name
-                          example: GAVSTE
-                        speciesGroup_id:
-                          type: integer
-                          description: Group ID
-                          example: 0
+                type: array
+                items:
+                  $ref: 'components.yaml#/schemas/Species'
 
   /taxon/{speciesId}:
     get:
       tags:
         - taxon
-      summary:
+      summary: Get a species.
       parameters:
-        - $ref: '#/components/parameters/speciesId'
+        - $ref: 'components.yaml#/parameters/speciesId'
+      responses:
+        200:
+          description: A species.
+          content:
+            application/x-resource+json:
+              schema:
+                $ref: 'components.yaml#/schemas/Species'
+          links:
+            collection:
+              description: The collection of atlases in which the species is enlisted.
 
-  /api/v1/map/{speciesId}/atlas/3?language=fi:
+  /taxon/{speciesId}/atlas:
     get:
-      summary: Map with datapoints for birds
-      description: Retrieves a map showing the breeding data of a spesified bird.
       tags:
-        - map
+        - taxon
+      summary: Get the collection of atlases in which a species is enlisted.
       parameters:
-        - name: language
-          in: query
-          schema:
-            type: string
-          example: 'fi'
-        - name: scaling
-          in: query
-          schema:
-            type: string
-          example: '25836'
-        - name: type
-          in: query
-          schema:
-            type: string
-          example: 'svg'
+        - $ref: 'components.yaml#/parameters/speciesId'
+      responses:
+        200:
+          description: The collection of atlases in which a species is enlisted.
+          content:
+            application/x-collection+json:
+              schema:
+                $ref: 'components.yaml#/schemas/AtlasCollection'
+          links:
+            item:
+              description: The data of a species in an atlas.
+
+  /taxon/{speciesId}/atlas/{atlasId}:
+    get:
+      parameters:
+        - $ref: 'components.yaml#/parameters/atlasId'
+      summary: Get the data of a species in an atlas.
+      tags:
+        - taxon
       responses:
         '200':
-          description: Svg or png image
+          description: The data of a species in an atlas.
           content:
-            image/*:
+            application/json:
               schema:
+                type: object
+                properties:
+                  speciesId:
+                    type: integer
+                    description: ID of the species.
+                  atlasId:
+                    type: integer
+                    description: ID of the atlas.
+                  data:
+                    type: array
+                    items:
+                      $ref: 'components.yaml#/schemas/SpeciesAreaData'
+                    description: An array of area mapped data of a species in an atlas.
+                example:
+                  - speciesId: 25836
+                    atlasId: 3
+                    data:
+                      - gridId: 664329
+                        coordinateN: 664
+                        coordinateE: 329
+                        breedingCategory: 1
+                      - gridId: 664331
+                        coordinateN: 664
+                        coordinateE: 331
+                        breedingCategory: 1
+                      - gridId: 666328
+                        coordinateN: 666
+                        coordinateE: 328
+                        breedingCategory: 2
+
+  /taxon/{speciesId}/stats:
+    get:
+      tags:
+        - taxon
+      summary: Get the collection of statistics of each atlas in which a species is enlisted.
+      parameters:
+        - $ref: 'components.yaml#/parameters/speciesId'
+      responses:
+        200:
+          description: The collection of statistics of each atlas in which a species is enlisted.
+          content:
+            application/x-collection+json:
+              schema:
+                $ref: 'components.yaml#/schemas/AtlasStatisticsCollection'
+          links:
+            item:
+              description: The statistics of an atlas in which a species is enlisted.
+
+  /taxon/{speciesId}/stats/{atlasId}:
+    get:
+      parameters:
+        - $ref: 'components.yaml#/parameters/atlasId'
+      summary: Get the statistics of an atlas in which a species is enlisted.
+      tags:
+        - taxon
+      responses:
+        '200':
+          description: The statistics of an atlas in which a species is enlisted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  speciesId:
+                    type: integer
+                    description: ID of the species.
+                  atlasId:
+                    type: integer
+                    description: ID of the atlas.
+                  statistics:
+                    $ref: 'components.yaml#/schemas/Statistics'
 
   /map/:
     get:
@@ -159,7 +233,7 @@ paths:
     get:
       summary: List of different subcollections for maps
       parameters:
-        - $ref: '#/components/parameters/speciesId'
+        - $ref: 'components.yaml#/parameters/speciesId'
       description: Retrieves a list of subcollections of maps; atlas maps and their comparison maps.
       tags: 
         - map
@@ -187,7 +261,7 @@ paths:
   /map/{speciesId}/atlas:
     get:
       parameters:
-        - $ref: '#/components/parameters/speciesId'
+        - $ref: 'components.yaml#/parameters/speciesId'
       summary: List of different atlases that are available for the species.
       description: Retrieves a list of different atlases that are available for the species.
       tags: 
@@ -217,7 +291,7 @@ paths:
   /grid/{gridId}:
     get:
       parameters:
-        - $ref: '#/components/parameters/gridId'
+        - $ref: 'components.yaml#/parameters/gridId'
       summary: List of different subcollections for grids
       description: Retrieves a list of subcollections of grids; stats for a grid and data of a grid.
       tags: 
@@ -247,7 +321,7 @@ paths:
   /grid/{gridId}/atlas:
     get:
       parameters:
-        - $ref: '#/components/parameters/gridId'
+        - $ref: 'components.yaml#/parameters/gridId'
       summary: Lists all atlases that have data for this grid.
       description: Retrieves a list of all atlases that has data for this grid.
       tags: 
@@ -277,8 +351,8 @@ paths:
   /grid/{gridId}/atlas/{atlasId}:
     get:
       parameters:
-        - $ref: '#/components/parameters/gridId'
-        - $ref: '#/components/parameters/atlasId'
+        - $ref: 'components.yaml#/parameters/gridId'
+        - $ref: 'components.yaml#/parameters/atlasId'
       summary: All data for a grid from the given atlas.
       description: Retrieves all data for one grid in one atlas.
       tags: 
@@ -320,7 +394,7 @@ paths:
   /grid/{gridId}/stats/:
     get:
       parameters:
-        - $ref: '#/components/parameters/gridId'
+        - $ref: 'components.yaml#/parameters/gridId'
       summary: Statistic for the grid.
       description: Retrieves statistic for the grid; sum of datapoints, number of different species, number of atlases with datapoints.
       tags: 
