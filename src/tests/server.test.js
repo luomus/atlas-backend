@@ -51,3 +51,19 @@ describe('species info from API', () => {
     expect(res2.text).toEqual(expect.not.stringContaining('25844'))
   })
 })
+
+describe('grid data from API', () => {
+  // test('GET /api/v1/grid/:id/atlas/3 responds with JSON', (done) => {
+  //   request(app)
+  //     .get('/api/v1/grid/664329/atlas/3')
+  //     .expect(200)
+  //     .expect('content-type', /application\/json/)
+  // })
+
+  test('GET /api/v1/grid/:id/atlas/3 responds with correct data ', async () => {
+    const res1 = await request(app).get('/api/v1/grid/664329/atlas/3')
+
+    expect(res1.text).toContain('10')
+
+  })
+})

@@ -98,7 +98,6 @@ class SpeciesGridDao {
   }
 
   getDataByGridId(gridId) {
-    console.log('daossa ja gridId on: ', gridId)
     return this.#querier('all', `SELECT bird_data_atlas3.id AS "id", bird_data_atlas3.species_mxcode AS "species_mxcode",
             bird_data_atlas3.grid_id AS "grid_id",
             bird_data_atlas3.breedingCategory AS "breedingCategory",
