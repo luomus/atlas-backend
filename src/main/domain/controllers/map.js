@@ -56,8 +56,8 @@ class Map {
      */
   createGridForBirdData() {
     return (req, res) => {
-      birdGridDao.getGridAndBreedingdataForSpecies(req.param('speciesId')).then((data) => {
-        birdDao.getById(req.param('speciesId')).then((species) => {
+      speciesGridDao.getGridAndBreedingdataForSpecies(req.param('speciesId')).then((data) => {
+        speciesDao.getById(req.param('speciesId')).then((species) => {
           console.log('lintu map.js:ssä: ', species[0])
           if (req.param('type') === 'png') {
             const callback = (png) => res.send(png)
