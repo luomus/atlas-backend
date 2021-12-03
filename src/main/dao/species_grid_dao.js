@@ -97,6 +97,19 @@ class SpeciesGridDao {
             AND species.visibility=1`, [speciesMxcode])
   }
 
+  getDataByGridId(gridId) {
+    console.log('daossa ja gridId on: ', gridId)
+    return this.#querier('all', `SELECT bird_data_atlas3.id AS "id", bird_data_atlas3.species_mxcode AS "species_mxcode",
+            bird_data_atlas3.grid_id AS "grid_id",
+            bird_data_atlas3.breedingCategory AS "breedingCategory",
+            bird_data_atlas3.breedingIndex AS "breedingIndex"
+            FROM bird_data_atlas3 
+            JOIN species 
+            ON species.mxCode = bird_data_atlas3.species_mxcode 
+            WHERE grid_id = :grid 
+            AND species.visibility=1`, [gridId])
+  }
+
   /**
    * Creates table for Atlas1-2 grids if that does not exist.
    * @returns {Promise}

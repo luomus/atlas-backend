@@ -26,6 +26,12 @@ class Grid {
     return (req, res) => gridDao.countSpecies(req.param('gridId'))
         .then<((data) => res.json(data), () => res.send(null))
   }
+
+  getGridData() {
+    console.log('olen etsimässä grid-dataa controllereissa')
+    return (req, res) => speciesGridDao.getDataByGridId(req.param('gridId'))
+        .then((data) => res.json(data), () => res.send(null))
+  }
 }
 
 module.exports = Grid
