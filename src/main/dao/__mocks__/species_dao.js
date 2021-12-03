@@ -1,4 +1,4 @@
-class BirdDao {
+class SpeciesDao {
   #data
 
   constructor() {
@@ -70,4 +70,4 @@ class BirdDao {
   }
 }
 
-module.exports = BirdDao
+module.exports = SpeciesDao

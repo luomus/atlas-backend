@@ -1,20 +1,20 @@
 const request = require('supertest')
 const app = require('../main/server')
-jest.mock('../main/dao/bird_dao')
-jest.mock('../main/dao/bird_grid_dao')
+jest.mock('../main/dao/species_dao')
+jest.mock('../main/dao/species_grid_dao')
 jest.mock('../main/dao/grid_dao')
 
-describe('Bird API', () => {
-  test('GET /api/birds responds with JSON', () => {
+describe('species list from API', () => {
+  test('GET /api/v1/taxon responds with JSON', () => {
     return request(app)
-        .get('/api/birds')
+        .get('/api/v1/taxon')
         .expect(200)
         .expect('content-type', /application\/json/)
   })
 
-  test('GET /api/birds responds with data of all birds', async () => {
+  test('GET /api/v1/taxon responds with data of all species', async () => {
     return request(app)
-        .get('/api/birds')
+        .get('/api/v1/taxon')
         .then((response) => {
           expect(response.text).toContain('Kaakkuri')
           expect(response.text).toContain('Kuikka')
@@ -25,18 +25,18 @@ describe('Bird API', () => {
   })
 })
 
-describe('Bird species API', () => {
-  test('GET /api/species responds with JSON', (done) => {
+describe('species info from API', () => {
+  test('GET /api/v1/taxon/:id/atlas/3 responds with JSON', (done) => {
     request(app)
-        .get('/api/species')
+        .get('/api/v1/taxon/25836/atlas/3')
         .query({mxcode: '25836'})
         .expect(200, done)
         .expect('content-type', /application\/json/)
   })
 
-  test('GET /api/species responds with correct data ', async () => {
-    const res1 = await request(app).get('/api/species').query({id: '25836'})
-    const res2 = await request(app).get('/api/species').query({id: '25837'})
+  test('GET /api/v1/taxon/:id/atlas/3 responds with correct data ', async () => {
+    const res1 = await request(app).get('/api/v1/taxon/25836/atlas/3')
+    const res2 = await request(app).get('/api/v1/taxon/25837/atlas/3')
 
     expect(res1.text).toContain('725693')
     expect(res1.text).toContain('725694')

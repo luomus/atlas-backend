@@ -1,4 +1,4 @@
-const BirdDao = require('../main/dao/bird_dao')
+const SpeciesDao = require('../main/dao/species_dao')
 
 jest.mock('../main/dao/querier')
 const querier = require('../main/dao/querier')
@@ -8,9 +8,9 @@ beforeEach(() => {
 })
 
 test('getById calls querier correctly', () => {
-  const birdDao = new BirdDao(querier)
-  birdDao.getById(25836)
-  birdDao.getById(25844)
+  const speciesDao = new SpeciesDao(querier)
+  speciesDao.getById(25836)
+  speciesDao.getById(25844)
 
   expect(querier).toHaveBeenCalledTimes(2)
   expect(querier.mock.calls[0][0]).toEqual('get')
@@ -20,8 +20,8 @@ test('getById calls querier correctly', () => {
 })
 
 test('getAll calls querier correctly', () => {
-  const birdDao = new BirdDao(querier)
-  birdDao.getAll()
+  const speciesDao = new SpeciesDao(querier)
+  speciesDao.getAll()
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
   expect(querier.mock.calls[0][1]).toContain('SELECT')

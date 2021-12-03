@@ -1,4 +1,4 @@
-const BirdGridDao = require('../main/dao/bird_grid_dao')
+const SpeciesGridDao = require('../main/dao/species_grid_dao')
 
 jest.mock('../main/dao/querier')
 const querier = require('../main/dao/querier')
@@ -8,9 +8,9 @@ beforeEach(() => {
 })
 
 test('getGridByIdAtlas3 calls querier correctly', () => {
-  const birdGridDao = new BirdGridDao(querier)
-  birdGridDao.getGridByIdAtlas3(1)
-  birdGridDao.getGridByIdAtlas3(2)
+  const speciesGridDao = new SpeciesGridDao(querier)
+  speciesGridDao.getGridByIdAtlas3(1)
+  speciesGridDao.getGridByIdAtlas3(2)
 
   expect(querier).toHaveBeenCalledTimes(2)
   expect(querier.mock.calls[0][0]).toEqual('get')
@@ -22,16 +22,16 @@ test('getGridByIdAtlas3 calls querier correctly', () => {
 })
 
 test('getAllGridsAtlas3 calls querier correctly', () => {
-  const birdGridDao = new BirdGridDao(querier)
-  birdGridDao.getAllGridsAtlas3()
+  const speciesGridDao = new SpeciesGridDao(querier)
+  speciesGridDao.getAllGridsAtlas3()
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
   expect(querier.mock.calls[0][1]).toContain('atlas3')
 })
 
-test('getGridAndBreedingdataForBird calls querier correctly', () => {
-  const birdGridDao = new BirdGridDao(querier)
-  birdGridDao.getGridAndBreedingdataForBird(1)
+test('getGridAndBreedingdataForspecies calls querier correctly', () => {
+  const speciesGridDao = new SpeciesGridDao(querier)
+  speciesGridDao.getGridAndBreedingdataForSpecies(1)
 
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')

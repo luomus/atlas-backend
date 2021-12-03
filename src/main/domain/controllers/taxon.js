@@ -42,7 +42,7 @@ class Taxon {
      */
   getGridAndBreedingdataForBird() {
     return (req, res) => {
-      return speciesGridDao.getGridAndBreedingdataForBird(req.param('taxonId'))
+      return speciesGridDao.getGridAndBreedingdataForSpecies(req.param('taxonId'))
           .then((data) => res.send(JSON.stringify(data)), () => res.send(null))
     }
   }

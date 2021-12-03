@@ -1,15 +1,15 @@
 const MapService = require('../main/domain/maps/map_service')
 const createAtlasMap = require('../main/domain/maps/create_atlas_map')
 const GridDao = require('../main/dao/grid_dao')
-const BirdDao = require('../main/dao/bird_dao')
-const BirdGridDao = require('../main/dao/bird_grid_dao')
+const SpeciesDao = require('../main/dao/species_dao')
+const SpeciesGridDao = require('../main/dao/species_grid_dao')
 const fs = require('fs')
 const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 
 jest.mock('../main/dao/grid_dao')
-jest.mock('../main/dao/bird_dao')
-jest.mock('../main/dao/bird_grid_dao')
+jest.mock('../main/dao/species_dao')
+jest.mock('../main/dao/species_grid_dao')
 
 let mapService
 let configObject
@@ -20,14 +20,14 @@ beforeEach(() => {
   const configFile = fs.readFileSync('atlas-config.json')
   configObject = JSON.parse(configFile)
   const gridDao = new GridDao()
-  const birdDao = new BirdDao()
-  const birdGridDao = new BirdGridDao()
+  const speciesDao = new SpeciesDao()
+  const speciesGridDao = new SpeciesGridDao()
   const geoJsonArray = readBaseMapFiles()
   let gridArray
   let atlasMap
   gridDao.getAllGrids().then((returnedGridArray) => {
-    birdGridDao.getBySpeciesFromAtlas3(27697).then((data) => {
-      birdDao.getSpeciesById(27697).then((species) => {
+    speciesGridDao.getBySpeciesFromAtlas3(27697).then((data) => {
+      speciesDao.getSpeciesById(27697).then((species) => {
         gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
         d = data.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
         atlasMap = createAtlasMap(gridArray, geoJsonArray, configObject)
@@ -41,12 +41,12 @@ beforeEach(() => {
 
 describe('Map is drawn correctly', () => {
   test('Image type is correct', () => {
-    const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
+    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
     expect(image).toContain(`</svg>`)
     // expect(image).toBeInstanceOf('image/svg')
   })
   test('Correct data points are visible', () => {
-    const image = mapService.getSpeciesMap(d, s, undefined, 'svg', undefined, undefined)
+    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
     expect(image).toContain(`fill="${configObject.legend.colourBox4.fill}" display="block" id="768326"`)
   })
 })

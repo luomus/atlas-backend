@@ -57,7 +57,7 @@ class Map {
   createGridForBirdData() {
     return (req, res) => {
       console.log('kysytään lintua: ', req.param('speciesId'))
-      birdGridDao.getGridAndBreedingdataForBird(req.param('speciesId')).then((data) => {
+      birdGridDao.getGridAndBreedingdataForSpecies(req.param('speciesId')).then((data) => {
         birdDao.getById(req.param('speciesId')).then((species) => {
           console.log('lintu grid.js:ssä: ', species)
           if (req.param('type') === 'png') {

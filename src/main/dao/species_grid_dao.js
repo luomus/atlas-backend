@@ -85,7 +85,7 @@ class SpeciesGridDao {
    * @param {number} speciesMxcode
    * @returns {Promise}
    */
-  getGridAndBreedingdataForBird(speciesMxcode) {
+  getGridAndBreedingdataForSpecies(speciesMxcode) {
     return this.#querier('all', `SELECT species.speciesFI AS "speciesFI", grid.id AS "id",
             grid.coordinateN AS "coordinateN", grid.coordinateE AS "coordinateE",
             bird_data_atlas3.breedingCategory AS "breedingCategory"
