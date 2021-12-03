@@ -12,13 +12,13 @@ jest.mock('../main/dao/species_dao')
 jest.mock('../main/dao/species_grid_dao')
 
 let mapService
-let configObject
+let config
 let s
 let d
 
 beforeEach(() => {
   const configFile = fs.readFileSync('atlas-config.json')
-  configObject = JSON.parse(configFile)
+  config = JSON.parse(configFile)
   const gridDao = new GridDao()
   const speciesDao = new SpeciesDao()
   const speciesGridDao = new SpeciesGridDao()
@@ -30,8 +30,8 @@ beforeEach(() => {
       speciesDao.getSpeciesById(27697).then((species) => {
         gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
         d = data.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
-        atlasMap = createAtlasMap(gridArray, geoJsonArray, configObject)
-        mapService = new MapService(atlasMap, configObject)
+        atlasMap = createAtlasMap(gridArray, geoJsonArray, config)
+        mapService = new MapService(atlasMap, config)
         s = species.map((datapoint) => ({...datapoint}))
       })
     })
@@ -47,7 +47,7 @@ describe('Map is drawn correctly', () => {
   })
   test('Correct data points are visible', () => {
     const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
-    expect(image).toContain(`fill="${configObject.legend.colourBox4.fill}" display="block" id="768326"`)
+    expect(image).toContain(`fill="${config.legend.colourBox4.fill}" display="block" id="768326"`)
   })
 })
 
@@ -62,7 +62,7 @@ describe('Map legend is shown correctly', () => {
   test('Legend has correct language', () => {
     const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'en')
     const image = parseDocument(imageText)
-    expect(image.getElementById('atlasTitle').textContent).toEqual(configObject.legend.atlasTitle.textEN)
+    expect(image.getElementById('atlasTitle').textContent).toEqual(config.legend.atlasTitle.textEN)
   })
 
   test('Legend box is shown', () => {

@@ -29,6 +29,7 @@ function MapService(atlasMap, configObject) {
          * @returns {SvgImage}
          */
     getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
+      console.log("getspeciesmap: ", species.speciesSCI)
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
         const colour = getColorForBreedingCategory(datapoint.breedingCategory)
@@ -37,7 +38,7 @@ function MapService(atlasMap, configObject) {
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
       speciesMap.setDimensions(width, height)
-      setLegend(speciesMap, species[0], language)
+      setLegend(speciesMap, species, language)
       if (type === 'png')
         convertToPng(speciesMap, callback, width, height)
       else

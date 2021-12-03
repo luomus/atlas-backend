@@ -56,18 +56,16 @@ class Map {
      */
   createGridForBirdData() {
     return (req, res) => {
-      console.log('kysytään lintua: ', req.param('speciesId'))
       birdGridDao.getGridAndBreedingdataForSpecies(req.param('speciesId')).then((data) => {
         birdDao.getById(req.param('speciesId')).then((species) => {
-          console.log('lintu grid.js:ssä: ', species)
+          console.log('lintu map.js:ssä: ', species[0])
           if (req.param('type') === 'png') {
             const callback = (png) => res.send(png)
             res.setHeader('Content-Type', 'image/png')
-            mapService.getSpeciesMap(data, species, callback, 'png', req.param('scaling'), req.param('language'))
+            mapService.getSpeciesMap(data, species[0], callback, 'png', req.param('scaling'), req.param('language'))
           } else {
             res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(mapService.getSpeciesMap(
-                data, species, undefined, 'svg', req.param('scaling'), req.param('language'),
+            res.send(mapService.getSpeciesMap(data, species[0], undefined, 'svg', req.param('scaling'), req.param('language'),
             ))
           }
         })
