@@ -5,7 +5,10 @@ info:
 servers:
   - url: /api/v1
     description: at current host
+
+
 paths:
+
   /taxon:
     get:
       summary: Get a collection of species.
@@ -32,31 +35,9 @@ paths:
                 type: array
                 items:
                   $ref: 'components.yaml#/schemas/Species'
-                example:
-                  - speciesFI: "Kaakkuri"
-                    speciesEN: "Red-throated Diver"
-                    speciesSCI: "Gavia stellata"
-                    speciesAbbr: "GAVSTE"
-                    speciesGroup_id: 1
-                    visibility: 1
-                    speciesSV: "Smålom"
-                    id: 36
-                    species_id: "MX.25836"
-                    links:
-                      - rel: collection
-                        href: "/taxon/25836/atlas"
-                  - speciesFI: "Kuikka"
-                    speciesEN: "Black-throated Diver"
-                    speciesSCI: "Gavia arctica"
-                    speciesAbbr: "GAVARC"
-                    speciesGroup_id: 1
-                    visibility: 1
-                    speciesSV: "Storlom"
-                    id: 37
-                    species_id: "MX.25837"
-                    links:
-                      - rel: collection
-                        href: "/taxon/25837/atlas"
+              examples:
+                "Collection of birds":
+                  $ref: "components.yaml#/examples/birdCollection"
 
   /taxon/findBy:
     get:
@@ -79,6 +60,9 @@ paths:
                 type: array
                 items:
                   $ref: 'components.yaml#/schemas/Species'
+              examples:
+                "Collection of birds":
+                  $ref: "components.yaml#/examples/birdCollection"
 
   /taxon/{speciesId}:
     get:
@@ -94,9 +78,14 @@ paths:
             application/x-resource+json:
               schema:
                 $ref: 'components.yaml#/schemas/Species'
+              examples:
+                "A bird":
+                  $ref: "components.yaml#/examples/bird"
           links:
-            collection:
+            "related: atlas":
               description: The collection of atlases in which the species is enlisted.
+            "related: stats":
+              description: The collection of statistics of each atlas in which the species is enlisted.
 
   /taxon/{speciesId}/atlas:
     get:
@@ -112,9 +101,12 @@ paths:
             application/x-collection+json:
               schema:
                 $ref: 'components.yaml#/schemas/AtlasCollection'
+              examples:
+                "Atlases for a bird":
+                  $ref: "components.yaml#/examples/birdAtlasCollection"
           links:
             item:
-              description: The data of a species in an atlas.
+              description: The data of the species in an atlas.
 
   /taxon/{speciesId}/atlas/{atlasId}:
     get:
@@ -142,22 +134,9 @@ paths:
                     items:
                       $ref: 'components.yaml#/schemas/SpeciesAreaData'
                     description: An array of area mapped data of a species in an atlas.
-                example:
-                  - speciesId: 25836
-                    atlasId: 3
-                    data:
-                      - gridId: 664329
-                        coordinateN: 664
-                        coordinateE: 329
-                        breedingCategory: 1
-                      - gridId: 664331
-                        coordinateN: 664
-                        coordinateE: 331
-                        breedingCategory: 1
-                      - gridId: 666328
-                        coordinateN: 666
-                        coordinateE: 328
-                        breedingCategory: 2
+              examples:
+                "Atlas data for a bird":
+                  $ref: "components.yaml#/examples/birdAtlasData"
 
   /taxon/{speciesId}/stats:
     get:
@@ -172,10 +151,13 @@ paths:
           content:
             application/x-collection+json:
               schema:
-                $ref: 'components.yaml#/schemas/AtlasStatisticsCollection'
+                $ref: 'components.yaml#/schemas/StatsCollection'
+              examples:
+                "Statistics collection for a bird":
+                  $ref: "components.yaml#/examples/birdStatsCollection"
           links:
             item:
-              description: The statistics of an atlas in which a species is enlisted.
+              description: The statistics of an atlas in which the species is enlisted.
 
   /taxon/{speciesId}/stats/{atlasId}:
     get:

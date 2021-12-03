@@ -32,6 +32,14 @@ schemas:
     items:
       type: object
       properties:
+        id:
+          type: integer
+          nullable: true
+          description: ID of the resource in which the link points to.
+        name:
+          type: string
+          nullable: true
+          description: Name of the resource in which the link points to.
         rel:
           type: string
           description: Defines the type of link relationship between the current resource and the resource which the link points to.
@@ -39,6 +47,9 @@ schemas:
         href:
           type: string
           description: Hypertext reference
+      required:
+        - rel
+        - href
     description: An array of link objects each identifying a relationship for the resource.
 
   Species:
@@ -73,19 +84,6 @@ schemas:
         description: MX-code of the species.
       links:
         $ref: "#/schemas/links"
-    example:
-      - speciesFI: Kaakkuri
-        speciesEN: Red-throated Diver
-        speciesSCI: Gavia stellata
-        speciesAbbr: GAVSTE
-        speciesGroup_id: 1
-        visibility: 1
-        speciesSV: Smålom
-        id: 36
-        species_id: MX.25836
-        links:
-          - rel: collection
-            href: "/taxon/25836/atlas"
 
   AtlasCollection:
     type: object
@@ -97,26 +95,8 @@ schemas:
         type: array
         items:
           $ref: 'components.yaml#/schemas/Atlas'
-    example:
-      - speciesId: 25836
-        collection:
-          - id: 1
-            period:
-              from: 1974
-              to: 1979
-          - id: 2
-            period:
-              from: 1986
-              to: 1989
-        links:
-          - rel: item
-            id: 1
-            href: '/taxon/25836/atlas/1'
-          - rel: item
-            id: 2
-            href: '/taxon/25836/atlas/2'
 
-  AtlasStatisticsCollection:
+  StatsCollection:
     type: object
     properties:
       speciesId:
@@ -126,18 +106,6 @@ schemas:
         type: array
         items:
           $ref: 'components.yaml#/schemas/Statistics'
-    example:
-      - speciesId: 25836
-        collection:
-          - id: 1
-          - id: 2
-        links:
-          - rel: item
-            id: 1
-            href: '/taxon/25836/stats/1'
-          - rel: item
-            id: 2
-            href: '/taxon/25836/stats/2'
 
   Statistics:
     type: object
@@ -181,3 +149,112 @@ schemas:
       coordinateN: 664
       coordinateE: 329
       breedingCategory: 1
+
+
+examples:
+
+  bird:
+    value:
+      - speciesFI: Kaakkuri
+        speciesEN: Red-throated Diver
+        speciesSCI: Gavia stellata
+        speciesAbbr: GAVSTE
+        speciesGroup_id: 1
+        visibility: 1
+        speciesSV: Smålom
+        id: 36
+        species_id: MX.25836
+        links:
+          - rel: related
+            href: "/taxon/25836/atlas"
+            name: atlas
+          - rel: related
+            href: "/taxon/25836/stats"
+            name: stats
+
+  birdCollection:
+    value:
+      - speciesFI: "Kaakkuri"
+        speciesEN: "Red-throated Diver"
+        speciesSCI: "Gavia stellata"
+        speciesAbbr: "GAVSTE"
+        speciesGroup_id: 1
+        visibility: 1
+        speciesSV: "Smålom"
+        id: 36
+        species_id: "MX.25836"
+        links:
+          - rel: related
+            href: "/taxon/25836/atlas"
+            name: atlas
+          - rel: related
+            href: "/taxon/25836/stats"
+            name: stats
+      - speciesFI: "Kuikka"
+        speciesEN: "Black-throated Diver"
+        speciesSCI: "Gavia arctica"
+        speciesAbbr: "GAVARC"
+        speciesGroup_id: 1
+        visibility: 1
+        speciesSV: "Storlom"
+        id: 37
+        species_id: "MX.25837"
+        links:
+          - rel: related
+            href: "/taxon/25837/atlas"
+            name: atlas
+          - rel: related
+            href: "/taxon/25837/stats"
+            name: stats
+
+  birdAtlasCollection:
+    value:
+      - speciesId: 25836
+        collection:
+          - id: 1
+            period:
+              from: 1974
+              to: 1979
+          - id: 2
+            period:
+              from: 1986
+              to: 1989
+        links:
+          - rel: item
+            id: 1
+            href: '/taxon/25836/atlas/1'
+          - rel: item
+            id: 2
+            href: '/taxon/25836/atlas/2'
+
+  birdAtlasData:
+    value:
+      - speciesId: 25836
+        atlasId: 3
+        data:
+          - gridId: 664329
+            coordinateN: 664
+            coordinateE: 329
+            breedingCategory: 1
+          - gridId: 664331
+            coordinateN: 664
+            coordinateE: 331
+            breedingCategory: 1
+          - gridId: 666328
+            coordinateN: 666
+            coordinateE: 328
+            breedingCategory: 2
+
+  birdStatsCollection:
+    value:
+      - speciesId: 25836
+        collection:
+          - id: 1
+          - id: 2
+        links:
+          - rel: item
+            id: 1
+            href: '/taxon/25836/stats/1'
+          - rel: item
+            id: 2
+            href: '/taxon/25836/stats/2'
