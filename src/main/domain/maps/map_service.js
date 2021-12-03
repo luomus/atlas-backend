@@ -29,7 +29,6 @@ function MapService(atlasMap, configObject) {
          * @returns {SvgImage}
          */
     getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
-      console.log("getspeciesmap: ", species.speciesSCI)
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
         const colour = getColorForBreedingCategory(datapoint.breedingCategory)
