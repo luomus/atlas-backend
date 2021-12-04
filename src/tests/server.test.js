@@ -53,12 +53,12 @@ describe('species info from API', () => {
 })
 
 describe('grid data from API', () => {
-  // test('GET /api/v1/grid/:id/atlas/3 responds with JSON', (done) => {
-  //   request(app)
-  //     .get('/api/v1/grid/664329/atlas/3')
-  //     .expect(200)
-  //     .expect('content-type', /application\/json/)
-  // })
+  test('GET /api/v1/grid/:id/atlas/3 responds with JSON', (done) => {
+    request(app)
+      .get('/api/v1/grid/664329/atlas/3')
+      .expect(200, done)
+      .expect('content-type', /application\/json/)
+  })
 
   test('GET /api/v1/grid/:id/atlas/3 responds with correct data ', async () => {
     const res1 = await request(app).get('/api/v1/grid/664329/atlas/3')

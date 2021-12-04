@@ -135,6 +135,10 @@ class SpeciesGridDao {
   getBySpeciesFromAtlas3(speciesMxcode) {
     return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesMxcode))
   }
+
+  getDataByGridId(gridId) {
+    return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId))
+  }
 }
 
 module.exports = SpeciesGridDao
