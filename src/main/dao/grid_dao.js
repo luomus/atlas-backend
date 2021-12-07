@@ -39,6 +39,7 @@ class GridDao {
             gridName varchar(100))`
     return this.#querier('run', sql)
   }
+
   /**
    * Updates in table Municipality the entry with given data and id.
    * @param {Object} municipality

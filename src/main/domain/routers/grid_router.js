@@ -9,6 +9,6 @@ gridRouter.get('/:gridId', grid.getGridInfo())
 gridRouter.get('/:gridId/atlas')
 gridRouter.get('/:gridId/atlas/:atlasId', grid.getGridData())
 gridRouter.get('/:gridId/stats', grid.getGridStats())
-gridRouter.get('/:gridId/stats/:atlasId')
+gridRouter.get('/:gridId/stats/:atlasId', grid.getGridBreedingCategoryStats())
 
 module.exports = gridRouter

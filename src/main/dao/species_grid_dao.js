@@ -109,6 +109,16 @@ class SpeciesGridDao {
             AND species.visibility=1`, [gridId])
   }
 
+  getNumOfBreedingCategoriesById(gridId) {
+    return this.#querier('all', `SELECT breedingCategory AS "breedingCategory", count(*) AS "num" FROM bird_data_atlas3
+            WHERE grid_id = :gridId GROUP BY breedingCategory`, [gridId])
+  }
+
+  getListOfDistinctBirdsById(gridId) {
+    return this.#querier('all', `SELECT distinct bird_data_atlas3.species_mxcode, species.speciesFi 
+            FROM bird_data_atlas3, species WHERE species.mxCode=bird_data_atlas3.species_mxcode AND grid_id= :gridId AND visibility=1`, [gridId])
+  }
+
   /**
    * Creates table for Atlas1-2 grids if that does not exist.
    * @returns {Promise}
