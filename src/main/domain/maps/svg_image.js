@@ -58,6 +58,17 @@ function SvgImage(svgDocument) {
       return this
     },
     /**
+     * Sets background colour of this svg-image.
+     * @param {Object} propertyMap
+     * @returns {SvgImage}
+     */
+    setBackgroundColour: function(propertyMap) {
+      this.addElement('g', {id: 'backgroundColour'}, undefined)
+      const properties = {...propertyMap, width: '100%', height: '100%'}
+      this.addElement('rect', properties, 'backgroundColour')
+      return this
+    },
+    /**
      * Adds new svg-element with given tag name and given properties inside given parent element.
      * @param {string} tagName
      * @param {Object} propertyMap
