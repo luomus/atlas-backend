@@ -1,4 +1,4 @@
-class SpeciesGridDao {
+class AtlasDataDao {
   #data
 
   constructor() {
@@ -7,6 +7,7 @@ class SpeciesGridDao {
         'id': 725693,
         'species_mxcode': 25836,
         'grid_id': 664329,
+        "atlas_id":3,
         'breedingIndex': 10,
         'breedingCategory': 1,
       },
@@ -14,6 +15,7 @@ class SpeciesGridDao {
         'id': 725694,
         'species_mxcode': 25836,
         'grid_id': 664331,
+        "atlas_id":3,
         'breedingIndex': 10,
         'breedingCategory': 1,
       },
@@ -21,6 +23,7 @@ class SpeciesGridDao {
         'id': 725695,
         'species_mxcode': 25836,
         'grid_id': 666328,
+        "atlas_id":3,
         'breedingIndex': 20,
         'breedingCategory': 2,
       },
@@ -28,6 +31,7 @@ class SpeciesGridDao {
         'id': 726848,
         'species_mxcode': 25837,
         'grid_id': 664328,
+        "atlas_id":3,
         'breedingIndex': 75,
         'breedingCategory': 4,
       },
@@ -35,6 +39,7 @@ class SpeciesGridDao {
         'id': 726849,
         'species_mxcode': 25837,
         'grid_id': 664329,
+        "atlas_id":3,
         'breedingIndex': 30,
         'breedingCategory': 2,
       },
@@ -42,6 +47,7 @@ class SpeciesGridDao {
         'id': 726850,
         'species_mxcode': 25837,
         'grid_id': 664331,
+        "atlas_id":3,
         'breedingIndex': 20,
         'breedingCategory': 2,
       },
@@ -49,6 +55,7 @@ class SpeciesGridDao {
         'id': 729270,
         'species_mxcode': 25844,
         'grid_id': 666324,
+        "atlas_id":3,
         'breedingIndex': 40,
         'breedingCategory': 3,
       },
@@ -56,6 +63,7 @@ class SpeciesGridDao {
         'id': 729271,
         'species_mxcode': 25844,
         'grid_id': 666331,
+        "atlas_id":3,
         'breedingIndex': 40,
         'breedingCategory': 3,
       },
@@ -63,6 +71,7 @@ class SpeciesGridDao {
         'id': 729272,
         'species_mxcode': 25844,
         'grid_id': 667337,
+        "atlas_id":3,
         'breedingIndex': 40,
         'breedingCategory': 3,
       },
@@ -70,6 +79,7 @@ class SpeciesGridDao {
         "id": 767775,
         "species_mxcode": 27697,
         "grid_id": 664318,
+        "atlas_id":3,
         "breedingIndex": 10,
         "breedingCategory": 1,
       },
@@ -77,6 +87,7 @@ class SpeciesGridDao {
         "id":767776,
         "species_mxcode":27697,
         "grid_id":667317,
+        "atlas_id":3,
         "breedingIndex":10,
         "breedingCategory":1,
       },
@@ -84,6 +95,7 @@ class SpeciesGridDao {
         "id":767777,
         "species_mxcode":27697,
         "grid_id":667318,
+        "atlas_id":3,
         "breedingIndex":10,
         "breedingCategory":1,
       },
@@ -91,6 +103,7 @@ class SpeciesGridDao {
         "id":767778,
         "species_mxcode":27697,
         "grid_id":683319,
+        "atlas_id":3,
         "breedingIndex":10,
         "breedingCategory":1,
       },
@@ -98,6 +111,7 @@ class SpeciesGridDao {
         "id":767779,
         "species_mxcode":27697,
         "grid_id":766327,
+        "atlas_id":3,
         "breedingIndex":73,
         "breedingCategory":4,
       },
@@ -105,6 +119,7 @@ class SpeciesGridDao {
         "id":767780,
         "species_mxcode":27697,
         "grid_id":768326,
+        "atlas_id":3,
         "breedingIndex":74,
         "breedingCategory":4,
       },
@@ -112,6 +127,7 @@ class SpeciesGridDao {
         "id":767781,
         "species_mxcode":27697,
         "grid_id":769326,
+        "atlas_id":3,
         "breedingIndex":20,
         "breedingCategory":2,
       },
@@ -119,6 +135,7 @@ class SpeciesGridDao {
         "id":767782,
         "species_mxcode":27697,
         "grid_id":769327,
+        "atlas_id":3,
         "breedingIndex":73,
         "breedingCategory":4,
       },
@@ -126,19 +143,20 @@ class SpeciesGridDao {
         "id":767783,
         "species_mxcode":27697,
         "grid_id":773352,
+        "atlas_id":3,
         "breedingIndex":20,
         "breedingCategory":2,
       }
     ]
   }
 
-  getBySpeciesFromAtlas3(speciesMxcode) {
-    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesMxcode))
+  getDataForSpeciesAndAtlas(mxcode, atlasId) {
+    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == mxcode && x.atlas_id == atlasId))
   }
 
-  getDataByGridId(gridId) {
+  getDataForGrid(gridId) {
     return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId))
   }
 }
 
-module.exports = SpeciesGridDao
+module.exports = AtlasDataDao

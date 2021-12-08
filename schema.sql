@@ -1,10 +1,3 @@
-CREATE TABLE users (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	username VARCHAR(30) UNIQUE,
-	password VARCHAR(50),
-	name VARCHAR(100)
-);
-
 CREATE TABLE species (
 	mxCode INTEGER PRIMARY KEY,
 	speciesAbbr VARCHAR(6),
@@ -16,39 +9,10 @@ CREATE TABLE species (
 	visibility INTEGER
 );
 
+
 CREATE TABLE speciesGroup (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name VARCHAR(100)
-);
-
-
-CREATE TABLE grid (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	coordinateN INTEGER,
-	coordinateE INTEGER,
-	municipality_id INTEGER REFERENCES municipality,
-	gridName varchar(100)
-);
-
-CREATE TABLE grid_atlas3 (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	grid_id INTEGER REFERENCES grid,
-	level1 FLOAT,
-	level2 FLOAT,
-	level3 FLOAT,
-	level4 FLOAT,
-	level5 FLOAT,
-	activitySum INTEGER,
-	activityCategory INTEGER
-);
-
-
-CREATE TABLE grid_atlas12 (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	grid_id INTEGER REFERENCES grid,
-	realiabilityAtlas1 INTEGER,
-	realiabilityAtlas2 INTEGER,
-	realiabilityCombined INTEGER
 );
 
 
@@ -61,22 +25,45 @@ CREATE TABLE municipality (
 );
 
 
-CREATE TABLE bird_data_atlas3 (
+CREATE TABLE grid (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	species_id INTEGER REFERENCES species,
-	grid_id INTEGER REFERENCES grid,
-	breedingIndex INTEGER,
-	breedingCategory INTEGER
+	coordinateN INTEGER,
+	coordinateE INTEGER,
+	municipality_id INTEGER REFERENCES municipality,
+	name varchar(100)
 );
 
 
-CREATE TABLE bird_data_atlas12 (
+CREATE TABLE atlas (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	starting_year INTEGER,
+	ending_year INTEGER,
+	name varchar(100),
+	speciesGroup_id REFERENCES speciesGroup
+);
+
+
+CREATE TABLE grid_bird_atlas (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	grid_id INTEGER REFERENCES grid,
+	atlas_id INTEGER REFERENCES atlas,
+	level1 FLOAT,
+	level2 FLOAT,
+	level3 FLOAT,
+	level4 FLOAT,
+	level5 FLOAT,
+	activitySum INTEGER,
+	activityCategory INTEGER
+);
+
+
+CREATE TABLE bird_data (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	species_id INTEGER REFERENCES species,
 	grid_id INTEGER REFERENCES grid,
-	breedingIndexAtlas1 INTEGER,
-	breedingIndexAtlas2 INTEGER,
-	breedingIndexCombined INTEGER
+	atlas_id INTEGER REFERENCES atlas,
+	breedingIndex INTEGER,
+	breedingCategory INTEGER
 );
 
 
@@ -85,6 +72,7 @@ CREATE TABLE plant_data (
 	year INTEGER,
 	species_code INTEGER REFERENCES species,
 	grid_id INTEGER REFERENCES grid,
+	atlas_id INTEGER REFERENCES atlas,
 	prevalence FLOAT,
 	numberOfObservations INTEGER,
 	oldestObservation INTEGER,

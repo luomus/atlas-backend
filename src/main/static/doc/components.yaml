@@ -1,0 +1,520 @@
+parameters:
+
+  speciesId:
+    in: path
+    name: speciesId
+    required: true
+    schema:
+      type: integer
+    description: MX code of the wanted species.
+
+  areaId:
+    in: path
+    name: areaId
+    required: true
+    schema:
+      type: integer
+    description: Location of the wanted area. Six digits, first three digits are degrees north and last three are degrees east.
+
+  atlasId:
+    in: path
+    name: atlasId
+    required: true
+    schema:
+      type: integer
+    description: ID of the atlas.
+
+
+schemas:
+
+  links:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the resource in which the link points to.
+        name:
+          type: string
+          description: Name of the resource in which the link points to.
+        rel:
+          type: string
+          description: Defines the type of link relationship between the current resource and the resource which the link points to.
+          # https://www.iana.org/assignments/link-relations/link-relations.xhtml
+        href:
+          type: string
+          description: Hypertext reference
+      required:
+        - rel
+        - href
+    description: An array of link objects each identifying a relationship for the resource.
+
+  SpeciesId:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the species.
+    required:
+      - id
+
+  AreaId:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the square area in the atlas grid.
+    required:
+      - id
+
+  Species:
+    allOf:
+      - $ref: "#/schemas/SpeciesId"
+      - type: object
+        properties:
+          speciesFI:
+            type: string
+            description: Finnish name
+          speciesEN:
+            type: string
+            description: English name
+          speciesSCI:
+            type: string
+            description: Scientific name
+          speciesAbbr:
+            type: string
+            description: Abbreviation of the scientific name
+          speciesGroupId:
+            type: integer
+            description: Group ID
+          visibility:
+            type: integer
+            description: Visibility of the species.
+          speciesSV:
+            type: string
+            description: Swedish name
+          mxCode:
+            type: integer
+            description: MX-code of the species.
+          links:
+            $ref: "#/schemas/links"
+
+  Atlas:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the atlas.
+      period:
+        type: object
+        properties:
+          from:
+            type: integer
+            description: Start year
+          to:
+            type: integer
+            description: End year
+
+  SpeciesAtlasDataCollection:
+    type: object
+    properties:
+      species:
+        $ref: "#/schemas/SpeciesId"
+      collection:
+        type: array
+        items:
+          $ref: '#/schemas/SpeciesAtlasData'
+        description: A collection of atlas data resources for a species.
+    required:
+      - species
+      - collection
+
+  AreaAtlasDataCollection:
+    type: object
+    properties:
+      area:
+        $ref: "#/schemas/AreaId"
+      collection:
+        type: array
+        items:
+          $ref: '#/schemas/AreaAtlasData'
+        description: A collection of atlas data resources for an area.
+    required:
+      - area
+      - collection
+
+  AreaAtlasStatistics:
+    type: object
+
+  AreaAtlasData:
+    type: object
+    properties:
+      atlas:
+        $ref: "#/schemas/Atlas"
+      statistics:
+        $ref: "#/schemas/AreaAtlasStatistics"
+      links:
+        $ref: "#/schemas/links"
+    required:
+      - atlas
+      - statistics
+
+  SpeciesAtlasData:
+    type: object
+    properties:
+      atlas:
+        $ref: "#/schemas/Atlas"
+      statistics:
+        $ref: "#/schemas/SpeciesAtlasStatistics"
+      links:
+        $ref: "#/schemas/links"
+    required:
+      - atlas
+      - statistics
+
+  SpeciesAtlasStatistics:
+    type: object
+
+  BasicAreaData:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of a square area in the atlas grid.
+      coordinateN:
+        type: integer
+        description: North coordinate.
+      coordinateE:
+        type: integer
+        description: East coordinate.
+    required:
+      - id
+      - coordinateN
+      - coordinateE
+
+  AreaData:
+    allOf:
+      - $ref: "#/schemas/BasicAreaData"
+      - type: object
+        description: Represents a square area in the atlas grid.
+        properties:
+          statistics:
+            type: object
+            description: "Statistics for the area; sum of data points, number of different species, number of \
+            atlases with data points."
+            properties:
+          links:
+            $ref: "#/schemas/links"
+
+  BirdSpecificAreaData:
+    type: object
+    properties:
+      breedingCategory:
+        type: integer
+        description: Breeding category of the bird species for an area.
+      breedingIndex:
+        type: integer
+        description: Breeding index of the bird species for an area.
+    description: Bird species specific area data.
+
+  BirdAreaData:
+    allOf:
+      - $ref: "#/schemas/BasicAreaData"
+      - $ref: "#/schemas/BirdSpecificAreaData"
+    description: "Represents a square area in the atlas grid. Contains information about a bird species \
+    observed in that area."
+
+  PlantSpecificAreaData:
+    type: object
+    properties:
+      plantData:
+        type: string
+        description: Some plant info.
+    description: Plant species specific area data.
+
+  PlantAreaData:
+    allOf:
+      - $ref: "#/schemas/BasicAreaData"
+      - $ref: "#/schemas/PlantSpecificAreaData"
+    description: "Represents a square area in the atlas grid. Contains information about a plant species \
+    observed in that area."
+
+  AreaDataCollection:
+    type: object
+    properties:
+      area:
+        $ref: "#/schemas/AreaId"
+      data:
+        type: array
+        items:
+          anyOf:
+            - allOf:
+                - type: object
+                  properties:
+                    species:
+                      $ref: "#/schemas/SpeciesId"
+                - $ref: "#/schemas/BirdSpecificAreaData"
+            - allOf:
+                - type: object
+                  properties:
+                    species:
+                      $ref: "#/schemas/SpeciesId"
+                - $ref: "#/schemas/PlantSpecificAreaData"
+
+  SpeciesMapCollections:
+    type: object
+    properties:
+      species:
+        $ref: "#/schemas/SpeciesId"
+      collection:
+        type: array
+        items:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the resource.
+            links:
+              $ref: "#/schemas/links"
+
+  SpeciesAtlasMapCollection:
+    type: object
+    properties:
+      species:
+        $ref: "#/schemas/SpeciesId"
+      collection:
+        type: array
+        items:
+          type: object
+          properties:
+            type:
+              type: string
+              description: Type of the resource.
+            atlas:
+              $ref: "#/schemas/Atlas"
+            links:
+              $ref: "#/schemas/links"
+
+  SpeciesMap:
+    type: object
+    properties:
+      species:
+        $ref: "#/schemas/SpeciesId"
+      collection:
+
+
+examples:
+
+  bird:
+    value:
+      speciesFI: Kaakkuri
+      speciesEN: Red-throated Diver
+      speciesSCI: Gavia stellata
+      speciesAbbr: GAVSTE
+      speciesGroupId: 1
+      visibility: 1
+      speciesSV: Smålom
+      id: 25836
+      mxCode: MX.25836
+      links:
+        - rel: related
+          href: "/taxon/25836/atlas"
+
+  birdCollection:
+    value:
+      - speciesFI: Kaakkuri
+        speciesEN: Red-throated Diver
+        speciesSCI: Gavia stellata
+        speciesAbbr: GAVSTE
+        speciesGroupId: 1
+        visibility: 1
+        speciesSV: Smålom
+        id: 25836
+        mxCode: MX.25836
+        links:
+          - rel: related
+            href: "/taxon/25836/atlas"
+      - speciesFI: Kuikka
+        speciesEN: Black-throated Diver
+        speciesSCI: Gavia arctica
+        speciesAbbr: GAVARC
+        speciesGroupId: 1
+        visibility: 1
+        speciesSV: Storlom
+        id: 25837
+        mxCode: MX.25837
+        links:
+          - rel: related
+            href: "/taxon/25837/atlas"
+
+  birdAtlasDataCollection:
+    value:
+      species:
+        id: 25836
+      collection:
+        - id: 1
+          period:
+            from: 1974
+            to: 1979
+          statistics: { }
+          links:
+            - rel: related
+              href: '/area?speciesId=25836&atlasId=1'
+        - id: 2
+          period:
+            from: 1986
+            to: 1989
+          statistics: { }
+          links:
+            - rel: related
+              href: '/area?speciesId=25836&atlasId=2'
+
+  birdAtlasData:
+    value:
+      species:
+        id: 25836
+      atlas:
+        id: 1
+        period:
+          from: 1974
+          to: 1979
+      statistics: { }
+      links:
+        - rel: related
+          href: '/area?speciesId=25836&atlasId=1'
+
+  birdAreaDataCollection:
+    value:
+      species:
+        id: 25836
+      atlas:
+        id: 1
+      collection:
+        - id: 664329
+          coordinateN: 664
+          coordinateE: 329
+          breedingCategory: 1
+        - id: 664331
+          coordinateN: 664
+          coordinateE: 331
+          breedingCategory: 1
+        - id: 666328
+          coordinateN: 666
+          coordinateE: 328
+          breedingCategory: 2
+
+  areaData:
+    value:
+      - id: 664329
+        coordinateN: 664
+        coordinateE: 329
+        statistics: {}
+        links:
+          - rel: related
+            href: '/area/664329/atlas'
+
+  areaAtlasDataCollection:
+    value:
+      area:
+        id: 664329
+      collection:
+        - atlas:
+            id: 1
+            period:
+              from: 1974
+              to: 1979
+          statistics: { }
+          links:
+            - rel: related
+              href: '/area/664329/atlas/1/data'
+        - atlas:
+            id: 2
+            period:
+              from: 1986
+              to: 1989
+          statistics: { }
+          links:
+            - rel: related
+              href: '/area/664329/atlas/2/data'
+
+  areaAtlasData:
+    value:
+      area:
+        id: 664329
+      atlas:
+        id: 1
+        period:
+          from: 1974
+          to: 1979
+      statistics: { }
+      links:
+        - rel: related
+          href: '/area/664329/atlas/1/data'
+
+  areaDataCollection:
+    value:
+      area:
+        id: 664329
+      data:
+        - species:
+            id: 25836
+          breedingCategory: 1
+          breedingIndex: 50
+        - species:
+            id: 25837
+          breedingCategory: 2
+          breedingIndex: 40
+
+  speciesMapCollections:
+    value:
+      species:
+        id: 25836
+      collection:
+        - type: atlas_map_collection
+          links:
+            - rel: self
+              href: '/map/25836/atlas'
+
+  speciesMapCollectionsCollection:
+    value:
+      - species:
+          id: 25836
+        collection:
+          - type: atlas_map_collection
+            links:
+              - rel: self
+                href: '/map/25836/atlas'
+      - species:
+          id: 25837
+        collection:
+          - type: atlas_map_collection
+            links:
+              - rel: self
+                href: '/map/25837/atlas'
+
+  speciesAtlasMapCollection:
+    value:
+      species:
+        id: 25836
+      collection:
+        - type: atlas_map
+          atlas:
+            id: 1
+            period:
+              from: 1974
+              to: 1979
+          links:
+            - rel: self
+              href: '/map/25836/atlas/1'
+        - type: atlas_map
+          atlas:
+            id: 2
+            period:
+              from: 1986
+              to: 1989
+          links:
+            - rel: self
+              href: '/map/25836/atlas/2'
+
+

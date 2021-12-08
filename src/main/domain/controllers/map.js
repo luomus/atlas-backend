@@ -6,9 +6,11 @@ const configObject = JSON.parse(configFile)
 const Querier = require('../../dao/querier')
 const SpeciesDao = require('../../dao/species_dao')
 const GridDao = require('../../dao/grid_dao')
-const SpeciesGridDao = require('../../dao/species_grid_dao')
+const AtlasDataDao = require('../../dao/atlas_data_dao')
+const AtlasGridDao = require('../../dao/atlas_grid_dao')
 const querier = Querier()
-const speciesGridDao = new SpeciesGridDao(querier)
+const atlasDataDao = new AtlasDataDao(querier)
+const atlasGridDao = new AtlasGridDao(querier)
 const speciesDao = new SpeciesDao(querier)
 const gridDao = new GridDao(querier)
 
@@ -56,9 +58,9 @@ class Map {
      */
   createGridForBirdData() {
     return (req, res) => {
-      speciesGridDao.getGridAndBreedingdataForSpecies(req.param('speciesId')).then((data) => {
+      atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(req.param('speciesId'), req.param('atlasId')).then((data) => {
         speciesDao.getById(req.param('speciesId')).then((species) => {
-          speciesGridDao.getAllGridsAtlas3().then((grid) => {
+          atlasGridDao.getAllBirdAtlasGridInfoByAtlas(req.param('atlasId')).then((grid) => {
             console.log('lintu map.js:ssä: ', species[0])
             if (req.param('type') === 'png') {
               const callback = (png) => res.send(png)

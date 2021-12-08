@@ -11,11 +11,11 @@ const alignmentCoordN = 68
 
 beforeEach(() => {
   const configFile = fs.readFileSync('atlas-config.json')
-  const configObject = JSON.parse(configFile)
+  const config = JSON.parse(configFile)
   const gridDao = new GridDao()
   gridDao.getAllGrids().then((returnedGridArray) => {
     gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-    atlasMap = createAtlasMap(gridArray, geoJsonArray, configObject)
+    atlasMap = createAtlasMap(gridArray, geoJsonArray, config)
     serializedMap = atlasMap.serialize()
   })
 })

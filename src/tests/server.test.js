@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require('../main/server')
 jest.mock('../main/dao/species_dao')
-jest.mock('../main/dao/species_grid_dao')
+jest.mock('../main/dao/atlas_data_dao')
 jest.mock('../main/dao/grid_dao')
 
 describe('species list from API', () => {
