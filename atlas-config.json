@@ -19,6 +19,19 @@
     "shape-rendering": "optimizeSpeed",
     "opacity": 0.7
   },
+  "breedingCategoryColour": {
+    "category4": "#228ae6",
+    "category3": "#66cc7a",
+    "category2": "#d6e573"
+  },
+  "activityCategoryColour": {
+    "category5": "#63748f",
+    "category4": "#7e8fab",
+    "category3": "#99a9c4",
+    "category2": "#b2c1db",
+    "category1": "#cedbf2",
+    "category0": "white"
+  },
   "legendBox": {
     "textBox": {
       "id": "textBox",

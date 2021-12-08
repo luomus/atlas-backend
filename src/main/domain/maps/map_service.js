@@ -95,19 +95,19 @@ function MapService(atlasMap, config) {
 
   function getColorForBreedingCategory(breedingCategory) {
     let color = 'rgba(124,240,10,0.0)'
-    if (breedingCategory === 4) color = '#228ae6'
-    else if (breedingCategory === 3) color = '#66cc7a'
-    else if (breedingCategory === 2) color = '#d6e573'
+    if (breedingCategory === 4) color = config.breedingCategoryColour.category4
+    else if (breedingCategory === 3) color = config.breedingCategoryColour.category3
+    else if (breedingCategory === 2) color = config.breedingCategoryColour.category2
     return color
   }
 
   function getColourForActivityCategory(activityCategory) {
-    const colour = activityCategory === 5 ? '#63748f'
-      : activityCategory === 4 ? '#7e8fab'
-      : activityCategory === 3 ? '#99a9c4 '
-      : activityCategory === 2 ? '#b2c1db'
-      : activityCategory === 1 ? '#cedbf2'
-      : 'white'
+    const colour = activityCategory === 5 ? config.activityCategoryColour.category5
+      : activityCategory === 4 ? config.activityCategoryColour.category4
+      : activityCategory === 3 ? config.activityCategoryColour.category3
+      : activityCategory === 2 ? config.activityCategoryColour.category2
+      : activityCategory === 1 ? config.activityCategoryColour.category1
+      : config.activityCategoryColour.category0
     return colour
   }
 }
