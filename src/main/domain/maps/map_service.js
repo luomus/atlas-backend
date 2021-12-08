@@ -26,9 +26,10 @@ function MapService(atlasMap, config) {
          * @param {string} type
          * @param {number} scaleFactor
          * @param {string} language
+         * @param {number} atlas
          * @returns {SvgImage}
          */
-    getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
+    getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas) {
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
         const colour = getColorForBreedingCategory(datapoint.breedingCategory)
@@ -37,7 +38,7 @@ function MapService(atlasMap, config) {
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
       speciesMap.setDimensions(width, height)
-      setLegend(speciesMap, species, language)
+      setLegend(speciesMap, species, language, atlas)
       if (type === 'png')
         convertToPng(speciesMap, callback, width, height)
       else
@@ -59,33 +60,25 @@ function MapService(atlasMap, config) {
     image.src = svg64(svg.serialize())
   }
 
-  function setLegend(gridOverlay, species, language) {
+  function setLegend(gridOverlay, species, language, atlas) {
+    const lan = language.toUpperCase()
+    setLegendTitle(gridOverlay, lan, atlas)
+    const textName = 'text' + lan
+    const speciesName = 'species' + lan
     gridOverlay.setText('speciesSCI', species.speciesSCI)
         .setAttributesOfElement('speciesSCI', {display: 'block'})
-    if (language === 'fi')
-      gridOverlay.setText('speciesFI', species.speciesFI)
-          .setAttributesOfElement('speciesFI', {display: 'block'})
-          .setText('atlasTitle', config.legend.atlasTitle.textFI)
-          .setText('breedingColourTitle', config.legend.breedingColourTitle.textFI)
-          .setText('colourTitle4', config.legend.colourTitle4.textFI)
-          .setText('colourTitle3', config.legend.colourTitle3.textFI)
-          .setText('colourTitle2', config.legend.colourTitle2.textFI)
-    else if (language === 'sv')
-      gridOverlay.setText('speciesSV', species.speciesSV)
-          .setAttributesOfElement('speciesSV', {display: 'block'})
-          .setText('atlasTitle', config.legend.atlasTitle.textSV)
-          .setText('breedingColourTitle', config.legend.breedingColourTitle.textSV)
-          .setText('colourTitle4', config.legend.colourTitle4.textSV)
-          .setText('colourTitle3', config.legend.colourTitle3.textSV)
-          .setText('colourTitle2', config.legend.colourTitle2.textSV)
-    else if (language === 'en')
-      gridOverlay.setText('speciesEN', species.speciesEN)
-          .setAttributesOfElement('speciesEN', {display: 'block'})
-          .setText('atlasTitle', config.legend.atlasTitle.textEN)
-          .setText('breedingColourTitle', config.legend.breedingColourTitle.textEN)
-          .setText('colourTitle4', config.legend.colourTitle4.textEN)
-          .setText('colourTitle3', config.legend.colourTitle3.textEN)
-          .setText('colourTitle2', config.legend.colourTitle2.textEN)
+        .setText(speciesName, species[speciesName])
+        .setAttributesOfElement(speciesName, {display: 'block'})
+        .setText('breedingColourTitle', config.legend.breedingColourTitle[textName])
+        .setText('colourTitle4', config.legend.colourTitle4[textName])
+        .setText('colourTitle3', config.legend.colourTitle3[textName])
+        .setText('colourTitle2', config.legend.colourTitle2[textName])
+  }
+
+
+  function setLegendTitle(gridOverlay, language, atlas) {
+    const text = 'text' + language + 'Atlas' + atlas
+    gridOverlay.setText('atlasTitle', config.legend.atlasTitle[text])
   }
 
   function getColorForBreedingCategory(breedingCategory) {

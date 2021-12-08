@@ -35,7 +35,7 @@ class AtlasGridDao {
    * @param {number} gridId
    * @returns {Promise}
    */
-  getBirdAtlasGridInfoByGridId(gridId) {
+  getAtlasGridInfoForGrid(gridId) {
     return this.#querier('get', `SELECT * FROM grid_bird_atlas WHERE grid_id = ?`, [gridId])
   }
 
@@ -44,7 +44,7 @@ class AtlasGridDao {
    * Returns the database search result for all grid info in given bird atlas.
    * @returns {Promise}
    */
-  getAllBirdAtlasGridInfoByAtlas(atlasId) {
+  getAllGridInfoForAtlas(atlasId) {
     return this.#querier('get', `SELECT * FROM grid_bird_atlas WHERE atlas_id = ?`, [atlasId])
   }
 
@@ -53,7 +53,7 @@ class AtlasGridDao {
    * Returns the database search result for all grid info in bird atlas.
    * @returns {Promise}
    */
-   getAllBirdAtlasGridInfo() {
+   getAllGridInfo() {
     return this.#querier('all', `SELECT * FROM grid_bird_atlas`)
   }
 

@@ -157,6 +157,14 @@ class AtlasDataDao {
   getDataForGrid(gridId) {
     return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId))
   }
+
+  getDataForGridAndAtlas(gridId, atlasId) {
+    return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId && x.atlas_id == atlasId))
+  }
+
+  getAllData() {
+    return Promise.resolve(this.#data)
+  }
 }
 
 module.exports = AtlasDataDao

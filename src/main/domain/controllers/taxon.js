@@ -20,16 +20,16 @@ class Taxon {
      * A method that returns all observations of a given specified in given atlas.
      * @returns {Array}
      */
-  getAllDataBySpeciesAndAtlas() {
+  getAllDataForSpeciesAndAtlas() {
     return (req, res) => {
-      return atlasDataDao.getDataForSpeciesAndAtlas(req.param('speciesId'), req.param('atlasId'))
+      return atlasDataDao.getDataForSpeciesAndAtlas(req.params.speciesId, req.param('atlasId'))
           .then((data) => res.json(data), () => res.send(null))
     }
   }
 
-  getAllDataBySpecies() {
+  getAllDataForSpecies() {
     return (req, res) => {
-      return atlasDataDao.getDataForSpecies(req.param('speciesId'))
+      return atlasDataDao.getDataForSpecies(req.params.speciesId)
           .then((data) => res.json(data), () => res.send(null))
     }
   }
@@ -40,13 +40,13 @@ class Taxon {
      */
   getGridAndBreedingdataForBird() {
     return (req, res) => {
-      return atlasDataDao.getGridAndBreedingdataForSpecies(req.param('speciesId'))
+      return atlasDataDao.getGridAndBreedingdataForSpecies(req.params.speciesId)
           .then((data) => res.send(JSON.stringify(data)), () => res.send(null))
     }
   }
 
   countByGroup() {
-    return (req, res) => speciesDao.countByGroup(req.param('speciesId'))
+    return (req, res) => speciesDao.countByGroup(req.params.speciesId)
         .then((data) => res.json(data), () => res.send(null))
   }
 }
