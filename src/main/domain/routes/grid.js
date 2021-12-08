@@ -26,16 +26,18 @@ class Grid {
     return (req, res) => {
       this.#birdGridDao.getGridAndBreedingdataForBird(req.param('id')).then((data) => {
         this.#birdDao.getById(req.param('id')).then((species) => {
-          if (req.param('type') === 'png') {
-            const callback = (png) => res.send(png)
-            res.setHeader('Content-Type', 'image/png')
-            this.#mapService.getSpeciesMap(data, species, callback, 'png', req.param('scaling'), req.param('language'))
-          } else {
-            res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(this.#mapService.getSpeciesMap(
-                data, species, undefined, 'svg', req.param('scaling'), req.param('language'),
-            ))
-          }
+          this.#birdGridDao.getAllGridsAtlas3().then((grid) => {
+            if (req.param('type') === 'png') {
+              const callback = (png) => res.send(png)
+              res.setHeader('Content-Type', 'image/png')
+              this.#mapService.getSpeciesMap(data, grid, species, callback, 'png', req.param('scaling'), req.param('language'))
+            } else {
+              res.setHeader('Content-Type', 'image/svg+xml')
+              res.send(this.#mapService.getSpeciesMap(
+                  data, grid, species, undefined, 'svg', req.param('scaling'), req.param('language'),
+              ))
+            }
+          })
         })
       })
     }

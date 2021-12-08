@@ -28,11 +28,16 @@ function MapService(atlasMap, configObject) {
          * @param {string} language
          * @returns {SvgImage}
          */
-    getSpeciesMap: function(data, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
+    getSpeciesMap: function(data, grid, species, callback, type = 'svg', scaleFactor = 4, language = 'fi') {
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
         const colour = getColorForBreedingCategory(datapoint.breedingCategory)
         speciesMap.setAttributesOfElement(datapoint.id, {fill: colour, display: 'block'})
+      })
+      grid.forEach((datapoint) => {
+        const colour = getColourForActivityCategory(datapoint.activityCategory)
+        const id = `${datapoint.grid_id}bg`
+        speciesMap.setAttributesOfElement(id, {fill: colour})
       })
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
@@ -94,6 +99,16 @@ function MapService(atlasMap, configObject) {
     else if (breedingCategory === 3) color = '#66cc7a'
     else if (breedingCategory === 2) color = '#d6e573'
     return color
+  }
+
+  function getColourForActivityCategory(activityCategory) {
+    const colour = activityCategory === 5 ? '#63748f'
+      : activityCategory === 4 ? '#7e8fab'
+      : activityCategory === 3 ? '#99a9c4 '
+      : activityCategory === 2 ? '#b2c1db'
+      : activityCategory === 1 ? '#cedbf2'
+      : 'white'
+    return colour
   }
 }
 
