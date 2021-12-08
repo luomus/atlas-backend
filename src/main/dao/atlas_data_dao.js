@@ -34,7 +34,7 @@ class AtlasDataDao {
    * @returns {Promise}
    */
   getAllAtlasData() {
-    return this.#querier('all', `SELECT * FROM bird_data`)
+    return this.#querier('all', `SELECT * bird_data`)
   }
 
   
@@ -87,7 +87,8 @@ class AtlasDataDao {
    * @param {number} atlasId
    * @returns {Promise}
    */
-   getGridAndBreedingdataForSpecies(mxcode, atlasId) {
+   getGridAndBreedingdataForSpeciesAndAtlas(mxcode, atlasId) {
+    console.log('atlas_data_dao', mxcode)
     return this.#querier('all', `SELECT species.speciesFI AS "speciesFI", grid.id AS "id",
             grid.coordinateN AS "coordinateN", grid.coordinateE AS "coordinateE",
             bird_data.breedingCategory AS "breedingCategory"
@@ -96,7 +97,7 @@ class AtlasDataDao {
             JOIN species 
             ON species.mxCode = bird_data.species_mxcode 
             WHERE species.mxcode = :mxcode
-            AND atlas_id = :atlasId
+            AND bird_data.atlas_id = :atlasId
             AND species.visibility=1`, [mxcode, atlasId])
   }
 
@@ -114,7 +115,7 @@ class AtlasDataDao {
             FROM bird_data 
             JOIN species 
             ON species.mxCode = bird_data.species_mxcode 
-            WHERE grid_id = :gridId
+            WHERE bird_data.grid_id = :gridId
             AND species.visibility=1`, [gridId])
   }
 
@@ -133,8 +134,8 @@ class AtlasDataDao {
             FROM bird_data 
             JOIN species 
             ON species.mxCode = bird_data.species_mxcode 
-            WHERE grid_id = :gridId
-            AND atlas_id = :atlasId
+            WHERE bird_data.grid_id = :gridId
+            AND bird_data.atlas_id = :atlasId
             AND species.visibility=1`, [gridId, atlasId])
   }
 
@@ -169,7 +170,7 @@ class AtlasDataDao {
    */
   getListOfDistinctBirdsForGrid(gridId) {
     return this.#querier('all', `SELECT distinct bird_data.species_mxcode, species.speciesFi 
-            FROM bird_data, species WHERE species.mxCode=bird_data.species_mxcode AND grid_id= :gridId AND visibility=1`, [gridId])
+            FROM bird_data, species WHERE species.mxCode=bird_data.species_mxcode AND bird_data.grid_id= :gridId AND visibility=1`, [gridId])
   }
 
 
@@ -181,7 +182,7 @@ class AtlasDataDao {
    */
   getListOfDistinctBirdsForGridAndAtlas(gridId, atlasId) {
     return this.#querier('all', `SELECT distinct bird_data.species_mxcode, species.speciesFi 
-            FROM bird_data, species WHERE species.mxCode=bird_data.species_mxcode AND grid_id= :gridId AND atlas_id = :atlasId AND visibility=1`, [gridId, atlasId])
+            FROM bird_data, species WHERE species.mxCode=bird_data.species_mxcode AND bird_data.grid_id = :gridId AND bird_data.atlas_id = :atlasId AND visibility=1`, [gridId, atlasId])
   }
 }
 

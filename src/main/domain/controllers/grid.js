@@ -31,8 +31,8 @@ class Grid {
    */
   getGridStats() {
     return async (req, res) => {
-      const breedingCategoryNum = await speciesGridDao.getNumOfBreedingCategoriesById(req.param('gridId')).catch(e => [])
-      const speciesList = await speciesGridDao.getListOfDistinctBirdsById(req.param('gridId')).catch(e => [])
+      const breedingCategoryNum = await atlasDataDao.getNumOfBreedingCategoriesForGridAndAtlas(req.param('gridId'), req.param('atlasId')).catch(e => [])
+      const speciesList = await atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(req.param('gridId'), req.param('atlasId')).catch(e => [])
       const data = [...breedingCategoryNum, ...speciesList]
       return res.json(data)
     }
@@ -43,7 +43,7 @@ class Grid {
    * @returns {JSON}
    */
   getGridData() {
-    return (req, res) => atlasDataDao.getDataForGrid(req.param('gridId'))
+    return (req, res) => atlasDataDao.getDataForGridAndAtlas(req.param('gridId'), req.param('atlasId'))
         .then((data) => res.json(data), () => res.send(null))
   }
 }

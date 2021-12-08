@@ -7,7 +7,7 @@ const speciesDao = new SpeciesDao(querier)
 
 class Taxon {
   /**
-     * Returns all species in the database.
+     * A method that returns all species in the database.
      * @returns {Array}
      */
   getAll() {
@@ -17,19 +17,19 @@ class Taxon {
 
 
   /**
-     * A method that returns all Atlas3 observations of a certain bird specified by bird id (MX.code).
+     * A method that returns all observations of a given specified in given atlas.
      * @returns {Array}
      */
   getAllDataBySpeciesAndAtlas() {
     return (req, res) => {
-      return atlasDataDao.getDataBySpeciesAndAtlas(req.param('taxonId', 'atlasId'))
+      return atlasDataDao.getDataForSpeciesAndAtlas(req.param('speciesId'), req.param('atlasId'))
           .then((data) => res.json(data), () => res.send(null))
     }
   }
 
   getAllDataBySpecies() {
     return (req, res) => {
-      return atlasDataDao.getAllDataBySpecies(req.param('taxonId'))
+      return atlasDataDao.getDataForSpecies(req.param('speciesId'))
           .then((data) => res.json(data), () => res.send(null))
     }
   }
@@ -40,13 +40,13 @@ class Taxon {
      */
   getGridAndBreedingdataForBird() {
     return (req, res) => {
-      return atlasDataDao.getGridAndBreedingdataForSpecies(req.param('taxonId'))
+      return atlasDataDao.getGridAndBreedingdataForSpecies(req.param('speciesId'))
           .then((data) => res.send(JSON.stringify(data)), () => res.send(null))
     }
   }
 
   countByGroup() {
-    return (req, res) => speciesDao.countByGroup(req.param('taxonId'))
+    return (req, res) => speciesDao.countByGroup(req.param('speciesId'))
         .then((data) => res.json(data), () => res.send(null))
   }
 }

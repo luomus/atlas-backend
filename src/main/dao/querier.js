@@ -29,31 +29,31 @@ function Querier() {
 
   return async (methodName, query, params = []) => {
     try {
-      connection = await oracledb.getConnection(config);
-      console.log('Connected to Oracle database');
+      connection = await oracledb.getConnection(config)
+      console.log('Connected to Oracle database')
 
       // run query
-      result = await connection.execute(query, params, {outFormat: oracledb.OBJECT});
+      result = await connection.execute(query, params, {outFormat: oracledb.OBJECT})
       console.log('SQL query executed')
     } catch (err) {
-      return reject(err.message);
+      return new Error(err.message) 
     } finally {
       if (connection)
         try {
-          await connection.close();
-          console.log('Oracle connection closed');
+          await connection.close()
+          console.log('Oracle connection closed')
         } catch (err) {
-          console.error(err.message);
+          console.error(err.message)
         }
     }
 
-    if (result.rows.length == 0)
+    if (result.rows.length == 0) {
     // query return null
-      return resolve('Query returned no rows');
-    else {
+      return new Error('Query returned no rows')
+    } else {
       // send query results
       correctMxFormating(result.rows)
-      return result.rows;
+      return result.rows
     }
   }
 
