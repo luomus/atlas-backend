@@ -41,12 +41,12 @@ beforeEach(() => {
 
 describe('Map is drawn correctly', () => {
   test('Image type is correct', () => {
-    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
+    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined, 3)
     expect(image).toContain(`</svg>`)
     // expect(image).toBeInstanceOf('image/svg')
   })
   test('Correct data points are visible', () => {
-    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
+    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined, 3)
     expect(image).toContain(`fill="${config.legend.colourBox4.fill}" display="block" id="768326"`)
   })
 })
@@ -54,19 +54,25 @@ describe('Map is drawn correctly', () => {
 
 describe('Map legend is shown correctly', () => {
   test('Legend has correct species name', () => {
-    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'fi')
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'fi', 3)
     const image = parseDocument(imageText)
     expect(image.getElementById('speciesFI').textContent).toEqual(s[0].speciesFI)
   })
 
-  test('Legend has correct language', () => {
-    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'en')
+  test('Legend has correct atlas name', () => {
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'fi', 2)
     const image = parseDocument(imageText)
-    expect(image.getElementById('atlasTitle').textContent).toEqual(config.legend.atlasTitle.textEN)
+    expect(image.getElementById('atlasTitle').textContent).toEqual(config.legend.atlasTitle.textFIAtlas2)
+  })
+
+  test('Legend has correct language', () => {
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'en', 3)
+    const image = parseDocument(imageText)
+    expect(image.getElementById('breedingColourTitle').textContent).toEqual(config.legend.breedingColourTitle.textEN)
   })
 
   test('Legend box is shown', () => {
-    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined)
+    const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined, 3)
     const image = parseDocument(imageText)
     expect(image.getElementById('breedingColourBox').getAttribute('display')).toEqual('block')
   })

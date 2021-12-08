@@ -33,8 +33,18 @@ class AtlasDataDao {
    * Returns the database search result for all bird atlas data.
    * @returns {Promise}
    */
-  getAllAtlasData() {
+  getAllData() {
     return this.#querier('all', `SELECT * bird_data`)
+  }
+
+
+  /**
+   * Returns the database search result for all bird data in given at.
+   * @param {number} atlasId 
+   * @returns {Promise}
+   */
+   getAllDataForAtlas(atlasId) {
+    return this.#querier('all', `SELECT * bird_data WHERE atlas_id = ?`, [atlasId])
   }
 
   
@@ -181,7 +191,7 @@ class AtlasDataDao {
    * @returns {Promise}
    */
   getListOfDistinctBirdsForGridAndAtlas(gridId, atlasId) {
-    return this.#querier('all', `SELECT distinct bird_data.species_mxcode, species.speciesFi 
+    return this.#querier('all', `SELECT distinct bird_data.species_mxcode AS "species_mxcode", bird_data.breedingCategory AS "breedingCategory", species.speciesFi AS "speciesFi" 
             FROM bird_data, species WHERE species.mxCode=bird_data.species_mxcode AND bird_data.grid_id = :gridId AND bird_data.atlas_id = :atlasId AND visibility=1`, [gridId, atlasId])
   }
 }

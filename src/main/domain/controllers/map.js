@@ -2,7 +2,7 @@ const fs = require('fs')
 const createAtlasMap = require('../maps/create_atlas_map')
 const MapService = require('../maps/map_service')
 const configFile = fs.readFileSync('atlas-config.json')
-const configObject = JSON.parse(configFile)
+const config = JSON.parse(configFile)
 const Querier = require('../../dao/querier')
 const SpeciesDao = require('../../dao/species_dao')
 const GridDao = require('../../dao/grid_dao')
@@ -28,7 +28,7 @@ class Map {
     gridDao.getAllGrids().then((gridArray) => {
       gridArray = gridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
       const geoJsonArray = this.readBaseMapFiles()
-      mapService = MapService(createAtlasMap(gridArray, geoJsonArray, configObject), configObject)
+      mapService = MapService(createAtlasMap(gridArray, geoJsonArray, config), config)
     })
   }
 
@@ -65,11 +65,10 @@ class Map {
             if (req.param('type') === 'png') {
               const callback = (png) => res.send(png)
               res.setHeader('Content-Type', 'image/png')
-              mapService.getSpeciesMap(data, grid, species[0], callback, 'png', req.param('scaling'), req.param('language'))
+              mapService.getSpeciesMap(data, grid, species[0], callback, 'png', req.param('scaling'), req.param('language'), req.param('atlasId'))
             } else {
               res.setHeader('Content-Type', 'image/svg+xml')
-              res.send(mapService.getSpeciesMap(data, grid, species[0], undefined, 'svg', req.param('scaling'), req.param('language'),
-              ))
+              res.send(mapService.getSpeciesMap(data, grid, species[0], undefined, 'svg', req.param('scaling'), req.param('language'), req.param('atlasId')))
             }
           })
         })

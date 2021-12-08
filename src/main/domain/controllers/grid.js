@@ -31,11 +31,18 @@ class Grid {
    */
   getGridStats() {
     return async (req, res) => {
-      const breedingCategoryNum = await atlasDataDao.getNumOfBreedingCategoriesForGridAndAtlas(req.param('gridId'), req.param('atlasId')).catch(e => [])
-      const speciesList = await atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(req.param('gridId'), req.param('atlasId')).catch(e => [])
-      const data = [...breedingCategoryNum, ...speciesList]
-      return res.json(data)
+      const { gridId, atlasId } = req.params
+      const birdList = await atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(gridId, atlasId).catch(e => [])
+      const categories = [1, 2, 3, 4].map(int => ({categoryNumber: int, sum: 0, speciesList: []}))
+      birdList.forEach(s => {
+        if (s.breedingCategory === 0) return
+        const cat = categories.find(c => c.categoryNumber === s.breedingCategory)
+        cat.sum += 1
+        cat.speciesList.push({speciesId: s.species_id, speciesFi: s.speciesFi})
+      })
+      return res.json(categories)
     }
+
   }
 
   /**
@@ -43,7 +50,7 @@ class Grid {
    * @returns {JSON}
    */
   getGridData() {
-    return (req, res) => atlasDataDao.getDataForGridAndAtlas(req.param('gridId'), req.param('atlasId'))
+    return (req, res) => atlasDataDao.getDataForGridAndAtlas(req.params.gridId, req.params.atlasId)
         .then((data) => res.json(data), () => res.send(null))
   }
 }
