@@ -121,9 +121,7 @@ paths:
           content:
             application/x-resource+json:
               schema:
-                allOf:
-                  - $ref: "components.yaml#/schemas/SpeciesId"
-                  - $ref: "components.yaml#/schemas/SpeciesAtlasData"
+                $ref: "components.yaml#/schemas/OneSpeciesAtlasData"
               examples:
                 "For a bird species":
                   $ref: "components.yaml#/examples/birdAtlasData"
@@ -264,6 +262,8 @@ paths:
                       id:
                         type: integer
                         description: ID of the atlas.
+                    required:
+                      - id
                   collection:
                     type: array
                     items:
