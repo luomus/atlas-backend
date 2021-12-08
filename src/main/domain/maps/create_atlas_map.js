@@ -20,6 +20,7 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
   return atlasMap
 
   function drawBaseMap(geoJsonArray, svgImage) {
+    svgImage.setBackgroundColour(configObject.mapBackground)
     const converterOptions = getConverterOptions(geoJsonArray)
     const converter = geojson2svg(converterOptions)
     let color
@@ -108,7 +109,8 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
     svgGridArray.forEach((rect) => {
       const circlePropertyMap = Object.assign(configObject.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
       const backgroundPropertyMap = Object.assign(configObject.gridBackground, {'id': (rect.id + 'bg'), 'x': (rect.e - 0.5), 'y': (rect.n - 0.5)})
-      return svgImage// .addElement('rect', backgroundPropertyMap, 'background')
+      return svgImage
+          .addElement('rect', backgroundPropertyMap, 'background')
           .addElement('circle', circlePropertyMap, 'overlay')
     })
     return svgImage

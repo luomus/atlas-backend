@@ -58,16 +58,18 @@ class Map {
     return (req, res) => {
       speciesGridDao.getGridAndBreedingdataForSpecies(req.param('speciesId')).then((data) => {
         speciesDao.getById(req.param('speciesId')).then((species) => {
-          console.log('lintu map.js:ssä: ', species[0])
-          if (req.param('type') === 'png') {
-            const callback = (png) => res.send(png)
-            res.setHeader('Content-Type', 'image/png')
-            mapService.getSpeciesMap(data, species[0], callback, 'png', req.param('scaling'), req.param('language'))
-          } else {
-            res.setHeader('Content-Type', 'image/svg+xml')
-            res.send(mapService.getSpeciesMap(data, species[0], undefined, 'svg', req.param('scaling'), req.param('language'),
-            ))
-          }
+          speciesGridDao.getAllGridsAtlas3().then((grid) => {
+            console.log('lintu map.js:ssä: ', species[0])
+            if (req.param('type') === 'png') {
+              const callback = (png) => res.send(png)
+              res.setHeader('Content-Type', 'image/png')
+              mapService.getSpeciesMap(data, grid, species[0], callback, 'png', req.param('scaling'), req.param('language'))
+            } else {
+              res.setHeader('Content-Type', 'image/svg+xml')
+              res.send(mapService.getSpeciesMap(data, grid, species[0], undefined, 'svg', req.param('scaling'), req.param('language'),
+              ))
+            }
+          })
         })
       })
     }

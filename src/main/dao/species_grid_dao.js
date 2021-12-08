@@ -44,7 +44,9 @@ class SpeciesGridDao {
    * @returns {Promise}
    */
   getAllGridsAtlas3() {
-    return this.#querier('all', `SELECT * FROM grid_atlas3`)
+    return this.#querier('all', `SELECT id AS "id", grid_id AS "grid_id", 
+            level1 AS "level1", level2 AS "level2", level3 AS "level3", level4 AS "level4", level5 AS "level5",
+            activitySum AS "activitySum", activityCategory AS "activityCategory" FROM grid_atlas3`)
   }
 
   /**
