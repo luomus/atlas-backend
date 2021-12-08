@@ -27,12 +27,12 @@ class Grid {
         .then((data) => res.json(data), () => res.send(null))
   }
 
-  getGridBreedingCategoryStats() {
+  getGridStats() {
     return async (req, res) => {
-      const breedingCategoryNum = await speciesGridDao.getNumOfBreedingCategoriesById(req.param('gridId'))
-      const speciesList = await speciesGridDao.getListOfDistinctBirdsById(req.param('gridId'))
-      const data = Object.assign(breedingCategoryNum, speciesList)
-      return res.json(data), () => res.send(null)
+      const breedingCategoryNum = await speciesGridDao.getNumOfBreedingCategoriesById(req.param('gridId')).catch(e => [])
+      const speciesList = await speciesGridDao.getListOfDistinctBirdsById(req.param('gridId')).catch(e => [])
+      const data = [...breedingCategoryNum, ...speciesList]
+      return res.json(data)
     }
   }
 
