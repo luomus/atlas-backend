@@ -50,3 +50,15 @@ body
 .luomus-logo {
     height: 45px !important;
 }
+
+.swagger-ui .operation-link pre {
+    display: none;
+}
+
+.swagger-ui .model .property {
+    display: none;
+}
+
+.swagger-ui .response-col_links .operation-link .description {
+    width: 10em;
+}
