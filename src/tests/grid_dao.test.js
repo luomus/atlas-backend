@@ -21,7 +21,7 @@ test('getAllGrids calls querier correctly', () => {
   gridDao.getAllGrids()
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
-  expect(querier.mock.calls[0][1]).toContain('SELECT * FROM')
+  expect(querier.mock.calls[0][1]).toContain('SELECT')
 })
 
 test('getMunicipalityById calls querier correctly', () => {

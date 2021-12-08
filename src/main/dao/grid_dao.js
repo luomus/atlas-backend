@@ -39,6 +39,7 @@ class GridDao {
             gridName varchar(100))`
     return this.#querier('run', sql)
   }
+
   /**
    * Updates in table Municipality the entry with given data and id.
    * @param {Object} municipality
@@ -120,7 +121,9 @@ class GridDao {
    * @returns {Promise}
    */
   getAllGrids() {
-    return this.#querier('all', `SELECT * FROM grid`)
+    return this.#querier('all', `SELECT ID AS "id", COORDINATEN AS 
+      "coordinateN", COORDINATEE AS "coordinateE", MUNICIPALITY_ID 
+      AS "municipality_id", GRIDNAME AS "gridName" FROM grid`)
   }
 }
 

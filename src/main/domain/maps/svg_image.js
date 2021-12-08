@@ -62,7 +62,7 @@ function SvgImage(svgDocument) {
      * @param {Object} propertyMap
      * @returns {SvgImage}
      */
-    setBackgroundColour: function(propertyMap) {
+     setBackgroundColour: function(propertyMap) {
       this.addElement('g', {id: 'backgroundColour'}, undefined)
       const properties = {...propertyMap, width: '100%', height: '100%'}
       this.addElement('rect', properties, 'backgroundColour')
@@ -137,7 +137,7 @@ function SvgImage(svgDocument) {
      * @param {string} id
      * @returns {svgElement}
      */
-     returnElementById: function(id) {
+    returnElementById: function(id) {
       return doc.getElementById(id)
     },
     /**
