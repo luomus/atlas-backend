@@ -13,7 +13,7 @@ const svg64 = require('svg64')
  * @constructor
  */
 // eslint-disable-next-line max-lines-per-function
-function MapService(atlasMap, configObject) {
+function MapService(atlasMap, config) {
   if (typeof atlasMap === 'undefined')
     return console.error('Wrong number of arguments: atlasMap should be defined')
 
@@ -65,27 +65,27 @@ function MapService(atlasMap, configObject) {
     if (language === 'fi')
       gridOverlay.setText('speciesFI', species.speciesFI)
           .setAttributesOfElement('speciesFI', {display: 'block'})
-          .setText('atlasTitle', configObject.legend.atlasTitle.textFI)
-          .setText('breedingColourTitle', configObject.legend.breedingColourTitle.textFI)
-          .setText('colourTitle4', configObject.legend.colourTitle4.textFI)
-          .setText('colourTitle3', configObject.legend.colourTitle3.textFI)
-          .setText('colourTitle2', configObject.legend.colourTitle2.textFI)
+          .setText('atlasTitle', config.legend.atlasTitle.textFI)
+          .setText('breedingColourTitle', config.legend.breedingColourTitle.textFI)
+          .setText('colourTitle4', config.legend.colourTitle4.textFI)
+          .setText('colourTitle3', config.legend.colourTitle3.textFI)
+          .setText('colourTitle2', config.legend.colourTitle2.textFI)
     else if (language === 'sv')
       gridOverlay.setText('speciesSV', species.speciesSV)
           .setAttributesOfElement('speciesSV', {display: 'block'})
-          .setText('atlasTitle', configObject.legend.atlasTitle.textSV)
-          .setText('breedingColourTitle', configObject.legend.breedingColourTitle.textSV)
-          .setText('colourTitle4', configObject.legend.colourTitle4.textSV)
-          .setText('colourTitle3', configObject.legend.colourTitle3.textSV)
-          .setText('colourTitle2', configObject.legend.colourTitle2.textSV)
+          .setText('atlasTitle', config.legend.atlasTitle.textSV)
+          .setText('breedingColourTitle', config.legend.breedingColourTitle.textSV)
+          .setText('colourTitle4', config.legend.colourTitle4.textSV)
+          .setText('colourTitle3', config.legend.colourTitle3.textSV)
+          .setText('colourTitle2', config.legend.colourTitle2.textSV)
     else if (language === 'en')
       gridOverlay.setText('speciesEN', species.speciesEN)
           .setAttributesOfElement('speciesEN', {display: 'block'})
-          .setText('atlasTitle', configObject.legend.atlasTitle.textEN)
-          .setText('breedingColourTitle', configObject.legend.breedingColourTitle.textEN)
-          .setText('colourTitle4', configObject.legend.colourTitle4.textEN)
-          .setText('colourTitle3', configObject.legend.colourTitle3.textEN)
-          .setText('colourTitle2', configObject.legend.colourTitle2.textEN)
+          .setText('atlasTitle', config.legend.atlasTitle.textEN)
+          .setText('breedingColourTitle', config.legend.breedingColourTitle.textEN)
+          .setText('colourTitle4', config.legend.colourTitle4.textEN)
+          .setText('colourTitle3', config.legend.colourTitle3.textEN)
+          .setText('colourTitle2', config.legend.colourTitle2.textEN)
   }
 
   function getColorForBreedingCategory(breedingCategory) {

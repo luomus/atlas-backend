@@ -7,7 +7,7 @@ const geojson2svg = require('geojson2svg')
  * @constructor
  */
 // eslint-disable-next-line max-lines-per-function
-function createAtlasMap(gridArray, geoJsonArray, configObject) {
+function createAtlasMap(gridArray, geoJsonArray, config) {
   const overlayPadding = 15
   const overlayCircleRadius = 0.5
   const baseMap = drawBaseMap(geoJsonArray, SvgImage())
@@ -106,8 +106,8 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
         .addElement('g', {id: 'overlay'})
     drawLegend(svgImage)
     svgGridArray.forEach((rect) => {
-      const circlePropertyMap = Object.assign(configObject.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
-      const backgroundPropertyMap = Object.assign(configObject.gridBackground, {'id': (rect.id + 'bg'), 'x': (rect.e - 0.5), 'y': (rect.n - 0.5)})
+      const circlePropertyMap = Object.assign(config.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
+      const backgroundPropertyMap = Object.assign(config.gridBackground, {'id': (rect.id + 'bg'), 'x': (rect.e - 0.5), 'y': (rect.n - 0.5)})
       return svgImage// .addElement('rect', backgroundPropertyMap, 'background')
           .addElement('circle', circlePropertyMap, 'overlay')
     })
@@ -153,20 +153,20 @@ function createAtlasMap(gridArray, geoJsonArray, configObject) {
   function drawLegend(svgImage) {
     svgImage.addElement('g', {id: 'legendBox'})
         .addElement('g', {id: 'legend'})
-        .addElement('rect', configObject.legendBox.textBox, 'legendBox')
-        .addElement('rect', configObject.legendBox.breedingColourBox, 'legendBox')
-        .addElement('text', configObject.legend.atlasTitle, 'legend')
-        .addElement('text', configObject.legend.speciesFI, 'legend')
-        .addElement('text', configObject.legend.speciesSCI, 'legend')
-        .addElement('text', configObject.legend.speciesSV, 'legend')
-        .addElement('text', configObject.legend.speciesEN, 'legend')
-        .addElement('text', configObject.legend.breedingColourTitle, 'legend')
-        .addElement('rect', configObject.legend.colourBox4, 'legend')
-        .addElement('text', configObject.legend.colourTitle4, 'legend')
-        .addElement('rect', configObject.legend.colourBox3, 'legend')
-        .addElement('text', configObject.legend.colourTitle3, 'legend')
-        .addElement('rect', configObject.legend.colourBox2, 'legend')
-        .addElement('text', configObject.legend.colourTitle2, 'legend')
+        .addElement('rect', config.legendBox.textBox, 'legendBox')
+        .addElement('rect', config.legendBox.breedingColourBox, 'legendBox')
+        .addElement('text', config.legend.atlasTitle, 'legend')
+        .addElement('text', config.legend.speciesFI, 'legend')
+        .addElement('text', config.legend.speciesSCI, 'legend')
+        .addElement('text', config.legend.speciesSV, 'legend')
+        .addElement('text', config.legend.speciesEN, 'legend')
+        .addElement('text', config.legend.breedingColourTitle, 'legend')
+        .addElement('rect', config.legend.colourBox4, 'legend')
+        .addElement('text', config.legend.colourTitle4, 'legend')
+        .addElement('rect', config.legend.colourBox3, 'legend')
+        .addElement('text', config.legend.colourTitle3, 'legend')
+        .addElement('rect', config.legend.colourBox2, 'legend')
+        .addElement('text', config.legend.colourTitle2, 'legend')
     return svgImage
   }
 }

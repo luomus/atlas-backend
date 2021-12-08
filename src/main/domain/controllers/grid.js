@@ -1,13 +1,13 @@
 const Querier = require('../../dao/querier')
-const SpeciesDao = require('../../dao/species_dao')
 const GridDao = require('../../dao/grid_dao')
-const SpeciesGridDao = require('../../dao/species_grid_dao')
+const AtlasDataDao = require('../../dao/atlas_data_dao')
 const querier = Querier()
-const speciesGridDao = new SpeciesGridDao(querier)
-const speciesDao = new SpeciesDao(querier)
+const atlasDataDao = new AtlasDataDao(querier)
 const gridDao = new GridDao(querier)
 
 class Grid {
+
+
   getAll() {
     return (req, res) => gridDao.getAll()
         .then((data) => res.json(data), () => res.send(null))
@@ -29,15 +29,15 @@ class Grid {
 
   getGridBreedingCategoryStats() {
     return async (req, res) => {
-      const breedingCategoryNum = await speciesGridDao.getNumOfBreedingCategoriesById(req.param('gridId'))
-      const speciesList = await speciesGridDao.getListOfDistinctBirdsById(req.param('gridId'))
+      const breedingCategoryNum = await atlasDataDao.getNumOfBreedingCategoriesById(req.param('gridId'))
+      const speciesList = await atlasDataDao.getListOfDistinctBirdsById(req.param('gridId'))
       const data = Object.assign(breedingCategoryNum, speciesList)
       return res.json(data), () => res.send(null)
     }
   }
 
   getGridData() {
-    return (req, res) => speciesGridDao.getDataByGridId(req.param('gridId'))
+    return (req, res) => atlasDataDao.getDataForGrid(req.param('gridId'))
         .then((data) => res.json(data), () => res.send(null))
   }
 }
