@@ -2,14 +2,14 @@ const MapService = require('../main/domain/maps/map_service')
 const createAtlasMap = require('../main/domain/maps/create_atlas_map')
 const GridDao = require('../main/dao/grid_dao')
 const SpeciesDao = require('../main/dao/species_dao')
-const SpeciesGridDao = require('../main/dao/species_grid_dao')
+const AtlasDataDao = require('../main/dao/atlas_data_dao')
 const fs = require('fs')
 const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
 
 jest.mock('../main/dao/grid_dao')
 jest.mock('../main/dao/species_dao')
-jest.mock('../main/dao/species_grid_dao')
+jest.mock('../main/dao/atlas_data_dao')
 
 let mapService
 let config
@@ -21,12 +21,12 @@ beforeEach(() => {
   config = JSON.parse(configFile)
   const gridDao = new GridDao()
   const speciesDao = new SpeciesDao()
-  const speciesGridDao = new SpeciesGridDao()
+  const atlasDataDao = new AtlasDataDao()
   const geoJsonArray = readBaseMapFiles()
   let gridArray
   let atlasMap
   gridDao.getAllGrids().then((returnedGridArray) => {
-    speciesGridDao.getBySpeciesFromAtlas3(27697).then((data) => {
+    atlasDataDao.getDataForSpeciesAndAtlas(27697, 3).then((data) => {
       speciesDao.getSpeciesById(27697).then((species) => {
         gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
         d = data.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))

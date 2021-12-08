@@ -150,13 +150,13 @@ class AtlasDataDao {
     ]
   }
 
-  getBySpecies(speciesMxcode) {
-    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesMxcode))
+  getDataForSpeciesAndAtlas(mxcode, atlasId) {
+    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == mxcode && x.atlas_id == atlasId))
   }
 
-  getDataByGridId(gridId) {
+  getDataForGrid(gridId) {
     return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId))
   }
 }
 
-module.exports = SpeciesGridDao
+module.exports = AtlasDataDao
