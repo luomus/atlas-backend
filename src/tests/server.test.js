@@ -34,6 +34,14 @@ describe('species info from API', () => {
         .expect('content-type', /application\/json/)
   })
 
+  test('GET /api/v1/taxon/:id/ responds with JSON', (done) => {
+    request(app)
+        .get('/api/v1/taxon/25836/')
+        .query({mxcode: '25836'})
+        .expect(200, done)
+        .expect('content-type', /application\/json/)
+  })
+
   test('GET /api/v1/taxon/:id/atlas/3 responds with correct data ', async () => {
     const res1 = await request(app).get('/api/v1/taxon/25836/atlas/3')
     const res2 = await request(app).get('/api/v1/taxon/25837/atlas/3')
@@ -49,6 +57,12 @@ describe('species info from API', () => {
     expect(res2.text).toContain('726850')
     expect(res2.text).toEqual(expect.not.stringContaining('25836'))
     expect(res2.text).toEqual(expect.not.stringContaining('25844'))
+  })
+
+  test('GET /api/v1/taxon/:id responds with correct data ', async () => {
+    const res1 = await request(app).get('/api/v1/taxon/25836')
+
+    expect(res1.text).toContain('25836')
   })
 })
 

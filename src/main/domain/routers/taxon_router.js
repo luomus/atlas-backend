@@ -4,7 +4,7 @@ const taxon = new Taxon()
 const taxonRouter = require('express').Router()
 
 taxonRouter.get('/', taxon.getAll())
-taxonRouter.get('/:speciesId', taxon.getAllDataForSpecies())
+taxonRouter.get('/:speciesId', taxon.getSpeciesById())
 taxonRouter.get('/:speciesId/atlas')
 taxonRouter.get('/:speciesId/atlas/:atlasId', taxon.getAllDataForSpeciesAndAtlas())
 taxonRouter.get('/:speciesId/stats')

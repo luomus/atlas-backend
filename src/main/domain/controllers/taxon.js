@@ -50,6 +50,11 @@ class Taxon {
         .then((data) => res.json(data), () => res.send(null))
   }
 
+  getSpeciesById() {
+    return (req, res) => speciesDao.getSpeciesById(req.params.speciesId)
+        .then((data) => res.json(data), () => res.send(null))
+  }
+
   getStatsForTaxon() {
     return (req, res) => atlasDataDao.getBreedingCategorySumForSpecies(req.params.speciesId, req.params.atlasId)
         .then((data) => res.json(data), () => res.send(null))
