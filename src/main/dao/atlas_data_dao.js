@@ -194,6 +194,17 @@ class AtlasDataDao {
     return this.#querier('all', `SELECT distinct bird_data.species_mxcode AS "species_mxcode", bird_data.breedingCategory AS "breedingCategory", species.speciesFi AS "speciesFi" 
             FROM bird_data, species WHERE species.mxCode=bird_data.species_mxcode AND bird_data.grid_id = :gridId AND bird_data.atlas_id = :atlasId AND visibility=1`, [gridId, atlasId])
   }
+
+    /**
+   * Returns the database search result for list of species for given grid and atlas.
+   * @param {number} speciesId
+   * @param {number} atlasId
+   * @returns {Promise}
+   */
+     getBreedingCategorySumForSpecies(speciesId, atlasId) {
+      return this.#querier('all', `SELECT breedingCategory AS "breedingCategory", count(*) "categorySum" 
+      FROM bird_data WHERE species_mxcode= :speciesId AND atlas_id= :atlasId GROUP BY breedingCategory`, [speciesId, atlasId])
+    }
 }
 
 

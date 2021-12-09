@@ -67,3 +67,37 @@ describe('grid data from API', () => {
 
   })
 })
+
+describe('species stats from API', () => {
+  test('GET /api/v1/taxon/:id/stats/3 responds with JSON', (done) => {
+    request(app)
+      .get('/api/v1/taxon/27850/stats/3')
+      .expect(200, done)
+      .expect('content-type', /application\/json/)
+  })
+
+  test('GET /api/v1/taxon/:id/stats/3 responds with correct data ', async () => {
+    const res1 = await request(app).get('/api/v1/taxon/27697/stats/3')
+
+    expect(res1.text).toContain('19')
+    expect(res1.text).toContain('767780')
+
+  })
+})
+
+describe('grid stats from API', () => {
+  test('GET /api/v1/grid/:speciesId/stats/:atlasId responds with JSON', (done) => {
+    request(app)
+      .get('/api/v1/grid/664329/stats/3')
+      .expect(200, done)
+      .expect('content-type', /application\/json/)
+  })
+
+  test('GET /api/v1/grid/:speciesId/stats/:atlasId responds with correct data ', async () => {
+    const res1 = await request(app).get('/api/v1/grid/664329/stats/3')
+
+    expect(res1.text).toContain('categoryNumber')
+    expect(res1.text).toContain('3')
+
+  })
+})

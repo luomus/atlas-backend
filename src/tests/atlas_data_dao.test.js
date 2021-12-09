@@ -44,3 +44,30 @@ test('getDataForGrid calls querier correctly', () => {
   expect(querier.mock.calls[0][0]).toEqual('all')
   expect(querier.mock.calls[0][1]).toContain('atlas')
 })
+
+test('getBreedingCategorySumForSpecies calls querier correctly', () => {
+  const atlasDataDao = new AtlasDataDao(querier)
+  atlasDataDao.getBreedingCategorySumForSpecies(25836)
+
+  expect(querier).toHaveBeenCalledTimes(1)
+  expect(querier.mock.calls[0][0]).toEqual('all')
+  expect(querier.mock.calls[0][1]).toContain('bird_data')
+})
+
+test('getListOfDistinctBirdsForGridAndAtlas calls querier correctly', () => {
+  const atlasDataDao = new AtlasDataDao(querier)
+  atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(664329)
+
+  expect(querier).toHaveBeenCalledTimes(1)
+  expect(querier.mock.calls[0][0]).toEqual('all')
+  expect(querier.mock.calls[0][1]).toContain('bird_data')
+})
+
+test('getNumOfBreedingCategoriesForGridAndAtlas calls querier correctly', () => {
+  const atlasDataDao = new AtlasDataDao(querier)
+  atlasDataDao.getNumOfBreedingCategoriesForGridAndAtlas(664329)
+
+  expect(querier).toHaveBeenCalledTimes(1)
+  expect(querier.mock.calls[0][0]).toEqual('all')
+  expect(querier.mock.calls[0][1]).toContain('bird_data')
+})

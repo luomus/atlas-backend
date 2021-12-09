@@ -7,8 +7,8 @@ taxonRouter.get('/', taxon.getAll())
 taxonRouter.get('/:speciesId', taxon.getAllDataForSpecies())
 taxonRouter.get('/:speciesId/atlas')
 taxonRouter.get('/:speciesId/atlas/:atlasId', taxon.getAllDataForSpeciesAndAtlas())
-taxonRouter.get('/:speciesId/stats', taxon.countByGroup())
-taxonRouter.get('/:speciesId/stats/:atlasId')
+taxonRouter.get('/:speciesId/stats')
+taxonRouter.get('/:speciesId/stats/:atlasId', taxon.getStatsForTaxon())
 taxonRouter.get('/findBy')
 
 

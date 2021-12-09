@@ -162,6 +162,14 @@ class AtlasDataDao {
     return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId && x.atlas_id == atlasId))
   }
 
+  getBreedingCategorySumForSpecies(speciesId, atlasId) {
+    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesId && x.atlas_id == atlasId))
+  }
+  
+  getListOfDistinctBirdsForGridAndAtlas(gridId, atlasId) {
+    return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId && x.atlas_id == atlasId))
+  }
+
   getAllData() {
     return Promise.resolve(this.#data)
   }
