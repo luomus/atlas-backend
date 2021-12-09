@@ -32,7 +32,7 @@ function MapService(atlasMap, config) {
     getSpeciesMap: function(data, grid, species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas) {
       const speciesMap = atlasMap.copy()
       data.forEach((datapoint) => {
-        const colour = getColorForBreedingCategory(datapoint.breedingCategory)
+        const colour = getColourForBreedingCategory(datapoint.breedingCategory)
         speciesMap.setAttributesOfElement(datapoint.id, {fill: colour, display: 'block'})
       })
       grid.forEach((datapoint) => {
@@ -75,9 +75,16 @@ function MapService(atlasMap, config) {
         .setText(speciesName, species[speciesName])
         .setAttributesOfElement(speciesName, {display: 'block'})
         .setText('breedingColourTitle', config.legend.breedingColourTitle[textName])
-        .setText('colourTitle4', config.legend.colourTitle4[textName])
-        .setText('colourTitle3', config.legend.colourTitle3[textName])
-        .setText('colourTitle2', config.legend.colourTitle2[textName])
+        .setText('breedingColourTitle4', config.legend.breedingColourTitle4[textName])
+        .setText('breedingColourTitle3', config.legend.breedingColourTitle3[textName])
+        .setText('breedingColourTitle2', config.legend.breedingColourTitle2[textName])
+        .setText('activityColourTitle', config.legend.activityColourTitle[textName])
+        .setText('activityColourTitle5', config.legend.activityColourTitle5[textName])
+        .setText('activityColourTitle4', config.legend.activityColourTitle4[textName])
+        .setText('activityColourTitle3', config.legend.activityColourTitle3[textName])
+        .setText('activityColourTitle2', config.legend.activityColourTitle2[textName])
+        .setText('activityColourTitle1', config.legend.activityColourTitle1[textName])
+        .setText('activityColourTitle0', config.legend.activityColourTitle0[textName])
   }
 
 
@@ -86,12 +93,12 @@ function MapService(atlasMap, config) {
     gridOverlay.setText('atlasTitle', config.legend.atlasTitle[text])
   }
 
-  function getColorForBreedingCategory(breedingCategory) {
-    let color = 'rgba(124,240,10,0.0)'
-    if (breedingCategory === 4) color = config.breedingCategoryColour.category4
-    else if (breedingCategory === 3) color = config.breedingCategoryColour.category3
-    else if (breedingCategory === 2) color = config.breedingCategoryColour.category2
-    return color
+  function getColourForBreedingCategory(breedingCategory) {
+    const colour = breedingCategory === 4 ? config.breedingCategoryColour.category4
+      : (breedingCategory === 3) ? config.breedingCategoryColour.category3
+      : (breedingCategory === 2) ? config.breedingCategoryColour.category2
+      : 'rgba(124,240,10,0.0)'
+    return colour
   }
 
   function getColourForActivityCategory(activityCategory) {
