@@ -7,9 +7,9 @@ const speciesDao = new SpeciesDao(querier)
 
 class Taxon {
   /**
-     * A method that returns all species in the database.
-     * @returns {Array}
-     */
+   * A method that returns all species in the database.
+   * @returns {Array}
+   */
   getAll() {
     return (req, res) => speciesDao.getAll()
         .then((data) => res.json(data), () => res.send(null))
@@ -17,9 +17,9 @@ class Taxon {
 
 
   /**
-     * A method that returns all observations of a given specified in given atlas.
-     * @returns {Array}
-     */
+   * A method that returns all observations of a given specified in given atlas.
+   * @returns {Array}
+   */
   getAllDataForSpeciesAndAtlas() {
     return (req, res) => {
       return atlasDataDao.getDataForSpeciesAndAtlas(req.params.speciesId, req.param('atlasId'))
@@ -59,6 +59,17 @@ class Taxon {
     return (req, res) => atlasDataDao.getBreedingCategorySumForSpecies(req.params.speciesId, req.params.atlasId)
         .then((data) => res.json(data), () => res.send(null))
   }
-}
+
+
+  /**
+   * A method that returns all observations of a given specified in given atlas.
+   * @returns {Array}
+   */
+ findTaxon() {
+  return (req, res) => {
+    return speciesDao.searchForSpecies(req.param('species'))
+        .then((data) => res.json(data), () => res.send(null))
+  }
+}}
 
 module.exports = Taxon

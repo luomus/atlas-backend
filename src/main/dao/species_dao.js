@@ -109,6 +109,14 @@ class SpeciesDao {
   countByGroup(speciesGroupId) {
     return this.#querier('get', `SELECT COUNT(mxcode) * FROM species WHERE speciesGroup_id = ?`, [speciesGroupId])
   }
+
+  searchForSpecies(name) {
+    return this.#querier('all', `SELECT * FROM species WHERE speciesFI LIKE '%name%'
+      OR speciesSV LIKE '%name%'
+      OR speciesEN LIKE '%name%'
+      OR speciesSCI LIKE '%name%'
+      OR speciesAbbr LIKE '%name%'`, [name])
+  }
 }
 
 module.exports = SpeciesDao;
