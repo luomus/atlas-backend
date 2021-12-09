@@ -1,5 +1,3 @@
-const express = require('express')
-const app = express()
 const gridRouter = require('express').Router()
 const Grid = require('../controllers/grid')
 const grid = new Grid()

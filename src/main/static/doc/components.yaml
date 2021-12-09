@@ -32,12 +32,6 @@ schemas:
     items:
       type: object
       properties:
-        id:
-          type: integer
-          description: ID of the resource in which the link points to.
-        name:
-          type: string
-          description: Name of the resource in which the link points to.
         rel:
           type: string
           description: Defines the type of link relationship between the current resource and the resource which the link points to.
@@ -55,7 +49,7 @@ schemas:
     properties:
       id:
         type: integer
-        description: ID of the species.
+        description: ID (MX code) of the species.
     required:
       - id
 
@@ -94,9 +88,6 @@ schemas:
           speciesSV:
             type: string
             description: Swedish name
-          mxCode:
-            type: integer
-            description: MX-code of the species.
           links:
             $ref: "#/schemas/links"
 
@@ -115,6 +106,12 @@ schemas:
           to:
             type: integer
             description: End year
+        required:
+          - from
+          - to
+    required:
+      - id
+      - period
 
   SpeciesAtlasDataCollection:
     type: object
@@ -129,6 +126,41 @@ schemas:
     required:
       - species
       - collection
+
+  SpeciesAtlasData:
+    type: object
+    properties:
+      type:
+        type: string
+        description: Type of the resource.
+      atlas:
+        $ref: "#/schemas/Atlas"
+      statistics:
+        $ref: "#/schemas/SpeciesAtlasStatistics"
+      links:
+        $ref: "#/schemas/links"
+    required:
+      - type
+      - atlas
+      - statistics
+      - links
+
+  OneSpeciesAtlasData:
+    allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            description: Type of the resource.
+        required:
+          - type
+      - type: object
+        properties:
+          species:
+            $ref: "#/schemas/SpeciesId"
+        required:
+          - species
+      - $ref: '#/schemas/SpeciesAtlasData'
 
   AreaAtlasDataCollection:
     type: object
@@ -150,23 +182,13 @@ schemas:
   AreaAtlasData:
     type: object
     properties:
+      type:
+        type: string
+        description: Type of the resource.
       atlas:
         $ref: "#/schemas/Atlas"
       statistics:
         $ref: "#/schemas/AreaAtlasStatistics"
-      links:
-        $ref: "#/schemas/links"
-    required:
-      - atlas
-      - statistics
-
-  SpeciesAtlasData:
-    type: object
-    properties:
-      atlas:
-        $ref: "#/schemas/Atlas"
-      statistics:
-        $ref: "#/schemas/SpeciesAtlasStatistics"
       links:
         $ref: "#/schemas/links"
     required:
@@ -315,11 +337,10 @@ examples:
       speciesGroupId: 1
       visibility: 1
       speciesSV: Smålom
-      id: 25836
-      mxCode: MX.25836
+      id: MX.25836
       links:
         - rel: related
-          href: "/taxon/25836/atlas"
+          href: "/taxon/MX.25836/atlas"
 
   birdCollection:
     value:
@@ -330,11 +351,10 @@ examples:
         speciesGroupId: 1
         visibility: 1
         speciesSV: Smålom
-        id: 25836
-        mxCode: MX.25836
+        id: MX.25836
         links:
           - rel: related
-            href: "/taxon/25836/atlas"
+            href: "/taxon/MX.25836/atlas"
       - speciesFI: Kuikka
         speciesEN: Black-throated Diver
         speciesSCI: Gavia arctica
@@ -342,38 +362,42 @@ examples:
         speciesGroupId: 1
         visibility: 1
         speciesSV: Storlom
-        id: 25837
-        mxCode: MX.25837
+        id: MX.25837
         links:
           - rel: related
-            href: "/taxon/25837/atlas"
+            href: "/taxon/MX.25837/atlas"
 
   birdAtlasDataCollection:
     value:
       species:
-        id: 25836
+        id: MX.25836
       collection:
-        - id: 1
-          period:
-            from: 1974
-            to: 1979
+        - type: species_atlas_data
+          atlas:
+            id: 1
+            period:
+              from: 1974
+              to: 1979
           statistics: { }
           links:
             - rel: related
-              href: '/area?speciesId=25836&atlasId=1'
-        - id: 2
-          period:
-            from: 1986
-            to: 1989
+              href: '/area?speciesId=MX.25836&atlasId=1'
+        - type: species_atlas_data
+          atlas:
+            id: 2
+            period:
+              from: 1986
+              to: 1989
           statistics: { }
           links:
             - rel: related
-              href: '/area?speciesId=25836&atlasId=2'
+              href: '/area?speciesId=MX.25837&atlasId=2'
 
   birdAtlasData:
     value:
+      type: species_atlas_data
       species:
-        id: 25836
+        id: MX.25836
       atlas:
         id: 1
         period:
@@ -382,12 +406,12 @@ examples:
       statistics: { }
       links:
         - rel: related
-          href: '/area?speciesId=25836&atlasId=1'
+          href: '/area?speciesId=MX.25836&atlasId=1'
 
   birdAreaDataCollection:
     value:
       species:
-        id: 25836
+        id: MX.25836
       atlas:
         id: 1
       collection:
@@ -395,14 +419,17 @@ examples:
           coordinateN: 664
           coordinateE: 329
           breedingCategory: 1
+          breedingIndex: 50
         - id: 664331
           coordinateN: 664
           coordinateE: 331
           breedingCategory: 1
+          breedingIndex: 50
         - id: 666328
           coordinateN: 666
           coordinateE: 328
           breedingCategory: 2
+          breedingIndex: 40
 
   areaData:
     value:
@@ -419,7 +446,8 @@ examples:
       area:
         id: 664329
       collection:
-        - atlas:
+        - type: area_atlas_data
+          atlas:
             id: 1
             period:
               from: 1974
@@ -428,7 +456,8 @@ examples:
           links:
             - rel: related
               href: '/area/664329/atlas/1/data'
-        - atlas:
+        - type: area_atlas_data
+          atlas:
             id: 2
             period:
               from: 1986
@@ -440,6 +469,7 @@ examples:
 
   areaAtlasData:
     value:
+      type: area_atlas_data
       area:
         id: 664329
       atlas:
@@ -458,45 +488,45 @@ examples:
         id: 664329
       data:
         - species:
-            id: 25836
+            id: MX.25836
           breedingCategory: 1
           breedingIndex: 50
         - species:
-            id: 25837
+            id: MX.25837
           breedingCategory: 2
           breedingIndex: 40
 
   speciesMapCollections:
     value:
       species:
-        id: 25836
+        id: MX.25836
       collection:
         - type: atlas_map_collection
           links:
             - rel: self
-              href: '/map/25836/atlas'
+              href: '/map/MX.25836/atlas'
 
   speciesMapCollectionsCollection:
     value:
       - species:
-          id: 25836
+          id: MX.25836
         collection:
           - type: atlas_map_collection
             links:
               - rel: self
-                href: '/map/25836/atlas'
+                href: '/map/MX.25836/atlas'
       - species:
-          id: 25837
+          id: MX.25837
         collection:
           - type: atlas_map_collection
             links:
               - rel: self
-                href: '/map/25837/atlas'
+                href: '/map/MX.25837/atlas'
 
   speciesAtlasMapCollection:
     value:
       species:
-        id: 25836
+        id: MX.25836
       collection:
         - type: atlas_map
           atlas:
@@ -506,7 +536,7 @@ examples:
               to: 1979
           links:
             - rel: self
-              href: '/map/25836/atlas/1'
+              href: '/map/MX.25836/atlas/1'
         - type: atlas_map
           atlas:
             id: 2
@@ -515,6 +545,6 @@ examples:
               to: 1989
           links:
             - rel: self
-              href: '/map/25836/atlas/2'
+              href: '/map/MX.25836/atlas/2'
 
 

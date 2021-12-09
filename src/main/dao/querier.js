@@ -49,7 +49,7 @@ function Querier() {
 
     if (result.rows.length == 0) {
     // query return null
-      return new Error('Query returned no rows')
+      return new Error('Empty result')
     } else {
       // send query results
       correctMxFormating(result.rows)
