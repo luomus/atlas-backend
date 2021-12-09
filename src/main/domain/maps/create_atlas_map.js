@@ -107,8 +107,10 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
         .addElement('g', {id: 'overlay'})
     drawLegend(svgImage)
     svgGridArray.forEach((rect) => {
-      const circlePropertyMap = Object.assign(config.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
-      const backgroundPropertyMap = Object.assign(config.gridBackground, {'id': (rect.id + 'bg'), 'x': (rect.e - 0.5), 'y': (rect.n - 0.5)})
+      const circlePropertyMap =
+          Object.assign(config.gridCircle, {id: rect.id, cx: (rect.e), cy: (rect.n), r: overlayCircleRadius})
+      const backgroundPropertyMap =
+          Object.assign(config.gridBackground, {'id': (rect.id + 'bg'), 'x': (rect.e - 0.5), 'y': (rect.n - 0.5)})
       return svgImage
           .addElement('rect', backgroundPropertyMap, 'background')
           .addElement('circle', circlePropertyMap, 'overlay')

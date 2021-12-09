@@ -36,7 +36,7 @@ function Querier() {
       result = await connection.execute(query, params, {outFormat: oracledb.OBJECT})
       console.log('SQL query executed')
     } catch (err) {
-      return new Error(err.message) 
+      return new Error(err.message)
     } finally {
       if (connection)
         try {
@@ -47,10 +47,10 @@ function Querier() {
         }
     }
 
-    if (result.rows.length == 0) {
+    if (result.rows.length == 0)
     // query return null
       return new Error('Empty result')
-    } else {
+    else {
       // send query results
       correctMxFormating(result.rows)
       return result.rows

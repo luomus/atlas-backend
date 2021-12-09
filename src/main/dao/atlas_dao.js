@@ -39,11 +39,9 @@ class AtlasDao {
    * Returns the database search result for all atlas info.
    * @returns {Promise}
    */
-   getAllAtlasInfo() {
+  getAllAtlasInfo() {
     return this.#querier('all', `SELECT * FROM atlas`)
   }
-
-
 }
 
 module.exports = AtlasDao;

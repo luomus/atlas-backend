@@ -8,17 +8,16 @@ const speciesDao = new SpeciesDao(querier)
 class Taxon {
   /**
    * A method that returns all species in the database.
-   * @returns {Array}
+   * @returns {JSON}
    */
   getAll() {
     return (req, res) => speciesDao.getAll()
         .then((data) => res.json(data), () => res.send(null))
   }
 
-
   /**
-   * A method that returns all observations of a given specified in given atlas.
-   * @returns {Array}
+   * Returns all observations of the given species in given atlas.
+   * @returns {JSON}
    */
   getAllDataForSpeciesAndAtlas() {
     return (req, res) => {
@@ -27,6 +26,10 @@ class Taxon {
     }
   }
 
+  /**
+   * Returns all atlas data of the given species.
+   * @returns {JSON}
+   */
   getAllDataForSpecies() {
     return (req, res) => {
       return atlasDataDao.getDataForSpecies(req.params.speciesId)
@@ -35,8 +38,8 @@ class Taxon {
   }
 
   /**
-     * A method that returns atlas grid data for a certain species specified by id (MX.code).
-     * @returns {Array}
+     * Returns atlas data of the given species.
+     * @returns {JSON}
      */
   getGridAndBreedingdataForBird() {
     return (req, res) => {
@@ -45,31 +48,39 @@ class Taxon {
     }
   }
 
-  countByGroup() {
-    return (req, res) => speciesDao.countByGroup(req.params.speciesId)
-        .then((data) => res.json(data), () => res.send(null))
-  }
-
+  /**
+   * Returns the species with given id (MX.code).
+   * @returns {Array}
+   */
   getSpeciesById() {
     return (req, res) => speciesDao.getSpeciesById(req.params.speciesId)
         .then((data) => res.json(data), () => res.send(null))
   }
 
+  /**
+   * Returns the statistics of the given species in given atlas.
+   * @returns {Array}
+   */
   getStatsForTaxon() {
     return (req, res) => atlasDataDao.getBreedingCategorySumForSpecies(req.params.speciesId, req.params.atlasId)
         .then((data) => res.json(data), () => res.send(null))
   }
 
-
   /**
-   * A method that returns all observations of a given specified in given atlas.
-   * @returns {Array}
+   * Returns a list of species with the given search term in their name.
+   * @returns {JSON}
    */
- findTaxon() {
-  return (req, res) => {
-    return speciesDao.searchForSpecies(req.param('species'))
-        .then((data) => res.json(data), () => res.send(null))
+  findTaxon() {
+    return (req, res) => {
+      return speciesDao.searchForSpecies(req.param('species'))
+          .then((data) => res.json(data), () => res.send(null))
+    }
   }
-}}
+
+  // countByGroup() {
+  //   return (req, res) => speciesDao.countByGroup(req.params.speciesId)
+  //       .then((data) => res.json(data), () => res.send(null))
+  // }
+}
 
 module.exports = Taxon

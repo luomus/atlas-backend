@@ -51,7 +51,7 @@ describe('Map is drawn correctly', () => {
   })
 })
 
-
+// eslint-disable-next-line max-lines-per-function
 describe('Map legend is shown correctly', () => {
   test('Legend has correct species name', () => {
     const imageText = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, 'fi', 3)

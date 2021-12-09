@@ -102,14 +102,28 @@ class SpeciesDao {
       AS "visibility" FROM species`)
   }
 
+  /**
+   * Returns the database search result for the number of entries in the table Species.
+   * @returns {Promise}
+   */
   countAll() {
     return this.#querier('get', `SELECT COUNT(mxcode) * FROM species`)
   }
 
+  /**
+   * Returns the database search result for the number of entries of given species group in the table Species.
+   * @param {number} speciesGroupId
+   * @returns {Promise}
+   */
   countByGroup(speciesGroupId) {
     return this.#querier('get', `SELECT COUNT(mxcode) * FROM species WHERE speciesGroup_id = ?`, [speciesGroupId])
   }
 
+  /**
+   * Returns the database search result for the given species name in the table Species.
+   * @param {number} name
+   * @returns {Promise}
+   */
   searchForSpecies(name) {
     return this.#querier('all', `SELECT * FROM species WHERE speciesFI LIKE '%name%'
       OR speciesSV LIKE '%name%'

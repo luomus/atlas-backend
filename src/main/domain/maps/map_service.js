@@ -95,15 +95,14 @@ function MapService(atlasMap, config) {
   }
 
   function getColourForActivityCategory(activityCategory) {
-    const colour = activityCategory === 5 ? '#63748f'
-      : activityCategory === 4 ? '#7e8fab'
-      : activityCategory === 3 ? '#99a9c4 '
-      : activityCategory === 2 ? '#b2c1db'
-      : activityCategory === 1 ? '#cedbf2'
-      : 'white'
+    const colour = activityCategory === 5 ? '#63748f' :
+      activityCategory === 4 ? '#7e8fab' :
+      activityCategory === 3 ? '#99a9c4 ' :
+      activityCategory === 2 ? '#b2c1db' :
+      activityCategory === 1 ? '#cedbf2' :
+      'white'
     return colour
   }
-
 }
 
 module.exports = MapService

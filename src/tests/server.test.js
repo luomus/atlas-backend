@@ -25,6 +25,7 @@ describe('species list from API', () => {
   })
 })
 
+// eslint-disable-next-line max-lines-per-function
 describe('species info from API', () => {
   test('GET /api/v1/taxon/:id/atlas/3 responds with JSON', (done) => {
     request(app)
@@ -69,25 +70,24 @@ describe('species info from API', () => {
 describe('grid data from API', () => {
   test('GET /api/v1/grid/:id/atlas/3 responds with JSON', (done) => {
     request(app)
-      .get('/api/v1/grid/664329/atlas/3')
-      .expect(200, done)
-      .expect('content-type', /application\/json/)
+        .get('/api/v1/grid/664329/atlas/3')
+        .expect(200, done)
+        .expect('content-type', /application\/json/)
   })
 
   test('GET /api/v1/grid/:id/atlas/3 responds with correct data ', async () => {
     const res1 = await request(app).get('/api/v1/grid/664329/atlas/3')
 
     expect(res1.text).toContain('10')
-
   })
 })
 
 describe('species stats from API', () => {
   test('GET /api/v1/taxon/:id/stats/3 responds with JSON', (done) => {
     request(app)
-      .get('/api/v1/taxon/27850/stats/3')
-      .expect(200, done)
-      .expect('content-type', /application\/json/)
+        .get('/api/v1/taxon/27850/stats/3')
+        .expect(200, done)
+        .expect('content-type', /application\/json/)
   })
 
   test('GET /api/v1/taxon/:id/stats/3 responds with correct data ', async () => {
@@ -95,16 +95,15 @@ describe('species stats from API', () => {
 
     expect(res1.text).toContain('19')
     expect(res1.text).toContain('767780')
-
   })
 })
 
 describe('grid stats from API', () => {
   test('GET /api/v1/grid/:speciesId/stats/:atlasId responds with JSON', (done) => {
     request(app)
-      .get('/api/v1/grid/664329/stats/3')
-      .expect(200, done)
-      .expect('content-type', /application\/json/)
+        .get('/api/v1/grid/664329/stats/3')
+        .expect(200, done)
+        .expect('content-type', /application\/json/)
   })
 
   test('GET /api/v1/grid/:speciesId/stats/:atlasId responds with correct data ', async () => {
@@ -112,6 +111,5 @@ describe('grid stats from API', () => {
 
     expect(res1.text).toContain('categoryNumber')
     expect(res1.text).toContain('3')
-
   })
 })

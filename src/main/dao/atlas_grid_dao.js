@@ -50,7 +50,7 @@ class AtlasGridDao {
             activitySum AS "activitySum", activityCategory AS "activityCategory" FROM grid_atlas3`)
   }
 
-  
+
   /**
    * Returns the database search result for all grid info in given bird atlas.
    * @returns {Promise}
@@ -64,12 +64,9 @@ class AtlasGridDao {
    * Returns the database search result for all grid info in bird atlas.
    * @returns {Promise}
    */
-   getAllGridInfo() {
+  getAllGridInfo() {
     return this.#querier('all', `SELECT * FROM grid_bird_atlas`)
   }
-
-
-  
 }
 
 module.exports = AtlasGridDao;
