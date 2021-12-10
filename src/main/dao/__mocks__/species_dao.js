@@ -65,7 +65,7 @@ class SpeciesDao {
     return Promise.resolve(this.#data)
   }
 
-  getSpeciesById(id) {
+  getById(id) {
     return Promise.resolve(this.#data.filter((x) => x.mxCode == id))
   }
 }

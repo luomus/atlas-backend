@@ -121,16 +121,18 @@ class SpeciesDao {
 
   /**
    * Returns the database search result for the given species name in the table Species.
-   * @param {number} name
+   * @param {string} name
    * @returns {Promise}
    */
   searchForSpecies(name) {
-    return this.#querier('all', `SELECT * FROM species WHERE speciesFI LIKE '%name%'
-      OR speciesSV LIKE '%name%'
-      OR speciesEN LIKE '%name%'
-      OR speciesSCI LIKE '%name%'
-      OR speciesAbbr LIKE '%name%'`, [name])
+    console.log('löytyi')
+    return this.#querier('all', `SELECT * FROM species WHERE speciesFI '%name%'`, [name])
   }
 }
+
+      // OR speciesSV LIKE '%name%'
+      // OR speciesEN LIKE '%name%'
+      // OR speciesSCI LIKE '%name%'
+      // OR speciesAbbr LIKE '%name%'
 
 module.exports = SpeciesDao;

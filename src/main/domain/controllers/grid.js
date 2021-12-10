@@ -15,12 +15,34 @@ class Grid {
         .then((data) => res.json(data), () => res.send(null))
   }
 
+  getCollection() {
+     return async (req, res) => {
+       const {speciesId, atlasId} = req.params 
+       if (typeof speciesId !== 'undefined') {
+        // Return collection of area resources with species data
+        const data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId)
+          .then((data) => res.json(data), () => res.send(null))
+        data = data.map(area => ({
+          id: area.grid_id,
+          coordinateN: grid_id.substring(0, 3),
+          coordinateE: grid_id.substring(3, 6),
+          breedingCategory: area.breedingCategory,
+          breedingIndex: area.breedingIndex,
+        }))
+
+       } else {
+        // Return collection of all areas
+        return gridDao.getAll().then((data) => res.json(data), () => res.send(null)) 
+       }
+     }
+    } 
+
   /**
    * Returns info for one area point.
    * @returns {JSON}
    */
   getGridInfo() {
-    return (req, res) => gridDao.getGridById(req.param('gridId'))
+    return (req, res) => gridDao.getGridById(req.params.gridId)
         .then((data) => res.json(data), () => res.send(null))
   }
 

@@ -5,7 +5,7 @@ const map = new Map()
 
 const mapRouter = require('express').Router()
 
-mapRouter.get('/', taxon.getAll())
+mapRouter.get('/',)
 mapRouter.get('/:speciesId')
 mapRouter.get('/:speciesId/atlas')
 

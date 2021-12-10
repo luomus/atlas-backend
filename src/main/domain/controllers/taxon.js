@@ -53,7 +53,7 @@ class Taxon {
    * @returns {Array}
    */
   getSpeciesById() {
-    return (req, res) => speciesDao.getSpeciesById(req.params.speciesId)
+    return (req, res) => speciesDao.getById(req.params.speciesId)
         .then((data) => res.json(data), () => res.send(null))
   }
 
@@ -62,8 +62,13 @@ class Taxon {
    * @returns {Array}
    */
   getStatsForTaxon() {
-    return (req, res) => atlasDataDao.getBreedingCategorySumForSpecies(req.params.speciesId, req.params.atlasId)
-        .then((data) => res.json(data), () => res.send(null))
+    return async (req, res) => {
+      const {speciesId, atlasId} = req.params
+      const stats = await atlasDataDao.getBreedingCategorySumForSpecies(speciesId, atlasId).catch((e) => [])
+      const link = `/area?speciesId=${speciesId}&atlasId=${atlasId}`
+      const categories = {statistics: {stats}, link: link}
+      return res.json(categories)
+    }
   }
 
   /**
@@ -71,10 +76,8 @@ class Taxon {
    * @returns {JSON}
    */
   findTaxon() {
-    return (req, res) => {
-      return speciesDao.searchForSpecies(req.param('species'))
+    return (req, res) => speciesDao.searchForSpecies(req.params.species)
           .then((data) => res.json(data), () => res.send(null))
-    }
   }
 
   // countByGroup() {

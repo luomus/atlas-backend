@@ -125,7 +125,7 @@ class GridDao {
     ]
   }
 
-  getAllGrids() {
+  getAll() {
     return Promise.resolve(this.#data)
   }
 }

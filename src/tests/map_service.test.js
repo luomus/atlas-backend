@@ -3,6 +3,7 @@ const createAtlasMap = require('../main/domain/maps/create_atlas_map')
 const GridDao = require('../main/dao/grid_dao')
 const SpeciesDao = require('../main/dao/species_dao')
 const AtlasDataDao = require('../main/dao/atlas_data_dao')
+const AtlasGridDao = require('../main/dao/atlas_grid_dao')
 const fs = require('fs')
 const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 
@@ -10,11 +11,13 @@ const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
 jest.mock('../main/dao/grid_dao')
 jest.mock('../main/dao/species_dao')
 jest.mock('../main/dao/atlas_data_dao')
+jest.mock('../main/dao/atlas_grid_dao')
 
 let mapService
 let config
-let s
-let d
+let speciesData
+let atlasData
+let atlasGrid
 
 beforeEach(() => {
   const configFile = fs.readFileSync('atlas-config.json')
@@ -22,26 +25,29 @@ beforeEach(() => {
   const gridDao = new GridDao()
   const speciesDao = new SpeciesDao()
   const atlasDataDao = new AtlasDataDao()
+  const atlasGridDao = new AtlasGridDao()
   const geoJsonArray = readBaseMapFiles()
   let gridArray
   let atlasMap
-  gridDao.getAllGrids().then((returnedGridArray) => {
-    atlasDataDao.getDataForSpeciesAndAtlas(27697, 3).then((data) => {
-      speciesDao.getSpeciesById(27697).then((species) => {
-        gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
-        d = data.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
-        atlasMap = createAtlasMap(gridArray, geoJsonArray, config)
-        mapService = new MapService(atlasMap, config)
-        s = species.map((datapoint) => ({...datapoint}))
-      })
-    })
-  })
+
+  return async (req, res) => {
+    const {speciesId, atlasId} = req.params
+    const returnedGridArray = await gridDao.getAll().catch(e => [])
+    const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
+    const species = await speciesDao.getById(speciesId).catch(e => [])
+    atlasGrid = await atlasGridDao.getAllBirdAtlasGridInfoByAtlas(atlasId).catch(e => [])
+    gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
+    atlasData = breedingData.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
+    atlasMap = createAtlasMap(gridArray, geoJsonArray, config)
+    mapService = new MapService(atlasMap, config)
+    speciesData = species.map((datapoint) => ({...datapoint}))
+  }
 })
 
 
 describe('Map is drawn correctly', () => {
   test('Image type is correct', () => {
-    const image = mapService.getSpeciesMap(d, s[0], undefined, 'svg', undefined, undefined, 3)
+    const image = mapService.getSpeciesMap(d, atlasGrid, s[0], undefined, 'svg', undefined, undefined, 3)
     expect(image).toContain(`</svg>`)
     // expect(image).toBeInstanceOf('image/svg')
   })
