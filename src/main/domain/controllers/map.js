@@ -18,12 +18,15 @@ let mapService
 
 class Map {
   /**
-     * @constructor
-     */
+   * @constructor
+   */
   constructor() {
     this.createBaseMap()
   }
 
+  /**
+   * Creates a basemap of Finland for atlas datapoints from the basemap files and an empty grid.
+   */
   createBaseMap() {
     gridDao.getAllGrids().then((gridArray) => {
       gridArray = gridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
@@ -32,6 +35,10 @@ class Map {
     })
   }
 
+  /**
+   * Reads the basemap files from geojson to an array.
+   * @returns {Array}
+   */
   readBaseMapFiles() {
     const geoJsonArray = []
     try {
@@ -53,15 +60,14 @@ class Map {
 
 
   /**
-     * A method that creates an image of the grid with a bird's breeding data.
-     * @returns {SVGElement}
-     */
+   * Creates an image of the grid with a bird's breeding data.
+   * @returns {SVGElement}
+   */
   createGridForBirdData() {
     return (req, res) => {
       atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(req.param('speciesId'), req.param('atlasId')).then((data) => {
         speciesDao.getById(req.param('speciesId')).then((species) => {
           atlasGridDao.getAllBirdAtlasGridInfoByAtlas(req.param('atlasId')).then((grid) => {
-            console.log('lintu map.js:ssä: ', species[0])
             if (req.param('type') === 'png') {
               const callback = (png) => res.send(png)
               res.setHeader('Content-Type', 'image/png')
