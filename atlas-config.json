@@ -19,6 +19,19 @@
     "shape-rendering": "optimizeSpeed",
     "opacity": 0.7
   },
+  "breedingCategoryColour": {
+    "category4": "#228ae6",
+    "category3": "#66cc7a",
+    "category2": "#d6e573"
+  },
+  "activityCategoryColour": {
+    "category5": "#63748f",
+    "category4": "#7e8fab",
+    "category3": "#99a9c4",
+    "category2": "#b2c1db",
+    "category1": "#cedbf2",
+    "category0": "white"
+  },
   "legendBox": {
     "textBox": {
       "id": "textBox",
@@ -30,29 +43,43 @@
       "fill": "white",
       "fill-opacity": 0,
       "stroke": "black",
-      "stroke-width": 0.15,
+      "stroke-width": 0.1,
       "display": "none"
     },
     "breedingColourBox": {
       "id": "breedingColourBox",
       "class": "legendBox",
       "x": 0.5,
-      "y": 41,
-      "width": 24,
+      "y": 21,
+      "width": 28,
       "height": 18,
       "fill": "#ebebeb",
       "fill-opacity": 1,
       "stroke": "black",
-      "stroke-width": 0.15,
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourBox": {
+      "id": "activityColourBox",
+      "class": "legendBox",
+      "x": 0.5,
+      "y": 41,
+      "width": 28,
+      "height": 27,
+      "fill": "#ebebeb",
+      "fill-opacity": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
       "display": "block"
     }
   },
   "legend": {
+    "fontFamily": "monospace",
     "atlasTitle": { 
       "id": "atlasTitle",
       "class": "title",
       "x": 1,
-      "y": 5,
+      "y": 4,
       "font-size": 3.5,
       "textFIAtlas1": "Lintuatlas 1 (1974-1979)",
       "textSVAtlas1": "Fågelatlas 1 (1974-1979)",
@@ -69,7 +96,7 @@
       "id": "speciesFI",
       "class": "speciesName",
       "x": 1,
-      "y": 24,
+      "y": 9,
       "font-size": 2.5,
       "display": "none"
     },
@@ -77,7 +104,7 @@
       "id": "speciesSV",
       "class": "speciesName",
       "x": 1,
-      "y": 24,
+      "y": 9,
       "font-size": 2.5,
       "display": "none"
     },
@@ -85,7 +112,7 @@
       "id": "speciesEN",
       "class": "speciesName",
       "x": 1,
-      "y": 24,
+      "y": 9,
       "font-size": 2.5,
       "display": "none"
     },
@@ -93,7 +120,7 @@
       "id": "speciesSCI", 
       "class": "speciesName",
       "x": 1,
-      "y": 28,
+      "y": 13,
       "font-size": 2.5,
       "font-style": "italic",
       "display": "none"
@@ -102,80 +129,220 @@
       "id": "breedingColourTitle",
       "class": "title",
       "x": 2,
-      "y": 45,
+      "y": 25,
       "font-size": 2.5,
       "textFI": "Pesintä",
       "textSV": "Häckning",
       "textEN": "Breeding",
       "display": "block"
     },
-    "colourBox4": { 
-      "id": "colourBox4",
-      "class": "colourBox",
+    "breedingColourBox4": { 
+      "id": "breedingColourBox4",
+      "class": "breedingColourBox",
       "x": 2,
-      "y": 48,
+      "y": 28,
       "width": 1,
       "height": 1,
-      "fill": "#228ae6",
       "stroke": "black",
       "stroke-width": 0.1,
       "display": "block"
     },
-    "colourTitle4": { 
-      "id": "colourTitle4",
-      "class": "colourTitle",
+    "breedingColourTitle4": { 
+      "id": "breedingColourTitle4",
+      "class": "breedingColourTitle",
       "x": 4,
-      "y": 49,
+      "y": 29,
       "font-size": 2,
       "textFI": "varma pesintä",
       "textSV": "säker häckning",
       "textEN": "sure breeding",
       "display": "block"
     },
-    "colourBox3": {
-      "id": "colourBox3", 
-      "class": "colourBox",
+    "breedingColourBox3": {
+      "id": "breedingColourBox3", 
+      "class": "breedingColourBox",
       "x": 2,
-      "y": 52,
+      "y": 31,
       "width": 1,
       "height": 1,
-      "fill": "#66cc7a",
       "stroke": "black",
       "stroke-width": 0.1,
       "display": "block"
     },
-    "colourTitle3": {
-      "id": "colourTitle3",
-      "class": "colourTitle",
+    "breedingColourTitle3": {
+      "id": "breedingColourTitle3",
+      "class": "breedingColourTitle",
       "x": 4,
-      "y": 53,
+      "y": 32,
       "font-size": 2,
       "textFI": "todennäköinen pesintä",
       "textSV": "trolig häckning",
       "textEN": "probable breeding",
       "display": "block"
     },
-    "colourBox2": { 
-      "id": "colourBox2",
-      "class": "colourBox",
+    "breedingColourBox2": { 
+      "id": "breedingColourBox2",
+      "class": "breedingColourBox",
       "x": 2,
-      "y": 56,
+      "y": 34,
       "width": 1,
       "height": 1,
-      "fill": "#d6e573",
       "stroke": "black",
       "stroke-width": 0.1,
       "display": "block"
     },
-    "colourTitle2": { 
-      "id": "colourTitle2",
-      "class": "colourTitle",
+    "breedingColourTitle2": { 
+      "id": "breedingColourTitle2",
+      "class": "breedingColourTitle",
       "x": 4,
-      "y": 57,
+      "y": 35,
       "font-size": 2,
       "textFI": "mahdollinen pesintä",
       "textSV": "eventuell häckning",
       "textEN": "possible breeding",
+      "display": "block"
+    },
+    "activityColourTitle": {
+      "id": "activityColourTitle",
+      "class": "title",
+      "x": 2,
+      "y": 45,
+      "font-size": 2.5,
+      "textFI": "Selvitysaste",
+      "textSV": "",
+      "textEN": "Activity category",
+      "display": "block"
+    },
+    "activityColourBox5": { 
+      "id": "activityColourBox5",
+      "class": "activityColourBox",
+      "x": 2,
+      "y": 48,
+      "width": 1,
+      "height": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourTitle5": { 
+      "id": "activityColourTitle5",
+      "class": "activityColourTitle",
+      "x": 4,
+      "y": 49,
+      "font-size": 2,
+      "textFI": "erinomainen",
+      "textSV": "",
+      "textEN": "",
+      "display": "block"
+    },
+    "activityColourBox4": { 
+      "id": "activityColourBox4",
+      "class": "activityColourBox",
+      "x": 2,
+      "y": 51,
+      "width": 1,
+      "height": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourTitle4": { 
+      "id": "activityColourTitle4",
+      "class": "activityColourTitle",
+      "x": 4,
+      "y": 52,
+      "font-size": 2,
+      "textFI": "hyvä",
+      "textSV": "",
+      "textEN": "",
+      "display": "block"
+    },
+    "activityColourBox3": {
+      "id": "activityColourBox3", 
+      "class": "activityColourBox",
+      "x": 2,
+      "y": 54,
+      "width": 1,
+      "height": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourTitle3": {
+      "id": "activityColourTitle3",
+      "class": "activityColourTitle",
+      "x": 4,
+      "y": 55,
+      "font-size": 2,
+      "textFI": "tyydyttävä",
+      "textSV": "",
+      "textEN": "",
+      "display": "block"
+    },
+    "activityColourBox2": { 
+      "id": "activityColourBox2",
+      "class": "activityColourBox",
+      "x": 2,
+      "y": 57,
+      "width": 1,
+      "height": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourTitle2": { 
+      "id": "activityColourTitle2",
+      "class": "activityColourTitle",
+      "x": 4,
+      "y": 58,
+      "font-size": 2,
+      "textFI": "välttävä",
+      "textSV": "",
+      "textEN": "",
+      "display": "block"
+    },
+    "activityColourBox1": { 
+      "id": "activityColourBox1",
+      "class": "activityColourBox",
+      "x": 2,
+      "y": 60,
+      "width": 1,
+      "height": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourTitle1": { 
+      "id": "activityColourTitle1",
+      "class": "activityColourTitle",
+      "x": 4,
+      "y": 61,
+      "font-size": 2,
+      "textFI": "satunnaistietoja",
+      "textSV": "",
+      "textEN": "",
+      "display": "block"
+    },
+    "activityColourBox0": {
+      "id": "activityColourBox0",
+      "class": "activityColourBox",
+      "x": 2,
+      "y": 63,
+      "width": 1,
+      "height": 1,
+      "stroke": "black",
+      "stroke-width": 0.1,
+      "display": "block"
+    },
+    "activityColourTitle0": { 
+      "id": "activityColourTitle0",
+      "class": "activityColourTitle",
+      "x": 4,
+      "y": 64,
+      "font-size": 2,
+      "textFI": "ei havaintoja",
+      "textSV": "",
+      "textEN": "",
       "display": "block"
     }
   }

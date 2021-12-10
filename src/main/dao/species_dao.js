@@ -75,7 +75,7 @@ class SpeciesDao {
    * @param {number} mxcode
    * @returns {Promise}
    */
-  getSpeciesById(mxcode) {
+  getById(mxcode) {
     return this.#querier('get', `SELECT mxCode AS "mxCode", speciesFI AS "speciesFI",
     speciesSV AS "speciesSV", speciesEN AS "speciesEN", speciesSCI AS "speciesSCI",
     speciesAbbr AS "speciesAbbr", speciesGroup_id AS "speciesGroup_id", visibility 

@@ -64,21 +64,18 @@ class Map {
    * @returns {SVGElement}
    */
   createGridForBirdData() {
-    return (req, res) => {
-      atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(req.param('speciesId'), req.param('atlasId')).then((data) => {
-        speciesDao.getById(req.param('speciesId')).then((species) => {
-          atlasGridDao.getAllBirdAtlasGridInfoByAtlas(req.param('atlasId')).then((grid) => {
-            if (req.param('type') === 'png') {
-              const callback = (png) => res.send(png)
-              res.setHeader('Content-Type', 'image/png')
-              mapService.getSpeciesMap(data, grid, species[0], callback, 'png', req.param('scaling'), req.param('language'), req.param('atlasId'))
-            } else {
-              res.setHeader('Content-Type', 'image/svg+xml')
-              res.send(mapService.getSpeciesMap(data, grid, species[0], undefined, 'svg', req.param('scaling'), req.param('language'), req.param('atlasId')))
-            }
-          })
-        })
-      })
+    return async (req, res) => {
+      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(req.param('speciesId'), req.param('atlasId')).catch(e => [])
+      const species = await speciesDao.getById(req.param('speciesId')).catch(e => [])
+      const atlasGrid = await atlasGridDao.getAllBirdAtlasGridInfoByAtlas(req.param('atlasId')).catch(e => [])
+      if (req.param('type') === 'png') {
+        const callback = (png) => res.send(png)
+        res.setHeader('Content-Type', 'image/png')
+        mapService.getSpeciesMap(breedingData, atlasGrid, species[0], callback, 'png', req.param('scaling'), req.param('language'), req.param('atlasId'))
+      } else {
+        res.setHeader('Content-Type', 'image/svg+xml')
+        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species[0], undefined, 'svg', req.param('scaling'), req.param('language'), req.param('atlasId')))
+      }
     }
   }
 }
