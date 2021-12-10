@@ -1,4 +1,5 @@
 global.__rootdir = __dirname
+global.__latestAtlas = 3
 const express = require('express')
 const cors = require('cors')
 const fs = require('fs')

@@ -44,19 +44,10 @@ class AtlasGridDao {
    * Returns the database search result for all grid info in given bird atlas.
    * @returns {Promise}
    */
-  getAllBirdAtlasGridInfoByAtlas(atlasId) {
-    return this.#querier('all', `SELECT id AS "id", grid_id AS "grid_id", 
-            level1 AS "level1", level2 AS "level2", level3 AS "level3", level4 AS "level4", level5 AS "level5",
-            activitySum AS "activitySum", activityCategory AS "activityCategory" FROM grid_atlas3`)
-  }
-
-
-  /**
-   * Returns the database search result for all grid info in given bird atlas.
-   * @returns {Promise}
-   */
   getAllGridInfoForAtlas(atlasId) {
-    return this.#querier('all', `SELECT * FROM grid_atlas WHERE atlas_id = :atlasId`, [atlasId])
+    return this.#querier('all', `SELECT id AS "id", grid_id AS "grid_id", atlas_id AS "atlas_id",
+            level1 AS "level1", level2 AS "level2", level3 AS "level3", level4 AS "level4", level5 AS "level5",
+            activitySum AS "activitySum", activityCategory AS "activityCategory" FROM grid_atlas WHERE atlas_id = :atlasId`, [atlasId])
   }
 
 

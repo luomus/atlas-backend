@@ -57,7 +57,15 @@ class AtlasDataDao {
     return this.#querier('all', `SELECT id AS "id", species_mxcode AS "species_mxcode",
             grid_id AS "grid_id", breedingIndex AS "breedingIndex", breedingCategory AS "breedingCategory" FROM bird_data WHERE species_mxcode = :mxcode`, [mxcode])
   }
-
+  
+  /**
+   * Returns the database search result of atlases that have observations of given species.
+   * @param {number} mxcode
+   * @returns {Promise}
+   */
+   getAtlasesForSpecies(mxcode) {
+    return this.#querier('all', `SELECT atlas_id AS "atlas_id" FROM bird_data WHERE species_mxcode = :mxcode`, [mxcode])
+  }
 
   /**
    * Returns the database search result for all data with given species mx-code and atlas id.

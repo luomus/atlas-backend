@@ -7,10 +7,10 @@ beforeEach(() => {
   querier.mockClear()
 })
 
-test('getSpeciesById calls querier correctly', () => {
+test('getById calls querier correctly', () => {
   const speciesDao = new SpeciesDao(querier)
-  speciesDao.getSpeciesById(25836)
-  speciesDao.getSpeciesById(25844)
+  speciesDao.getById(25836)
+  speciesDao.getById(25844)
 
   expect(querier).toHaveBeenCalledTimes(2)
   expect(querier.mock.calls[0][0]).toEqual('get')

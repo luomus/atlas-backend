@@ -5,7 +5,7 @@ class AtlasGridDao {
     this.#data = [
       {
         'id': 7755,
-        'grid_id': 667337,
+        'grid_id': 667317,
         'atlas_id': 3,
         'level1': 1.00,
         'level2': 110.90,
@@ -82,7 +82,7 @@ class AtlasGridDao {
     return Promise.resolve(this.#data)
   }
 
-  getAllBirdAtlasGridInfoByAtlas(atlasId) {
+  getAllGridInfoByAtlas(atlasId) {
     return Promise.resolve(this.#data.filter((x) => x.atlas_id == atlasId))
   }
 }

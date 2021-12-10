@@ -17,19 +17,23 @@ class Grid {
 
   getCollection() {
      return async (req, res) => {
-       const {speciesId, atlasId} = req.query
-       console.log(req.query, "speciesId: ", speciesId, "atlasId: ", atlasId)
+       let {speciesId, atlasId = __latestAtlas} = req.query
        if (typeof speciesId !== 'undefined') {
         // Return collection of area resources with species data
+        speciesId = speciesId.split(".")[1]
         let data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
         data = data.map(area => ({
-          id: area.grid_id,
-          coordinateN: area.grid_id.toString().substring(0, 3),
-          coordinateE: area.grid_id.toString().substring(3, 6),
-          breedingCategory: area.breedingCategory,
-          breedingIndex: area.breedingIndex,
+          id: area.grid_id.toString(),
+          coordinateN: parseInt(area.grid_id.toString().substring(0, 3)),
+          coordinateE: parseInt(area.grid_id.toString().substring(3, 6)),
+          breedingCategory: parseInt(area.breedingCategory),
+          breedingIndex: parseInt(area.breedingIndex),
         }))
-        return data
+        return res.json({
+          species: {id: speciesId.toString()},
+          atlas: {id: atlasId.toString()},
+          collection: data,
+        }) 
        } else {
         // Return collection of all areas
         return gridDao.getAll().then((data) => res.json(data), () => res.send(null)) 
@@ -42,7 +46,7 @@ class Grid {
    * @returns {JSON}
    */
   getGridInfo() {
-    return (req, res) => gridDao.getGridById(req.params.gridId)
+    return (req, res) => gridDao.getById(req.params.gridId)
         .then((data) => res.json(data), () => res.send(null))
   }
 

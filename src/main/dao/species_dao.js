@@ -88,7 +88,7 @@ class SpeciesDao {
    * @returns {Promise}
    */
   getAllByGroup(speciesGroupId) {
-    return this.#querier('get', `SELECT * FROM species WHERE speciesGroup_id = ?`, [speciesGroupId])
+    return this.#querier('get', `SELECT * FROM species WHERE speciesGroup_id = :speciesGroupId`, [speciesGroupId])
   }
 
   /**
@@ -116,7 +116,7 @@ class SpeciesDao {
    * @returns {Promise}
    */
   countByGroup(speciesGroupId) {
-    return this.#querier('get', `SELECT COUNT(mxcode) * FROM species WHERE speciesGroup_id = ?`, [speciesGroupId])
+    return this.#querier('get', `SELECT COUNT(mxcode) * FROM species WHERE speciesGroup_id = :speciesGroupId`, [speciesGroupId])
   }
 
   /**

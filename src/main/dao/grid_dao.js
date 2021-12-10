@@ -104,7 +104,7 @@ class GridDao {
    * @param {number} id
    * @returns {Promise}
    */
-  getGridById(id) {
+  getById(id) {
     return this.#querier('get', `SELECT * FROM grid WHERE id = ?`, [id])
   }
 
@@ -120,7 +120,7 @@ class GridDao {
    * Returns the database search result for all data from table Grid.
    * @returns {Promise}
    */
-  getAllGrids() {
+  getAll() {
     return this.#querier('all', `SELECT ID AS "id", COORDINATEN AS 
       "coordinateN", COORDINATEE AS "coordinateE", MUNICIPALITY_ID 
       AS "municipality_id", GRIDNAME AS "gridName" FROM grid`)

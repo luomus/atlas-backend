@@ -31,15 +31,15 @@ function MapService(atlasMap, config) {
          */
     getSpeciesMap: function(data, grid, species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas) {
       const speciesMap = atlasMap.copy()
-      data.forEach((datapoint) => {
-        const colour = getColourForBreedingCategory(datapoint.breedingCategory)
-        speciesMap.setAttributesOfElement(datapoint.id, {fill: colour, display: 'block'})
-      })
-      grid.forEach((datapoint) => {
-        const colour = getColourForActivityCategory(datapoint.activityCategory)
-        const id = `${datapoint.grid_id}bg`
+      for (let i = 0; i < data.length; i++) {
+        const colour = getColourForBreedingCategory(data[i].breedingCategory)
+        speciesMap.setAttributesOfElement(data[i].id, {fill: colour, display: 'block'})
+      }
+      for (let i = 0; i < grid.length; i++) {
+        const colour = getColourForActivityCategory(grid[i].activityCategory)
+        const id = `${grid[i].grid_id}bg`
         speciesMap.setAttributesOfElement(id, {fill: colour})
-      })
+      }
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
       speciesMap.setDimensions(width, height)

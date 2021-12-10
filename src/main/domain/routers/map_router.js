@@ -8,7 +8,6 @@ const mapRouter = require('express').Router()
 mapRouter.get('/',)
 mapRouter.get('/:speciesId')
 mapRouter.get('/:speciesId/atlas')
-
 mapRouter.get('/:speciesId/atlas/:atlasId', map.createGridForBirdData())
 
 mapRouter.get('/:speciesId/change')

@@ -28,7 +28,7 @@ class Map {
    * Creates a basemap of Finland for atlas datapoints from the basemap files and an empty grid.
    */
   createBaseMap() {
-    gridDao.getAllGrids().then((gridArray) => {
+    gridDao.getAll().then((gridArray) => {
       gridArray = gridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
       const geoJsonArray = this.readBaseMapFiles()
       mapService = MapService(createAtlasMap(gridArray, geoJsonArray, config), config)
@@ -68,14 +68,14 @@ class Map {
       const {speciesId, atlasId} = req.params
       const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
       const species = await speciesDao.getById(speciesId).catch(e => [])
-      const atlasGrid = await atlasGridDao.getAllBirdAtlasGridInfoByAtlas(atlasId).catch(e => [])
+      const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch(e => [])
       if (req.param('type') === 'png') {
         const callback = (png) => res.send(png)
         res.setHeader('Content-Type', 'image/png')
-        mapService.getSpeciesMap(breedingData, atlasGrid, species[0], callback, 'png', req.param('scaling'), req.param('language'), atlasId)
+        mapService.getSpeciesMap(breedingData, atlasGrid, species[0], callback, 'png', req.params.scaling, req.params.language, atlasId)
       } else {
         res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species[0], undefined, 'svg', req.param('scaling'), req.param('language'), atlasId))
+        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species[0], undefined, 'svg', req.params.scaling, req.params.language,  atlasId))
       }
     }
   }

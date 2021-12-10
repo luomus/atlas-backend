@@ -31,7 +31,15 @@ class AtlasDao {
    * @returns {Promise}
    */
   getAllAtlasInfoBySpeciesGroup(speciesGroupId) {
-    return this.#querier('get', `SELECT * FROM atlas WHERE species_group_id = ?`, [speciesGroupId])
+    return this.#querier('get', `SELECT * FROM atlas WHERE species_group_id = :speciesGroupId`, [speciesGroupId])
+  }
+
+  /**
+   * Returns the database search result for all atlas info for given species group.
+   * @returns {Promise}
+   */
+   getById(atlasId) {
+    return this.#querier('get', `SELECT * FROM atlas WHERE id = :atlasId`, [atlasId])
   }
 
 

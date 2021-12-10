@@ -231,8 +231,8 @@
       "y": 49,
       "font-size": 2,
       "textFI": "erinomainen",
-      "textSV": "",
-      "textEN": "",
+      "textSV": "utmärkt",
+      "textEN": "excellent",
       "display": "block"
     },
     "activityColourBox4": { 
@@ -253,8 +253,8 @@
       "y": 52,
       "font-size": 2,
       "textFI": "hyvä",
-      "textSV": "",
-      "textEN": "",
+      "textSV": "bra",
+      "textEN": "good",
       "display": "block"
     },
     "activityColourBox3": {
@@ -275,8 +275,8 @@
       "y": 55,
       "font-size": 2,
       "textFI": "tyydyttävä",
-      "textSV": "",
-      "textEN": "",
+      "textSV": "nöjaktig",
+      "textEN": "satisfactory",
       "display": "block"
     },
     "activityColourBox2": { 
@@ -297,8 +297,8 @@
       "y": 58,
       "font-size": 2,
       "textFI": "välttävä",
-      "textSV": "",
-      "textEN": "",
+      "textSV": "försvarlig",
+      "textEN": "passable",
       "display": "block"
     },
     "activityColourBox1": { 
@@ -319,8 +319,8 @@
       "y": 61,
       "font-size": 2,
       "textFI": "satunnaistietoja",
-      "textSV": "",
-      "textEN": "",
+      "textSV": "sporadiska data",
+      "textEN": "occasional data",
       "display": "block"
     },
     "activityColourBox0": {
@@ -341,8 +341,8 @@
       "y": 64,
       "font-size": 2,
       "textFI": "ei havaintoja",
-      "textSV": "",
-      "textEN": "",
+      "textSV": "inga observationer",
+      "textEN": "no observations",
       "display": "block"
     }
   }
