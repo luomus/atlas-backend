@@ -17,19 +17,19 @@ class Grid {
 
   getCollection() {
      return async (req, res) => {
-       const {speciesId, atlasId} = req.params 
+       const {speciesId, atlasId} = req.query
+       console.log(req.query, "speciesId: ", speciesId, "atlasId: ", atlasId)
        if (typeof speciesId !== 'undefined') {
         // Return collection of area resources with species data
-        const data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId)
-          .then((data) => res.json(data), () => res.send(null))
+        let data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
         data = data.map(area => ({
           id: area.grid_id,
-          coordinateN: grid_id.substring(0, 3),
-          coordinateE: grid_id.substring(3, 6),
+          coordinateN: area.grid_id.toString().substring(0, 3),
+          coordinateE: area.grid_id.toString().substring(3, 6),
           breedingCategory: area.breedingCategory,
           breedingIndex: area.breedingIndex,
         }))
-
+        return data
        } else {
         // Return collection of all areas
         return gridDao.getAll().then((data) => res.json(data), () => res.send(null)) 

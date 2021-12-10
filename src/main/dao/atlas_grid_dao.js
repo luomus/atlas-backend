@@ -17,7 +17,7 @@ class AtlasGridDao {
    * @returns {Promise}
    */
   createTableGridBirdAtlas() {
-    const sql = `CREATE TABLE IF NOT EXISTS grid_bird_atlas (
+    const sql = `CREATE TABLE IF NOT EXISTS grid_atlas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             grid_id INTEGER REFERENCES grid,
             level1 FLOAT,
@@ -36,7 +36,7 @@ class AtlasGridDao {
    * @returns {Promise}
    */
   getAtlasGridInfoForGrid(gridId) {
-    return this.#querier('get', `SELECT * FROM grid_bird_atlas WHERE grid_id = ?`, [gridId])
+    return this.#querier('get', `SELECT * FROM grid_atlas WHERE grid_id = ?`, [gridId])
   }
 
 
@@ -56,7 +56,7 @@ class AtlasGridDao {
    * @returns {Promise}
    */
   getAllGridInfoForAtlas(atlasId) {
-    return this.#querier('get', `SELECT * FROM grid_bird_atlas WHERE atlas_id = ?`, [atlasId])
+    return this.#querier('all', `SELECT * FROM grid_atlas WHERE atlas_id = :atlasId`, [atlasId])
   }
 
 
@@ -65,7 +65,7 @@ class AtlasGridDao {
    * @returns {Promise}
    */
   getAllGridInfo() {
-    return this.#querier('all', `SELECT * FROM grid_bird_atlas`)
+    return this.#querier('all', `SELECT * FROM grid_atlas`)
   }
 }
 
