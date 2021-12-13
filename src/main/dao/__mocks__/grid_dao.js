@@ -128,6 +128,10 @@ class GridDao {
   getAll() {
     return Promise.resolve(this.#data)
   }
+
+  getById(gridId) {
+    return Promise.resolve(this.#data.filter((x) => x.id == gridId))
+  }
 }
 
 module.exports = GridDao

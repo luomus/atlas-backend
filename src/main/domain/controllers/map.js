@@ -65,18 +65,18 @@ class Map {
    */
   createGridForBirdData() {
     return async (req, res) => {
-      let {speciesId, atlasId} = req.params
-      speciesId = speciesId.split(".")[1]
-      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
-      const species = await speciesDao.getById(speciesId).catch(e => [])
+      const {speciesId, atlasId, scaling, language} = req.params
+      const species = speciesId.split(".")[1]
+      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(species, atlasId).catch(e => [])
+      const speciesData = await speciesDao.getById(species).catch(e => [])
       const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch(e => [])
       if (req.param('type') === 'png') {
         const callback = (png) => res.send(png)
         res.setHeader('Content-Type', 'image/png')
-        mapService.getSpeciesMap(breedingData, atlasGrid, species[0], callback, 'png', req.params.scaling, req.params.language, atlasId)
+        mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', scaling, language, atlasId)
       } else {
         res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species[0], undefined, 'svg', req.params.scaling, req.params.language,  atlasId))
+        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', scaling, language, atlasId))
       }
     }
   }

@@ -174,7 +174,10 @@ class AtlasDataDao {
   getListOfDistinctBirdsForGridAndAtlas(gridId, atlasId) {
     return Promise.resolve(this.#data.filter((x) => x.grid_id == gridId && x.atlas_id == atlasId))
   }
-
+  
+  getAtlasesForSpecies(speciesId) {
+    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesId).map(d => d.atlas_id))
+  }
   getAllData() {
     return Promise.resolve(this.#data)
   }

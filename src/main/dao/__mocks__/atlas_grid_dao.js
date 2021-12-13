@@ -82,7 +82,7 @@ class AtlasGridDao {
     return Promise.resolve(this.#data)
   }
 
-  getAllGridInfoByAtlas(atlasId) {
+  getAllGridInfoForAtlas(atlasId) {
     return Promise.resolve(this.#data.filter((x) => x.atlas_id == atlasId))
   }
 }

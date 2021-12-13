@@ -63,7 +63,7 @@ class AtlasDataDao {
    * @param {number} mxcode
    * @returns {Promise}
    */
-   getAtlasesForSpecies(mxcode) {
+  getAtlasesForSpecies(mxcode) {
     return this.#querier('all', `SELECT atlas_id AS "atlas_id" FROM bird_data WHERE species_mxcode = :mxcode`, [mxcode])
   }
 
