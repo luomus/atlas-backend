@@ -67,13 +67,11 @@ class Taxon {
     return async (req, res) => {
       let {speciesId, atlasId} = req.params
       speciesId = speciesId.split(".")[1]
-      console.log(speciesId, atlasId)
-      console.log(res)
       const stats = await atlasDataDao.getBreedingCategorySumForSpecies(speciesId, atlasId).catch((e) => [])
       const atlas = await atlasDao.getById(atlasId).catch((e) => [])
       return res.json({
           type: "species_atlas_data",
-          species: {id: speciesId.toString()},
+          species: {id: 'MX:' + speciesId.toString()},
           atlas: {
             id: atlasId.toString(),
             period: {
@@ -108,7 +106,7 @@ class Taxon {
     return async (req, res) => {
       const speciesId = req.params.speciesId.split(".")[1]
       const atlases = await atlasDataDao.getAtlasesForSpecies(speciesId).catch((e) => [])
-      const uniqueAtlases = [...new Set(atlases.map(a => a.atlas_id))] 
+      const uniqueAtlases = [...new Set(atlases.map(a => a.atlas_id))]
       const getAtlasForTaxonFunc = this.getAtlasForTaxon()
       const _res = {json: data => data}
       const atlasDataCollection = await Promise.all(uniqueAtlases.map(async (atlasId) => 

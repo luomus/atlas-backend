@@ -65,7 +65,8 @@ class Map {
    */
   createGridForBirdData() {
     return async (req, res) => {
-      const {speciesId, atlasId} = req.params
+      let {speciesId, atlasId} = req.params
+      speciesId = speciesId.split(".")[1]
       const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
       const species = await speciesDao.getById(speciesId).catch(e => [])
       const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch(e => [])

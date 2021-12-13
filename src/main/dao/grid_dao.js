@@ -105,7 +105,7 @@ class GridDao {
    * @returns {Promise}
    */
   getById(id) {
-    return this.#querier('get', `SELECT * FROM grid WHERE id = ?`, [id])
+    return this.#querier('get', `SELECT * FROM grid WHERE id = :id`, [id])
   }
 
   /**
