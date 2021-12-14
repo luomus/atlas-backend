@@ -66,7 +66,7 @@ class Map {
   createGridForBirdData() {
     
     return async (req, res) => {
-      const {speciesId, atlasId, scaling, language, type} = req.params
+      const {speciesId, atlasId} = req.params
       const species = speciesId.split(".")[1]
       const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(species, atlasId).catch(e => {return res.json(e.message)})
       const speciesData = await speciesDao.getById(species).catch(e => {return res.json(e.message)})
@@ -74,13 +74,13 @@ class Map {
       if (breedingData === "Empty result" || speciesData === "Empty result" || atlasGrid === "Empty result") {
         return res.json('Error: Empty result')
       } else {
-        if (type === 'png') {
+        if (req.query.type === 'png') {
           const callback = (png) => res.send(png)
           res.setHeader('Content-Type', 'image/png')
-          mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', scaling, language, atlasId)
+          mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', req.query.scaling, req.query.language, atlasId)
         } else {
           res.setHeader('Content-Type', 'image/svg+xml')
-          res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', scaling, language, atlasId))
+          res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', req.query.scaling, req.query.language, atlasId))
         }
       }
     }
