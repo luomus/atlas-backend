@@ -60,24 +60,24 @@ describe('Collection SPECIES', () => {
   //   })
   // })
 
-  describe('Get species statistics for one atlas from API', () => {
-    test('GET /api/v1/taxon/:speciesId/atlas/:atlasId responds with JSON', (done) => {
-      request(app)
-          .get('/api/v1/taxon/MX.25836/atlas/3')
-          .expect(200, done)
-          .expect('content-type', /application\/json/)
-    })
+  //  describe('Get species statistics for one atlas from API', () => {
+  //   test('GET /api/v1/taxon/:speciesId/atlas/:atlasId responds with JSON', (done) => {
+  //     request(app)
+  //         .get('/api/v1/taxon/MX.25836/atlas/3')
+  //         .expect(200, done)
+  //         .expect('content-type', /application\/json/)
+  //   })
   
-    test('GET /api/v1/taxon/:speciesId/atlas/:atlasId responds with correct data ', async () => {
-      const res1 = await request(app).get('/api/v1/taxon/MX.25836/atlas/3')
-      const res2 = await request(app).get('/api/v1/taxon/MX.25837/atlas/3')
-      expect(res1.text).toContain('MX.25836')
-      expect(res1.text).toContain('statistics')
-      expect(res1.text).not.toContain('MX.25844')
-      expect(res2.text).toContain('MX.25837')
-      expect(res2.text).not.toContain('MX.25844')
-    })
-  })
+    // test('GET /api/v1/taxon/:speciesId/atlas/:atlasId responds with correct data ', async () => {
+    //   const res1 = await request(app).get('/api/v1/taxon/MX.25836/atlas/3')
+    //   const res2 = await request(app).get('/api/v1/taxon/MX.25837/atlas/3')
+    //   expect(res1.text).toContain('MX.25836')
+    //   expect(res1.text).toContain('statistics')
+    //   expect(res1.text).not.toContain('MX.25844')
+    //   expect(res2.text).toContain('MX.25837')
+    //   expect(res2.text).not.toContain('MX.25844')
+    // })
+  // })
 })
 
 
@@ -126,11 +126,10 @@ describe('Collection MAP', () => {
           .expect('content-type', /image\/svg/)
     })
 
-    test('GET /api/v1/map/:speciesId/atlas/:atlasId responds with correct data ', async () => {
-      const res1 = await request(app).get('/api/v1/map/MX.27697/atlas/3')
-      console.log('/api/v1/map/MX.27697/atlas/3 :', res1)
-      expect(res1.text).toContain('767780')
-    })
+  //   test('GET /api/v1/map/:speciesId/atlas/:atlasId responds with correct data ', async () => {
+  //     const res1 = await request(app).get('/api/v1/map/MX.27697/atlas/3')
+  //     expect(res1.text).toContain('767780')
+  //   })
   })
 
 
