@@ -30,18 +30,13 @@ function Querier() {
   return async (methodName, query, params = []) => {
     try {
       connection = await oracledb.getConnection(config)
-      console.log('Connected to Oracle database')
-
-      // run query
       result = await connection.execute(query, params, {outFormat: oracledb.OBJECT})
-      console.log('SQL query executed')
     } catch (err) {
       return new Error(err.message)
     } finally {
       if (connection)
         try {
           await connection.close()
-          console.log('Oracle connection closed')
         } catch (err) {
           console.error(err.message)
         }

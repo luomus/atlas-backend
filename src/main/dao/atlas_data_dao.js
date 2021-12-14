@@ -106,7 +106,6 @@ class AtlasDataDao {
    * @returns {Promise}
    */
   getGridAndBreedingdataForSpeciesAndAtlas(mxcode, atlasId) {
-    console.log('atlas_data_dao', mxcode)
     return this.#querier('all', `SELECT species.speciesFI AS "speciesFI", grid.id AS "id",
             grid.coordinateN AS "coordinateN", grid.coordinateE AS "coordinateE",
             bird_data.breedingCategory AS "breedingCategory"
