@@ -30,7 +30,7 @@ beforeEach(async () => {
   const returnedGridArray = await gridDao.getAll().catch(e => [])
   const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(27697, 3).catch(e => [])
   const species = await speciesDao.getById(27697).catch(e => [])
-  const atlasGrid = await gridDataDao.getAllGridInfoByAtlas(3).catch(e => [])
+  const atlasGrid = await gridDataDao.getAllGridInfoForAtlas(3).catch(e => [])
   const gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
   atlasData = breedingData.map((datapoint) => ({...datapoint, id: datapoint.grid_id}))
   speciesData = species.map((datapoint) => ({...datapoint}))
