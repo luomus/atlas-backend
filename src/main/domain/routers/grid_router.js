@@ -3,10 +3,10 @@ const Grid = require('../controllers/grid')
 const grid = new Grid()
 
 gridRouter.get('/', grid.getCollection() )
-gridRouter.get('/:gridId', grid.getGridInfo())
-gridRouter.get('/:gridId/atlas')
-gridRouter.get('/:gridId/atlas/:atlasId', grid.getGridStats())
-gridRouter.get('/:gridId/atlas/:atlasId/data', grid.getGridData())
+gridRouter.get('/:areaId', grid.getGridInfo())
+gridRouter.get('/:areaId/atlas')
+gridRouter.get('/:areaId/atlas/:atlasId', grid.getGridStats())
+gridRouter.get('/:areaId/atlas/:atlasId/data', grid.getGridData())
 
 
 module.exports = gridRouter

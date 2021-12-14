@@ -5,7 +5,7 @@ parameters:
     name: speciesId
     required: true
     schema:
-      type: integer
+      type: string
     description: MX code of the wanted species.
 
   areaId:
@@ -224,7 +224,7 @@ schemas:
           statistics:
             type: object
             description: "Statistics for the area; sum of data points, number of different species, number of \
-            atlases with data points."
+              atlases with data points."
             properties:
           links:
             $ref: "#/schemas/links"
@@ -245,7 +245,7 @@ schemas:
       - $ref: "#/schemas/BasicAreaData"
       - $ref: "#/schemas/BirdSpecificAreaData"
     description: "Represents a square area in the atlas grid. Contains information about a bird species \
-    observed in that area."
+      observed in that area."
 
   PlantSpecificAreaData:
     type: object
@@ -260,7 +260,7 @@ schemas:
       - $ref: "#/schemas/BasicAreaData"
       - $ref: "#/schemas/PlantSpecificAreaData"
     description: "Represents a square area in the atlas grid. Contains information about a plant species \
-    observed in that area."
+      observed in that area."
 
   AreaDataCollection:
     type: object
@@ -330,39 +330,41 @@ examples:
 
   bird:
     value:
+      id: MX.25836
       speciesFI: Kaakkuri
+      speciesSV: Smålom
       speciesEN: Red-throated Diver
       speciesSCI: Gavia stellata
       speciesAbbr: GAVSTE
       speciesGroupId: 1
       visibility: 1
-      speciesSV: Smålom
-      id: MX.25836
       links:
         - rel: related
           href: "/taxon/MX.25836/atlas"
 
   birdCollection:
     value:
-      - speciesFI: Kaakkuri
+      - id: MX.25836
+        speciesFI: Kaakkuri
+        speciesSV: Smålom
         speciesEN: Red-throated Diver
         speciesSCI: Gavia stellata
         speciesAbbr: GAVSTE
         speciesGroupId: 1
         visibility: 1
-        speciesSV: Smålom
-        id: MX.25836
+        
         links:
           - rel: related
             href: "/taxon/MX.25836/atlas"
-      - speciesFI: Kuikka
+      - id: MX.25837
+        speciesFI: Kuikka
+        speciesSV: Storlom
         speciesEN: Black-throated Diver
         speciesSCI: Gavia arctica
         speciesAbbr: GAVARC
         speciesGroupId: 1
         visibility: 1
-        speciesSV: Storlom
-        id: MX.25837
+
         links:
           - rel: related
             href: "/taxon/MX.25837/atlas"
@@ -418,18 +420,19 @@ examples:
         - id: 664329
           coordinateN: 664
           coordinateE: 329
-          breedingCategory: 1
           breedingIndex: 50
+          breedingCategory: 1
         - id: 664331
           coordinateN: 664
           coordinateE: 331
-          breedingCategory: 1
           breedingIndex: 50
+          breedingCategory: 1
         - id: 666328
           coordinateN: 666
           coordinateE: 328
-          breedingCategory: 2
           breedingIndex: 40
+          breedingCategory: 2
+        
 
   areaData:
     value:
@@ -489,12 +492,13 @@ examples:
       data:
         - species:
             id: MX.25836
-          breedingCategory: 1
-          breedingIndex: 50
+            breedingIndex: 50
+            breedingCategory: 1
         - species:
             id: MX.25837
-          breedingCategory: 2
-          breedingIndex: 40
+            breedingIndex: 40
+            breedingCategory: 2
+          
 
   speciesMapCollections:
     value:

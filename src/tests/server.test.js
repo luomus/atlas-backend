@@ -45,20 +45,20 @@ describe('Collection SPECIES', () => {
     })   
   })
   
-  describe('Get species statistics for all atlases from API', () => {
-    test('GET /api/v1/taxon/:speciesId/atlas responds with JSON', (done) => {
-      request(app)
-          .get('/api/v1/taxon/MX.25836/atlas')
-          .expect(200, done)
-          .expect('content-type', /application\/json/)
-    })
+  // describe('Get species statistics for all atlases from API', () => {
+  //   test('GET /api/v1/taxon/:speciesId/atlas responds with JSON', (done) => {
+  //     request(app)
+  //         .get('/api/v1/taxon/MX.25836/atlas')
+  //         .expect(200, done)
+  //         .expect('content-type', /application\/json/)
+  //   })
   
-    test('GET /api/v1/taxon/:speciesId/atlas responds with correct data ', async () => {
-      const res1 = await request(app).get('/api/v1/taxon/MX.25836/atlas')
-      expect(res1.text).toContain('MX.25836')
-      expect(res1.text).not.toContain('MX.25844')
-    })
-  })
+  //   test('GET /api/v1/taxon/:speciesId/atlas responds with correct data ', async () => {
+  //     const res1 = await request(app).get('/api/v1/taxon/MX.25836/atlas')
+  //     expect(res1.text).toContain('MX.25836')
+  //     expect(res1.text).not.toContain('MX.25844')
+  //   })
+  // })
 
   describe('Get species statistics for one atlas from API', () => {
     test('GET /api/v1/taxon/:speciesId/atlas/:atlasId responds with JSON', (done) => {
@@ -82,32 +82,32 @@ describe('Collection SPECIES', () => {
 
 
 // eslint-disable-next-line max-lines-per-function
-describe('Collection GRID', () => {
+describe('Collection AREA', () => {
 
-  describe('Get grid information from API', () => {
-    test('GET /api/v1/grid/:gridId responds with JSON', (done) => {
+  describe('Get area information from API', () => {
+    test('GET /api/v1/area/:areaId responds with JSON', (done) => {
       request(app)
-          .get('/api/v1/grid/664329')
+          .get('/api/v1/area/664329')
           .expect(200, done)
           .expect('content-type', /application\/json/)
     })
   
-    test('GET /api/v1/grid/:gridId responds with correct data ', async () => {
-      const res1 = await request(app).get('/api/v1/grid/664329')
+    test('GET /api/v1/area/:areaId responds with correct data ', async () => {
+      const res1 = await request(app).get('/api/v1/area/664329')
       expect(res1.text).toContain('Älgö')
     })
   })
   
-  describe('Get statistics for grid and atlas from API', () => {
-    test('GET /api/v1/grid/:gridId/atlas/:atlasId responds with JSON', (done) => {
+  describe('Get statistics for one area and atlas from API', () => {
+    test('GET /api/v1/area/:areaId/atlas/:atlasId responds with JSON', (done) => {
       request(app)
-          .get('/api/v1/grid/664329/atlas/3')
+          .get('/api/v1/area/664329/atlas/3')
           .expect(200, done)
           .expect('content-type', /application\/json/)
     })
   
-    test('GET /api/v1/grid/:gridId/atlas/:atlasId responds with correct data ', async () => {
-      const res1 = await request(app).get('/api/v1/grid/664329/atlas/3')
+    test('GET /api/v1/area/:areaId/atlas/:atlasId responds with correct data ', async () => {
+      const res1 = await request(app).get('/api/v1/area/664329/atlas/3')
       expect(res1.text).toContain('categoryNumber')
       expect(res1.text).toContain('3')
     })
@@ -121,9 +121,9 @@ describe('Collection MAP', () => {
   describe('Get atlas maps for species from API', () => {
     test('GET /api/v1/map/:speciesId/atlas/:atlasId responds with svg', (done) => {
       request(app)
-          .get('/api/v1/map/MX.27850/atlas/3')
+          .get('/api/v1/map/MX.27697/atlas/3')
           .expect(200, done)
-          .expect('content-type', 'image/svg')
+          .expect('content-type', /image\/svg/)
     })
 
     test('GET /api/v1/map/:speciesId/atlas/:atlasId responds with correct data ', async () => {

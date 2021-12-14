@@ -64,19 +64,24 @@ class Map {
    * @returns {SVGElement}
    */
   createGridForBirdData() {
+    
     return async (req, res) => {
-      const {speciesId, atlasId, scaling, language} = req.params
+      const {speciesId, atlasId, scaling, language, type} = req.params
       const species = speciesId.split(".")[1]
-      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(species, atlasId).catch(e => [])
-      const speciesData = await speciesDao.getById(species).catch(e => [])
-      const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch(e => [])
-      if (req.param('type') === 'png') {
-        const callback = (png) => res.send(png)
-        res.setHeader('Content-Type', 'image/png')
-        mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', scaling, language, atlasId)
+      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(species, atlasId).catch(e => {return res.json(e.message)})
+      const speciesData = await speciesDao.getById(species).catch(e => {return res.json(e.message)})
+      const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch(e => {return res.json(e.message)})
+      if (breedingData === "Empty result" || speciesData === "Empty result" || atlasGrid === "Empty result") {
+        return res.json('Error: Empty result')
       } else {
-        res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', scaling, language, atlasId))
+        if (type === 'png') {
+          const callback = (png) => res.send(png)
+          res.setHeader('Content-Type', 'image/png')
+          mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', scaling, language, atlasId)
+        } else {
+          res.setHeader('Content-Type', 'image/svg+xml')
+          res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', scaling, language, atlasId))
+        }
       }
     }
   }

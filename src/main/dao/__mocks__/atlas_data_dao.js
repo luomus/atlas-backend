@@ -163,7 +163,7 @@ class AtlasDataDao {
   }
 
   getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId) {
-    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesId && x.atlas_id == atlasId))
+    return Promise.resolve(this.#data.filter((x) => x.species_mxcode == speciesId && x.atlas_id == atlasId).map((d) => ({...d, id: d.grid_id})))
   }
 
 

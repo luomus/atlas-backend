@@ -41,6 +41,7 @@ paths:
 
   /taxon/find:
     get:
+      deprecated: true
       parameters:
         - name: name
           in: query
@@ -87,6 +88,7 @@ paths:
 
   /taxon/{speciesId}/atlas:
     get:
+      deprecated: true
       tags:
         - taxon
       summary: Get atlas data collection for a species.
@@ -111,8 +113,8 @@ paths:
         - $ref: 'components.yaml#/parameters/atlasId'
       summary: Get an atlas data for a species.
       description: "An atlas data resource for a species contains statistics about the species in the atlas. \
-      It also contains information about the atlas and the species, including a link to the related collection \
-      of area data resources i.e. an array of area mapped data for the species in the atlas."
+        It also contains information about the atlas and the species, including a link to the related collection \
+        of area data resources i.e. an array of area mapped data for the species in the atlas."
       tags:
         - taxon
       responses:
@@ -131,9 +133,10 @@ paths:
 
   /map/:
     get:
+      deprecated: true
       summary: Get a collection of map collections for species.
       description: "There is no parameters for this endpoint at the moment. Response will include map \
-      collections for all the species."
+        collections for all the species."
       tags: 
         - map
       responses:
@@ -152,6 +155,7 @@ paths:
 
   /map/{speciesId}:
     get:
+      deprecated: true
       summary: Get map collections for a species.
       parameters:
         - $ref: 'components.yaml#/parameters/speciesId'
@@ -173,7 +177,8 @@ paths:
               description: "A link pointing to the collection itself."
 
   /map/{speciesId}/atlas:
-    get:
+    get:      
+      deprecated: true
       parameters:
         - $ref: 'components.yaml#/parameters/speciesId'
       summary: Get atlas map collection for a species.
@@ -207,16 +212,16 @@ paths:
           schema:
             type: string
           example: '5'
-        - name: id
-          in: query
-          schema:
-            type: string
-          example: '25836'
         - name: type
           in: query
           schema:
             type: string
           example: 'svg'
+        - name: language
+          in: query
+          schema:
+            type: string
+          example: 'fi'
       responses:
         200:
           description: SVG or PNG image
@@ -228,21 +233,21 @@ paths:
     get:
       summary: Get a collection of areas.
       description: "Each area resource represents a square area in the atlas grid and may include \
-      information about a species observed in that area."
+        information about a species observed in that area."
       tags:
         - area
       parameters:
         - name: speciesId
           in: query
           description: "Give ID of the wanted species to include species data. If omitted, each area \
-          resource is returned without any species data."
+            resource is returned without any species data."
           required: false
           schema:
             type: integer
         - name: atlasId
           in: query
           description: "The ID of the wanted atlas. Relevant only if species ID is given and species \
-          data will be included. If omitted, species data from the latest atlas is used."
+            data will be included. If omitted, species data from the latest atlas is used."
           required: false
           schema:
             type: integer
@@ -303,7 +308,8 @@ paths:
               description: "A link to the related atlas data collection for the area."
 
   /area/{areaId}/atlas:
-    get:
+    get:      
+      deprecated: true
       parameters:
         - $ref: 'components.yaml#/parameters/areaId'
       summary: Get atlas data collection for an area.
@@ -328,23 +334,23 @@ paths:
         - $ref: 'components.yaml#/parameters/atlasId'
       summary: Get an atlas data for an area.
       description: "An atlas data resource for an area contains statistics about the area in the atlas. \
-      It also contains information about the atlas and the area, including a link to all data for the area from \
-      the atlas."
+        It also contains information about the atlas and the area, including a link to all data for the area from \
+        the atlas."
       tags:
         - area
       responses:
         '200':
           description: An atlas data resource for an area.
-          content:
-            application/x-resource+json:
-              schema:
-                $ref: 'components.yaml#/schemas/AreaAtlasData'
-              examples:
-                "For an area":
-                  $ref: "components.yaml#/examples/areaAtlasData"
-          links:
-            related:
-              description: A link to all data for the area from the atlas.
+          # content:
+          #   application/x-resource+json:
+          #     schema:
+          #       $ref: 'components.yaml#/schemas/AreaAtlasData'
+          #     examples:
+          #       "For an area":
+          #         $ref: "components.yaml#/examples/areaAtlasData"
+          # links:
+          #   related:
+          #     description: A link to all data for the area from the atlas.
 
   /area/{areaId}/atlas/{atlasId}/data:
     get:

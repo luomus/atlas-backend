@@ -32,7 +32,7 @@ app.get('/', (req, res) => res.redirect('/doc'))
 app.use(express.static(__rootdir + '/static'))
 
 app.use('/api/v1/taxon', taxonRouter)
-app.use('/api/v1/grid', gridRouter)
+app.use('/api/v1/area', gridRouter)
 app.use('/api/v1/map', mapRouter)
 
 

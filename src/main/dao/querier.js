@@ -47,11 +47,9 @@ function Querier() {
         }
     }
 
-    if (result.rows.length == 0)
-    // query return null
-      return new Error('Empty result')
-    else {
-      // send query results
+    if (result.rows.length === 0) {
+      return 'Empty result'
+    } else {
       correctMxFormating(result.rows)
       return result.rows
     }
