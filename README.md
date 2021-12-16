@@ -3,12 +3,13 @@
 ![actions badge](https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/node.js.yml/badge.svg)
 
 In this project, Luomus Bird and Plant Atlas are developed.
+In staging:
+https://atlas-staging.rahtiapp.fi/
 
 ## Documentation
 
-### Classes
-#### Routing
-* [Birds](https://atlas-ohtuprojekti.github.io/ATLAS/Birds.html)
+* [JSDoc](https://atlas-ohtuprojekti.github.io/ATLAS/index.html)
+* [OpenAPI](https://atlas-staging.rahtiapp.fi/doc/)
 
 ## Project management
 
