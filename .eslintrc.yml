@@ -24,7 +24,7 @@ rules:
   require-jsdoc: 1
   max-lines-per-function:
     - 2
-    - 20
+    - 25
   brace-style:
     - 2
     - 1tbs

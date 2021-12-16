@@ -26,7 +26,7 @@ function Querier() {
   //       })
   //     })
 
-
+  // eslint-disable-next-line max-lines-per-function
   return async (methodName, query, params = []) => {
     try {
       connection = await oracledb.getConnection(config)
@@ -42,15 +42,16 @@ function Querier() {
         }
     }
 
-    if (result.rows.length === 0) {
+    if (result.rows.length === 0)
       return 'Empty result'
-    } else {
+    else {
       correctMxFormating(result.rows)
       return result.rows
     }
   }
 
   function correctMxFormating(data) {
+    // eslint-disable-next-line guard-for-in
     for (const val in data) {
       if (data[val].hasOwnProperty('species_mxcode')) {
         data[val].species_id = 'MX.' + data[val].species_mxcode

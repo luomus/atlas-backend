@@ -38,7 +38,7 @@ class AtlasDao {
    * Returns the database search result for all atlas info for given species group.
    * @returns {Promise}
    */
-   getById(atlasId) {
+  getById(atlasId) {
     return this.#querier('get', `SELECT * FROM atlas WHERE id = :atlasId`, [atlasId])
   }
 

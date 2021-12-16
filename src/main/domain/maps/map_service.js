@@ -94,20 +94,20 @@ function MapService(atlasMap, config) {
   }
 
   function getColourForBreedingCategory(breedingCategory) {
-    const colour = breedingCategory === 4 ? config.breedingCategoryColour.category4
-      : (breedingCategory === 3) ? config.breedingCategoryColour.category3
-      : (breedingCategory === 2) ? config.breedingCategoryColour.category2
-      : 'rgba(124,240,10,0.0)'
+    const colour = breedingCategory === 4 ? config.breedingCategoryColour.category4 :
+      (breedingCategory === 3) ? config.breedingCategoryColour.category3 :
+      (breedingCategory === 2) ? config.breedingCategoryColour.category2 :
+      'rgba(124,240,10,0.0)'
     return colour
   }
 
   function getColourForActivityCategory(activityCategory) {
-    const colour = activityCategory === 5 ? config.activityCategoryColour.category5
-      : activityCategory === 4 ? config.activityCategoryColour.category4
-      : activityCategory === 3 ? config.activityCategoryColour.category3
-      : activityCategory === 2 ? config.activityCategoryColour.category2
-      : activityCategory === 1 ? config.activityCategoryColour.category1
-      : config.activityCategoryColour.category0
+    const colour = activityCategory === 5 ? config.activityCategoryColour.category5 :
+      activityCategory === 4 ? config.activityCategoryColour.category4 :
+      activityCategory === 3 ? config.activityCategoryColour.category3 :
+      activityCategory === 2 ? config.activityCategoryColour.category2 :
+      activityCategory === 1 ? config.activityCategoryColour.category1 :
+      config.activityCategoryColour.category0
     return colour
   }
 }

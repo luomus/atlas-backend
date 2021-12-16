@@ -1,6 +1,7 @@
 const Taxon = require('../controllers/taxon.js')
 const taxon = new Taxon()
 
+// eslint-disable-next-line new-cap
 const taxonRouter = require('express').Router()
 
 taxonRouter.get('/', taxon.getAll())

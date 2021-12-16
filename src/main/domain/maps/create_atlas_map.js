@@ -163,8 +163,8 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
         .addElement('text', config.legend.speciesSCI, 'legend')
         .addElement('text', config.legend.speciesSV, 'legend')
         .addElement('text', config.legend.speciesEN, 'legend')
-        svgImage = drawBreedingLegend(svgImage)
-        svgImage = drawActivityLegend(svgImage)
+    svgImage = drawBreedingLegend(svgImage)
+    svgImage = drawActivityLegend(svgImage)
     return svgImage
   }
 

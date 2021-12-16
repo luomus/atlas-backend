@@ -63,28 +63,28 @@ class Map {
    * Creates an image of the grid with a bird's breeding data.
    * @returns {SVGElement}
    */
+  /* eslint-disable max-len */
   createGridForBirdData() {
-    
     return async (req, res) => {
       const {speciesId, atlasId} = req.params
-      const species = speciesId.split(".")[1]
-      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(species, atlasId).catch(e => {return res.json(e.message)})
-      const speciesData = await speciesDao.getById(species).catch(e => {return res.json(e.message)})
-      const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch(e => {return res.json(e.message)})
-      if (breedingData === "Empty result" || speciesData === "Empty result" || atlasGrid === "Empty result") {
+      const species = speciesId.split('.')[1]
+      const breedingData = await atlasDataDao.getGridAndBreedingdataForSpeciesAndAtlas(species, atlasId).catch((e) => {return res.json(e.message)})
+      const speciesData = await speciesDao.getById(species).catch((e) => {return res.json(e.message)})
+      const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch((e) => {return res.json(e.message)})
+      if (breedingData === 'Empty result' || speciesData === 'Empty result' || atlasGrid === 'Empty result')
         return res.json('Error: Empty result')
+      else
+      if (req.query.type === 'png') {
+        const callback = (png) => res.send(png)
+        res.setHeader('Content-Type', 'image/png')
+        mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', req.query.scaling, req.query.language, atlasId)
       } else {
-        if (req.query.type === 'png') {
-          const callback = (png) => res.send(png)
-          res.setHeader('Content-Type', 'image/png')
-          mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], callback, 'png', req.query.scaling, req.query.language, atlasId)
-        } else {
-          res.setHeader('Content-Type', 'image/svg+xml')
-          res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', req.query.scaling, req.query.language, atlasId))
-        }
+        res.setHeader('Content-Type', 'image/svg+xml')
+        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, speciesData[0], undefined, 'svg', req.query.scaling, req.query.language, atlasId))
       }
     }
   }
+  /* eslint-enable max-len */
 }
 
 module.exports = Map

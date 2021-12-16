@@ -15,14 +15,16 @@ class Grid {
         .then((data) => res.json(data), () => res.send(null))
   }
 
+  // eslint-disable-next-line max-lines-per-function
   getCollection() {
-     return async (req, res) => {
-       let {speciesId, atlasId = __latestAtlas} = req.query
-       if (typeof speciesId !== 'undefined') {
+    // eslint-disable-next-line max-lines-per-function
+    return async (req, res) => {
+      let {speciesId, atlasId = __latestAtlas} = req.query
+      if (typeof speciesId !== 'undefined') {
         // Return collection of area resources with species data
-        speciesId = speciesId.split(".")[1]
-        let data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch(e => [])
-        data = data.map(area => ({
+        speciesId = speciesId.split('.')[1]
+        let data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => [])
+        data = data.map((area) => ({
           id: area.grid_id.toString(),
           coordinateN: parseInt(area.grid_id.toString().substring(0, 3)),
           coordinateE: parseInt(area.grid_id.toString().substring(3, 6)),
@@ -33,13 +35,12 @@ class Grid {
           species: {id: speciesId.toString()},
           atlas: {id: atlasId.toString()},
           collection: data,
-        }) 
-       } else {
+        })
+      } else
         // Return collection of all areas
-        return gridDao.getAll().then((data) => res.json(data), () => res.send(null)) 
-       }
-     }
-    } 
+        return gridDao.getAll().then((data) => res.json(data), () => res.send(null))
+    }
+  }
 
   /**
    * Returns info for one area point.

@@ -47,7 +47,8 @@ class AtlasGridDao {
   getAllGridInfoForAtlas(atlasId) {
     return this.#querier('all', `SELECT id AS "id", grid_id AS "grid_id", atlas_id AS "atlas_id",
             level1 AS "level1", level2 AS "level2", level3 AS "level3", level4 AS "level4", level5 AS "level5",
-            activitySum AS "activitySum", activityCategory AS "activityCategory" FROM grid_atlas WHERE atlas_id = :atlasId`, [atlasId])
+            activitySum AS "activitySum", activityCategory AS "activityCategory" FROM grid_atlas 
+            WHERE atlas_id = :atlasId`, [atlasId])
   }
 
 

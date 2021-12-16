@@ -23,7 +23,7 @@ class Taxon {
    */
   getAllDataForSpeciesAndAtlas() {
     return (req, res) => {
-      const speciesId = req.params.speciesId.split(".")[1]
+      const speciesId = req.params.speciesId.split('.')[1]
       return atlasDataDao.getDataForSpeciesAndAtlas(speciesId, req.params.atlasId)
           .then((data) => res.json(data), () => res.send(null))
     }
@@ -35,7 +35,7 @@ class Taxon {
    */
   getAllDataForSpecies() {
     return (req, res) => {
-      const speciesId = req.params.speciesId.split(".")[1]
+      const speciesId = req.params.speciesId.split('.')[1]
       return atlasDataDao.getDataForSpecies(speciesId)
           .then((data) => res.json(data), () => res.send(null))
     }
@@ -47,7 +47,7 @@ class Taxon {
      */
   getGridAndBreedingdataForBird() {
     return (req, res) => {
-      const speciesId = req.params.speciesId.split(".")[1]
+      const speciesId = req.params.speciesId.split('.')[1]
       return atlasDataDao.getGridAndBreedingdataForSpecies(speciesId)
           .then((data) => res.send(JSON.stringify(data)), () => res.send(null))
     }
@@ -59,7 +59,7 @@ class Taxon {
    */
   getSpeciesById() {
     return (req, res) => {
-      const speciesId = req.params.speciesId.split(".")[1]
+      const speciesId = req.params.speciesId.split('.')[1]
       return speciesDao.getById(speciesId)
           .then((data) => res.json(data), () => res.send(null))
     }
@@ -69,28 +69,30 @@ class Taxon {
    * Returns the statistics of the given species in given atlas.
    * @returns {Array}
    */
+  // eslint-disable-next-line max-lines-per-function
   getAtlasForTaxon() {
+    // eslint-disable-next-line max-lines-per-function
     return async (req, res) => {
       const {speciesId, atlasId} = req.params
-      const species = speciesId.split(".")[1]
+      const species = speciesId.split('.')[1]
       const stats = await atlasDataDao.getBreedingCategorySumForSpecies(species, atlasId).catch((e) => [])
       const atlas = await atlasDao.getById(atlasId).catch((e) => [])
       return res.json({
-          type: "species_atlas_data",
-          species: {id: 'MX.' + species.toString()},
-          atlas: {
-            id: atlasId.toString(),
-            name: atlas[0].NAME.toString(),
-            period: {
-              from: atlas[0].STARTINGYEAR,
-              to: atlas[0].ENDINGYEAR
-            }
+        type: 'species_atlas_data',
+        species: {id: 'MX.' + species.toString()},
+        atlas: {
+          id: atlasId.toString(),
+          name: atlas[0].NAME.toString(),
+          period: {
+            from: atlas[0].STARTINGYEAR,
+            to: atlas[0].ENDINGYEAR,
           },
-          statistics: stats,
-          links: [{
-            rel: "related",
-            href: `/area?speciesId=MX.${speciesId}&atlasId=${atlasId}`
-          }]
+        },
+        statistics: stats,
+        links: [{
+          rel: 'related',
+          href: `/area?speciesId=MX.${speciesId}&atlasId=${atlasId}`,
+        }],
       })
     }
   }
@@ -101,7 +103,7 @@ class Taxon {
    */
   findTaxon() {
     return (req, res) => speciesDao.searchForSpecies(req.params.species)
-          .then((data) => res.json(data), () => res.send(null))
+        .then((data) => res.json(data), () => res.send(null))
   }
 
   // countByGroup() {
@@ -117,13 +119,12 @@ class Taxon {
   //     console.log('unique atlases: ', uniqueAtlases)
   //     const getAtlasForTaxonFunc = this.getAtlasForTaxon()
   //     const _res = {json: data => data}
-  //     const atlasDataCollection = await Promise.all(uniqueAtlases.map(async (atlasId) => 
+  //     const atlasDataCollection = await Promise.all(uniqueAtlases.map(async (atlasId) =>
   //       await getAtlasForTaxonFunc({params: {speciesId: req.params.speciesId, atlasId: atlasId}}, _res)
   //     ))
   //     return res.json(atlasDataCollection)
-  //   } 
+  //   }
   // }
-
 }
 
 module.exports = Taxon

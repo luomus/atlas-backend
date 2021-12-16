@@ -1,3 +1,4 @@
+// eslint-disable-next-line new-cap
 const gridRouter = require('express').Router()
 const Grid = require('../controllers/grid')
 const grid = new Grid()
