@@ -10,6 +10,8 @@ const geojson2svg = require('geojson2svg')
 function createAtlasMap(gridArray, geoJsonArray, config) {
   const overlayPadding = 15
   const overlayCircleRadius = 0.5
+  const YKJgridRatio = 10
+  const numberOfYKJsquaresE = 8
   const baseMap = drawBaseMap(geoJsonArray, SvgImage())
 
   const overlay = drawGrid(gridArray, SvgImage())
@@ -75,18 +77,22 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
   }
 
   function getOverlayTranslationCoords(baseMap, overlay) {
-    const baseMapScaleFactor = 10 / (baseMap.getWidth() / 8)
-    const dataMapCoords = overlay.getElementCoordsById(680320)
-    const baseMapX = Math.ceil(baseMap.getElementCoordsById(32).x * baseMapScaleFactor)
-    const baseMapY = Math.ceil(baseMap.getElementCoordsById(68).y * baseMapScaleFactor)
+    const baseMapScaleFactor = YKJgridRatio / (baseMap.getWidth() / numberOfYKJsquaresE)
+    const dataMapCoords = overlay.getElementCoordsById(config.alignmentCoordinates.combined)
+    const baseMapX = Math.ceil(baseMap.getElementCoordsById(config.alignmentCoordinates.e).x * baseMapScaleFactor)
+    const baseMapY = Math.ceil(baseMap.getElementCoordsById(config.alignmentCoordinates.n).y * baseMapScaleFactor)
     const translateX = baseMapX - dataMapCoords.x + overlayCircleRadius
     const translateY = baseMapY - dataMapCoords.y - overlayCircleRadius
     return {x: translateX, y: translateY}
   }
 
   function getScaleFactorForMerge(baseMap, overlay) {
-    const baseMapDistance = Math.abs(baseMap.getElementCoordsById(32).x - baseMap.getElementCoordsById(33).x)
-    const dataMapDistance = Math.abs(overlay.getElementCoordsById(680320).x - overlay.getElementCoordsById(680330).x)
+    const baseMapX1 = baseMap.getElementCoordsById(config.alignmentCoordinates.e).x
+    const baseMapX2 = baseMap.getElementCoordsById(config.alignmentCoordinates.e + 1).x
+    const baseMapDistance = Math.abs(baseMapX1 - baseMapX2)
+    const dataMapX1 = overlay.getElementCoordsById(config.alignmentCoordinates.combined).x
+    const dataMapX2 = overlay.getElementCoordsById(config.alignmentCoordinates.combined + 10).x
+    const dataMapDistance = Math.abs(dataMapX1 - dataMapX2)
     return baseMapDistance / dataMapDistance
   }
 

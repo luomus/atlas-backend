@@ -209,7 +209,7 @@
       "y": 45,
       "font-size": 2.5,
       "textFI": "Selvitysaste",
-      "textSV": "",
+      "textSV": "Aktivitetskategori",
       "textEN": "Activity category",
       "display": "block"
     },
@@ -345,5 +345,10 @@
       "textEN": "no observations",
       "display": "block"
     }
+  },
+  "alignmentCoordinates": {
+    "n": 68,
+    "e": 32,
+    "combined": 680320
   }
 }
