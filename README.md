@@ -17,7 +17,7 @@ The API is in this ATLAS repository, whereas [Lintuatlas](https://github.com/ATL
 
 ## Documentation
 
-[Software structure (in Finnish)](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/rakenne.png)
+* [Software structure (in Finnish)](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/rakenne.png)
 * [JSDoc](https://atlas-ohtuprojekti.github.io/ATLAS/index.html)
 * [OpenAPI](https://atlas-staging.rahtiapp.fi/doc/)
 
@@ -29,9 +29,9 @@ Open the .env.example file at the root of the project and modify it so that it c
 
 Initiate VPN connection to the Helsinki University network. This is needed for the Oracle database connection to work.
 
-While at the root of the project install dependencies with `npm install`. For a list of necessary dependencies, see [package.json file](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/package.json
+While at the root of the project install dependencies with `npm install`. For a list of necessary dependencies, see [package.json file](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/package.json).
 
-Run program with 'node .\src\main\start.js'. You can now see the API in your browser on http://localhost:3000. Stop the program with Ctrl+C.
+Run program with `node .\src\main\start.js`. You can now see the API in your browser on http://localhost:3000. Stop the program with Ctrl+C.
 
 If you make changes to the code, you can update the app in Rahti following [these instructions](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/imagen_pushaus.md).
 
