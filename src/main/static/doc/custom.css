@@ -62,3 +62,7 @@ body
 .swagger-ui .response-col_links .operation-link .description {
     width: 10em;
 }
+
+section.swagger-container .wrapper:nth-child(3) {
+    display: none;
+}
