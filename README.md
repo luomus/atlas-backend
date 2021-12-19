@@ -32,7 +32,7 @@ Initiate VPN connection to the Helsinki University network. This is needed for t
 
 While at the root of the project install dependencies with `npm install`. For a list of necessary dependencies, see [package.json file](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/package.json). In addition, Oracle Instant Client software is needed and should be downloaded from [here](https://www.oracle.com/database/technologies/instant-client.html).
 
-Run program with `node .\src\main\start.js`. You can now see the API in your browser on http://localhost:3000. Stop the program with Ctrl+C.
+Run program with `node .\src\main\start.js`. You can now see the available API endpoints in your browser on http://localhost:3000. Stop the program with Ctrl+C.
 
 If you make changes to the code, you can update the app in Rahti following [these instructions](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/imagen_pushaus.md).
 
