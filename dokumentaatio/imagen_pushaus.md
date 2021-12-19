@@ -14,7 +14,7 @@ Test the image locally with
 For the first time:  
 
 Go to [Rahti web console](https://rahti.csc.fi:8443/login) to retrieve the login command (top right corner of the page)
-![pic](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/rahti.png?raw=true)
+![pic](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/rahti.png)
 
 In terminal paste the login command:
 `oc login https://rahti.csc.fi:8443 --token=xxxxx`
