@@ -1,50 +1,47 @@
-# Uuden imagen pushaus rahtiin
+# Pushing a new image to Rahti
 
 
 
-### Imagen luonti
-Buildaa image omalla koneella projektin juurikansiossa
-`docker build . -t imagen_nimi`
+### Create an image
+Build the image locally at the root of the project with
+`docker build . -t image_name`
 
-Kokeile toimiiko image paikallisesti
-`docker run imagen_nimi`
-
-
-### Kirjautuminen rahtiin
-Kirjautuminen ensimmäistä kertaa  
-
-Hae rahdista komento, jossa kirjautumistoken sivun oikeasta yläkulmasta
-![kuva rahdista](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/rahti.png?raw=true)
+Test the image locally with
+`docker run image_name`
 
 
+### Terminal login to Rahti
+For the first time:  
 
-Terminaalissa:
-`oc login https://rahti.csc.fi:8443 --token=rahdista_saatu_token`
+Go to [Rahti web console](https://rahti.csc.fi:8443/login) to retrieve the login command (top right corner of the page)
+![pic](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/rahti.png?raw=true)
+
+In terminal paste the login command:
+`oc login https://rahti.csc.fi:8443 --token=xxxxx`
 
 
-Kirjautuminen ensimmäisen kerran jälkeen
+After the first time:
 ```
-oc login
+`oc login`
 
-oma_tunnus
-oma_salasana
+own_username
+own_password
 ```
 
+### Terminal login to Docker
 
-### Kirjautuminen dockeriin
-
-Hae token
+Get your token with
 `oc whoami -t`
 
-Terminaaliin tulostuu token
+Copy the token.
 
-Kirjaudu dockeriin
-`docker login -u oma_tunnus -p saatu_token docker-registry.rahti.csc.fi`
-
-
+Login to docker with:
+`docker login -u own_username -p token docker-registry.rahti.csc.fi`
 
 
-### Imagen pushaus
+
+
+### Pushing the image
 ```
-docker tag imagen_nimi docker-registry.rahti.csc.fi/atlas-dev/atlas:latest
+docker tag image_name docker-registry.rahti.csc.fi/atlas-dev/atlas:latest
 docker push docker-registry.rahti.csc.fi/atlas-dev/atlas:latest
