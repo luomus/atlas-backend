@@ -1,0 +1,36 @@
+title ATLAS Map Service
+
+
+frontend->API: http request
+
+API->router: http request
+
+note over router: handles and forwards the request
+
+router->DAO: request
+
+note over DAO: DAO retrieves the raw data from the database
+
+DAO->database: database retrieval
+
+database->DAO: raw data
+
+note over DAO: DAO forwards the data
+
+DAO->router: data
+
+note over router: receives data and forwards it to the map service
+
+router->map service: data
+
+note over map service: map service uses data to create an SVG map
+
+map service->router: map
+
+note over router: receives and forwards the map
+
+router->API: map
+
+note over API: API transmits the file to the user
+
+API->frontend: map
