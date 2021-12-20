@@ -19,6 +19,7 @@ The API is in this ATLAS repository, whereas [Lintuatlas](https://github.com/ATL
 ## Documentation
 
 * [Map Service structure](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/mapservice.png)
+* [Database structure](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/database_diagram.png)
 * [JSDoc](https://atlas-ohtuprojekti.github.io/ATLAS/index.html)
 * [OpenAPI](https://atlas-staging.rahtiapp.fi/doc/)
 

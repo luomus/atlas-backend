@@ -32,7 +32,7 @@ class Grid {
           breedingIndex: parseInt(area.breedingIndex),
         }))
         return res.json({
-          species: {id: speciesId.toString()},
+          species: {id: 'MX.' + speciesId.toString()},
           atlas: {id: atlasId.toString()},
           collection: data,
         })
