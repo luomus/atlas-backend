@@ -18,7 +18,7 @@ The API is in this ATLAS repository, whereas [Lintuatlas](https://github.com/ATL
 
 ## Documentation
 
-* [Software structure (in Finnish)](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/rakenne.png)
+* [Map Service structure](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/mapservice.png)
 * [JSDoc](https://atlas-ohtuprojekti.github.io/ATLAS/index.html)
 * [OpenAPI](https://atlas-staging.rahtiapp.fi/doc/)
 
@@ -34,7 +34,7 @@ While at the root of the project install dependencies with `npm install`. For a 
 
 Run program with `node .\src\main\start.js`. You can now see the available API endpoints in your browser on http://localhost:3000. Stop the program with Ctrl+C.
 
-If you make changes to the code, you can update the app in Rahti following [these instructions](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/imagen_pushaus.md).
+If you make changes to the code and push them to Github, the app in Rahti will be updated automatically.
 
 
 
