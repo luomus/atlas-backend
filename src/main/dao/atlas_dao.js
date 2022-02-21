@@ -10,6 +10,8 @@ class AtlasDao {
    */
   constructor(querier) {
     this.#querier = querier
+
+    this.createTableAtlas()
   }
 
   /**
@@ -17,21 +19,12 @@ class AtlasDao {
    * @returns {Promise}
    */
   createTableAtlas() {
-    const sql = `CREATE TABLE IF NOT EXISTS atlas (
-            starting_year INTEGER,
-            ending_year INTEGER,
-            name varchar(100),
-            species_group_id INTEGER REFERENCES species_group)`
+    const sql = `CREATE TABLE IF NOT EXISTS Atlas (\
+      id INTEGER PRIMARY KEY AUTOINCREMENT,\
+      startingYear INTEGER,\
+      endingYear INTEGER,\
+      name VARCHAR(100))`
     return this.#querier('run', sql)
-  }
-
-
-  /**
-   * Returns the database search result for all atlas info for given species group.
-   * @returns {Promise}
-   */
-  getAllAtlasInfoBySpeciesGroup(speciesGroupId) {
-    return this.#querier('get', `SELECT * FROM atlas WHERE species_group_id = :speciesGroupId`, [speciesGroupId])
   }
 
   /**
@@ -39,16 +32,15 @@ class AtlasDao {
    * @returns {Promise}
    */
   getById(atlasId) {
-    return this.#querier('get', `SELECT * FROM atlas WHERE id = :atlasId`, [atlasId])
+    return this.#querier('get', `SELECT * FROM Atlas WHERE id = :atlasId`, [atlasId])
   }
-
 
   /**
    * Returns the database search result for all atlas info.
    * @returns {Promise}
    */
   getAllAtlasInfo() {
-    return this.#querier('all', `SELECT * FROM atlas`)
+    return this.#querier('all', `SELECT * FROM Atlas`)
   }
 }
 

@@ -1,10 +1,15 @@
 global.__rootdir = __dirname
-global.__latestAtlas = 3
+global.__latestAtlas = 4
 const express = require('express')
 const cors = require('cors')
+const sqlite3 = require('sqlite3')
 const fs = require('fs')
 const YAML = require('yamljs')
 const app = express()
+// global.db = new sqlite3.Database('./birds.db', (err) => {
+//   if (err) console.log('Could not connect to database', err)
+//   else console.log('Connected to database')
+// })
 const gridRouter = require('./domain/routers/grid_router')
 const mapRouter = require('./domain/routers/map_router')
 const taxonRouter = require('./domain/routers/taxon_router')
@@ -22,12 +27,6 @@ try {
 app.use(cors())
 
 app.get('/', (req, res) => res.redirect('/doc'))
-
-// const db = new sqlite3.Database('./birds.db', (err) => {
-//   if (err) console.log('Could not connect to database', err)
-//   else console.log('Connected to database')
-// })
-
 
 app.use(express.static(__rootdir + '/static'))
 

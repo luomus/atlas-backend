@@ -6,6 +6,7 @@ const grid = new Grid()
 gridRouter.get('/', grid.getCollection() )
 gridRouter.get('/:areaId', grid.getGridInfo())
 gridRouter.get('/:areaId/atlas')
+gridRouter.get('/:areaId/atlas/current', grid.getGridStatsActive())
 gridRouter.get('/:areaId/atlas/:atlasId', grid.getGridStats())
 gridRouter.get('/:areaId/atlas/:atlasId/data', grid.getGridData())
 

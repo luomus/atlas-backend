@@ -1,80 +1,38 @@
-CREATE TABLE species (
-	mxCode INTEGER PRIMARY KEY,
-	speciesAbbr VARCHAR(6),
-	speciesSCI VARCHAR(100),
-	speciesFI VARCHAR(100),
-	speciesSV VARCHAR(100),
-	speciesEN VARCHAR(100),
-	speciesGroup_id REFERENCES speciesGroup,
-	visibility INTEGER
+CREATE TABLE Grid (
+  id VARCHAR(100) PRIMARY KEY,
+  coordinates VARCHAR(7),
+  birdAssociationArea VARCHAR(100),
+  name VARCHAR(100),
+  level1 INTEGER,
+  level2 FLOAT,
+  level3 FLOAT,
+  level4 FLOAT,
+  level5 FLOAT
 );
 
 
-CREATE TABLE speciesGroup (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name VARCHAR(100)
+CREATE TABLE Atlas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  startingYear INTEGER,
+  endingYear INTEGER,
+  name VARCHAR(100)
 );
 
 
-CREATE TABLE municipality (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name varchar(100),
-	birdSocietyNameFI varchar(100),
-	birdSocietyNameSV varchar(100),
-	regionNumber INTEGER
+CREATE TABLE AtlasGrid (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  atlas INTEGER REFERENCES Atlas,
+  grid VARCHAR(100) REFERENCES Grid,
+  atlasClassSum INTEGER,
+  activityCategory VARCHAR(100)
 );
 
 
-CREATE TABLE grid (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	coordinateN INTEGER,
-	coordinateE INTEGER,
-	municipality_id INTEGER REFERENCES municipality,
-	name varchar(100)
-);
-
-
-CREATE TABLE atlas (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	starting_year INTEGER,
-	ending_year INTEGER,
-	name varchar(100),
-	speciesGroup_id REFERENCES speciesGroup
-);
-
-
-CREATE TABLE grid_bird_atlas (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	grid_id INTEGER REFERENCES grid,
-	atlas_id INTEGER REFERENCES atlas,
-	level1 FLOAT,
-	level2 FLOAT,
-	level3 FLOAT,
-	level4 FLOAT,
-	level5 FLOAT,
-	activitySum INTEGER,
-	activityCategory INTEGER
-);
-
-
-CREATE TABLE bird_data (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	species_id INTEGER REFERENCES species,
-	grid_id INTEGER REFERENCES grid,
-	atlas_id INTEGER REFERENCES atlas,
-	breedingIndex INTEGER,
-	breedingCategory INTEGER
-);
-
-
-CREATE TABLE plant_data (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	year INTEGER,
-	species_code INTEGER REFERENCES species,
-	grid_id INTEGER REFERENCES grid,
-	atlas_id INTEGER REFERENCES atlas,
-	prevalence FLOAT,
-	numberOfObservations INTEGER,
-	oldestObservation INTEGER,
-	newestObservation INTEGER
+CREATE TABLE AtlasGridSpeciesData (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  speciesId VARCHAR(100),
+  grid VARCHAR(100) REFERENCES grid,
+  atlas INTEGER REFERENCES atlas,
+  atlasCode VARCHAR(100),
+  atlasClass VARCHAR(100)
 );

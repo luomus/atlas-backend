@@ -12,7 +12,6 @@ const svg64 = require('svg64')
  * @returns {MapService}
  * @constructor
  */
-// eslint-disable-next-line max-lines-per-function
 function MapService(atlasMap, config) {
   if (typeof atlasMap === 'undefined')
     return console.error('Wrong number of arguments: atlasMap should be defined')
@@ -29,21 +28,22 @@ function MapService(atlasMap, config) {
          * @param {number} atlas
          * @returns {SvgImage}
          */
-    getSpeciesMap: function(data, grid, species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas) {
+    getSpeciesMap: function(data, grid, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas) {
       const speciesMap = atlasMap.copy()
       for (let i = 0; i < data.length; i++) {
-        const colour = getColourForBreedingCategory(data[i].breedingCategory)
-        speciesMap.setAttributesOfElement(data[i].id, {fill: colour, display: 'block'})
+        const colour = getColourForAtlasClass(data[i].atlasClass)
+        speciesMap.setAttributesOfElement(data[i].grid, {fill: colour, display: 'block'})
       }
       for (let i = 0; i < grid.length; i++) {
         const colour = getColourForActivityCategory(grid[i].activityCategory)
-        const id = `${grid[i].grid_id}bg`
+        const id = `${grid[i].grid}bg`
         speciesMap.setAttributesOfElement(id, {fill: colour})
       }
+
       const width = speciesMap.getWidth() * scaleFactor
       const height = speciesMap.getHeight() * scaleFactor
       speciesMap.setDimensions(width, height)
-      setLegend(speciesMap, species, language, atlas)
+      setLegend(speciesMap, language, atlas)
       if (type === 'png')
         convertToPng(speciesMap, callback, width, height)
       else
@@ -65,15 +65,14 @@ function MapService(atlasMap, config) {
     image.src = svg64(svg.serialize())
   }
 
-  function setLegend(gridOverlay, species, language, atlas) {
+  function setLegend(gridOverlay, language, atlas) {
     const lan = language.toUpperCase()
     setLegendTitle(gridOverlay, lan, atlas)
     const textName = 'text' + lan
-    const speciesName = 'species' + lan
-    gridOverlay.setText('speciesSCI', species.speciesSCI)
-        .setAttributesOfElement('speciesSCI', {display: 'block'})
-        .setText(speciesName, species[speciesName])
-        .setAttributesOfElement(speciesName, {display: 'block'})
+    gridOverlay //.setText('speciesSCI', species.speciesSCI)
+        //.setAttributesOfElement('speciesSCI', {display: 'block'})
+        //.setText(speciesName, species[speciesName])
+        //.setAttributesOfElement(speciesName, {display: 'block'})
         .setText('breedingColourTitle', config.legend.breedingColourTitle[textName])
         .setText('breedingColourTitle4', config.legend.breedingColourTitle4[textName])
         .setText('breedingColourTitle3', config.legend.breedingColourTitle3[textName])
@@ -93,10 +92,11 @@ function MapService(atlasMap, config) {
     gridOverlay.setText('atlasTitle', config.legend.atlasTitle[text])
   }
 
-  function getColourForBreedingCategory(breedingCategory) {
-    const colour = breedingCategory === 4 ? config.breedingCategoryColour.category4 :
-      (breedingCategory === 3) ? config.breedingCategoryColour.category3 :
-      (breedingCategory === 2) ? config.breedingCategoryColour.category2 :
+  function getColourForAtlasClass(atlasClass) {
+    const atlasClassLetter = atlasClass.slice(-1)
+    const colour = atlasClassLetter === 'D' ? config.atlasClassColour.category4 :
+      (atlasClassLetter === 'C') ? config.atlasClassColour.category3 :
+      (atlasClassLetter === 'B') ? config.atlasClassColour.category2 :
       'rgba(124,240,10,0.0)'
     return colour
   }

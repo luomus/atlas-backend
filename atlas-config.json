@@ -19,7 +19,7 @@
     "shape-rendering": "optimizeSpeed",
     "opacity": 0.7
   },
-  "breedingCategoryColour": {
+  "atlasClassColour": {
     "category4": "#228ae6",
     "category3": "#66cc7a",
     "category2": "#d6e573"
@@ -90,6 +90,9 @@
       "textFIAtlas3": "Lintuatlas 3 (2006-2010)",
       "textSVAtlas3": "Fågelatlas 3 (2006-2010)",
       "textENAtlas3": "Bird Atlas 3 (2006-2010)",
+      "textFIAtlas4": "Lintuatlas 4 (2022-2025)",
+      "textSVAtlas4": "Fågelatlas 4 (2022-2025)",
+      "textENAtlas4": "Bird Atlas 4 (2022-2025)",
       "display": "block"
     },
     "speciesFI": { 
@@ -349,6 +352,7 @@
   "alignmentCoordinates": {
     "n": 68,
     "e": 32,
-    "combined": 680320
+    "combined": "http://tun.fi/YKJ.680:320",
+    "combined10": "http://tun.fi/YKJ.690:330"
   }
 }

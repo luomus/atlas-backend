@@ -91,7 +91,7 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
     const baseMapX2 = baseMap.getElementCoordsById(config.alignmentCoordinates.e + 1).x
     const baseMapDistance = Math.abs(baseMapX1 - baseMapX2)
     const dataMapX1 = overlay.getElementCoordsById(config.alignmentCoordinates.combined).x
-    const dataMapX2 = overlay.getElementCoordsById(config.alignmentCoordinates.combined + 10).x
+    const dataMapX2 = overlay.getElementCoordsById(config.alignmentCoordinates.combined10).x
     const dataMapDistance = Math.abs(dataMapX1 - dataMapX2)
     return baseMapDistance / dataMapDistance
   }
@@ -178,13 +178,13 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
     svgImage.addElement('rect', config.legendBox.breedingColourBox, 'legendBox')
         .addElement('text', config.legend.breedingColourTitle, 'legend')
         .addElement('rect', config.legend.breedingColourBox4, 'legend')
-        .setAttributesOfElement(config.legend.breedingColourBox4.id, {fill: config.breedingCategoryColour.category4})
+        .setAttributesOfElement(config.legend.breedingColourBox4.id, {fill: config.atlasClassColour.category4})
         .addElement('text', config.legend.breedingColourTitle4, 'legend')
         .addElement('rect', config.legend.breedingColourBox3, 'legend')
-        .setAttributesOfElement(config.legend.breedingColourBox3.id, {fill: config.breedingCategoryColour.category3})
+        .setAttributesOfElement(config.legend.breedingColourBox3.id, {fill: config.atlasClassColour.category3})
         .addElement('text', config.legend.breedingColourTitle3, 'legend')
         .addElement('rect', config.legend.breedingColourBox2, 'legend')
-        .setAttributesOfElement(config.legend.breedingColourBox2.id, {fill: config.breedingCategoryColour.category2})
+        .setAttributesOfElement(config.legend.breedingColourBox2.id, {fill: config.atlasClassColour.category2})
         .addElement('text', config.legend.breedingColourTitle2, 'legend')
     return svgImage
   }

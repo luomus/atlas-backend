@@ -1,8 +1,8 @@
 const Querier = require('../../dao/querier')
 const GridDao = require('../../dao/grid_dao')
-const AtlasDataDao = require('../../dao/atlas_data_dao')
+const AtlasGridSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
 const querier = Querier()
-const atlasDataDao = new AtlasDataDao(querier)
+const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const gridDao = new GridDao(querier)
 
 class Grid {
@@ -23,13 +23,13 @@ class Grid {
       if (typeof speciesId !== 'undefined') {
         // Return collection of area resources with species data
         speciesId = speciesId.split('.')[1]
-        let data = await atlasDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => [])
+        let data = await atlasGridSPeciesDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => [])
         data = data.map((area) => ({
-          id: area.grid_id.toString(),
-          coordinateN: parseInt(area.grid_id.toString().substring(0, 3)),
-          coordinateE: parseInt(area.grid_id.toString().substring(3, 6)),
-          breedingCategory: parseInt(area.breedingCategory),
-          breedingIndex: parseInt(area.breedingIndex),
+          id: area.grid.toString(),
+          coordinateN: parseInt(area.grid.toString().substring(0, 3)),
+          coordinateE: parseInt(area.grid.toString().substring(3, 6)),
+          atlasClass: parseInt(area.atlasClass),
+          atlasCode: parseInt(area.atlasCode),
         }))
         return res.json({
           species: {id: 'MX.' + speciesId.toString()},
@@ -62,21 +62,35 @@ class Grid {
       const birdList = await atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(areaId, atlasId).catch((e) => [])
       const categories = [1, 2, 3, 4].map((int) => ({categoryNumber: int, sum: 0, speciesList: []}))
       birdList.forEach((s) => {
-        if (s.breedingCategory === 0) return
-        const cat = categories.find((c) => c.categoryNumber === s.breedingCategory)
+        if (s.atlasClass === 0) return
+        const cat = categories.find((c) => c.atlasClass === s.atlasClass)
         cat.sum += 1
-        cat.speciesList.push({speciesId: s.species_id, speciesFi: s.speciesFi})
+        cat.speciesList.push({speciesId: s.species, speciesFi: s.speciesFi})
       })
       return res.json(categories)
     }
   }
 
   /**
+   * 
+   * @returns {JSON}
+   */
+  getGridStatsActive() {
+    return async (req, res) => {
+      const { areaId } = req.params
+      const birdList = await gridDao.getGridForActiveAtlas(areaId)
+
+      console.log(birdList)
+
+      return res.json(birdList.data)
+    }
+  }
+  /**
    * Returns all atlas data for one area point.
    * @returns {JSON}
    */
   getGridData() {
-    return (req, res) => atlasDataDao.getDataForGridAndAtlas(req.params.areaId, req.params.atlasId)
+    return (req, res) => atlasGridSPeciesDataDao.getDataForGridAndAtlas(req.params.areaId, req.params.atlasId)
         .then((data) => res.json(data), () => res.send(null))
   }
 }

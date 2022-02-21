@@ -11,6 +11,7 @@ rules:
   max-len:
     - 2
     - 120
+    - ignoreStrings
   new-cap:
     - 2    
     - capIsNewExceptions: 
@@ -20,11 +21,11 @@ rules:
   curly:
     - 2
     - multi
-  valid-jsdoc: 0
-  require-jsdoc: 1
+  valid-jsdoc: 1
+  require-jsdoc: 0
   max-lines-per-function:
     - 2
-    - 25
+    - 120
   brace-style:
     - 2
     - 1tbs

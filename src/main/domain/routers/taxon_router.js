@@ -4,11 +4,7 @@ const taxon = new Taxon()
 // eslint-disable-next-line new-cap
 const taxonRouter = require('express').Router()
 
-taxonRouter.get('/', taxon.getAll())
-taxonRouter.get('/:speciesId', taxon.getSpeciesById())
-// taxonRouter.get('/:speciesId/atlas', taxon.getAtlases())
+//taxonRouter.get('/:speciesId/atlas/current', taxon.getCurrentAtlasForTaxon())
 taxonRouter.get('/:speciesId/atlas/:atlasId', taxon.getAtlasForTaxon())
-taxonRouter.get('/find/', taxon.findTaxon())
-
 
 module.exports = taxonRouter
