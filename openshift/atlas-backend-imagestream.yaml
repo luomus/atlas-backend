@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: atlas-backend
+  name: atlas-backend
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: luomus/atlas-backend:latest
+      generation: null
+      importPolicy: {}
+      name: "latest"
+status:
+  dockerImageRepository: "luomus/lifeplan-monitor"

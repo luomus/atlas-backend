@@ -1,12 +1,14 @@
 version: '3.4'
 
 services:
-  atlas:
-    image: atlas
+  atlas-backend:
+    image: atlas-backend
     build:
       context: .
       dockerfile: ./Dockerfile
     environment:
-      NODE_ENV: production
+      NODE_ORACLEDB_USER: ${NODE_ORACLEDB_USER}
+      NODE_ORACLEDB_PASSWORD: ${NODE_ORACLEDB_PASSWORD}
+      NODE_ORACLEDB_CONNECTIONSTRING: ${NODE_ORACLEDB_CONNECTIONSTRING}
     ports:
       - 3000:3000
