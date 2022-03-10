@@ -10,8 +10,6 @@ class AtlasDao {
    */
   constructor(querier) {
     this.#querier = querier
-
-    this.createTableAtlas()
   }
 
   /**
@@ -19,11 +17,11 @@ class AtlasDao {
    * @returns {Promise}
    */
   createTableAtlas() {
-    const sql = `CREATE TABLE IF NOT EXISTS Atlas (\
-      id INTEGER PRIMARY KEY AUTOINCREMENT,\
-      startingYear INTEGER,\
-      endingYear INTEGER,\
-      name VARCHAR(100))`
+    const sql = 'CREATE TABLE IF NOT EXISTS Atlas (' +
+      'id INTEGER PRIMARY KEY, ' +
+      'startingYear INTEGER, ' +
+      'endingYear INTEGER, ' +
+      'name VARCHAR(100))'
     return this.#querier('run', sql)
   }
 
@@ -40,7 +38,12 @@ class AtlasDao {
    * @returns {Promise}
    */
   getAllAtlasInfo() {
-    return this.#querier('all', `SELECT * FROM Atlas`)
+    return this.#querier('all', 'SELECT' +
+    'id as "id", ' +
+    'startingYear as "startingYear"' +
+    'endingYear as "endingYear"' +
+    'name as "name"' +
+    'FROM Atlas')
   }
 }
 

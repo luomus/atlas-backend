@@ -8,7 +8,6 @@ const {DOMImplementation, XMLSerializer, DOMParser} = require('xmldom')
  * @returns {SvgImage}
  * @constructor
  */
-// eslint-disable-next-line max-lines-per-function
 function SvgImage(svgDocument) {
   const xmlSerializer = new XMLSerializer()
   const namespace = 'http://www.w3.org/2000/svg'
@@ -32,6 +31,26 @@ function SvgImage(svgDocument) {
   }
 
   return {
+    /**
+     * 
+     * @param {string} id 
+     * @returns {SvgImage}
+     */
+    removeElementById(id) {
+      const element = doc.getElementById(id)
+      doc.removeChild(element)
+      return this
+    },
+    /**
+     * 
+     * @param {string} style 
+     * @returns {SvgImage}
+     */
+    addGlobalStyle(cssStyle) {
+      const style = new DOMParser().parseFromString(`<style>${cssStyle}</style>`, 'text/css')
+      svg.appendChild(style)
+      return this
+    },
     /**
      * Sets dimensions of this svg-image.
      * @param {number} width

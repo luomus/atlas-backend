@@ -6,12 +6,11 @@ const map = new Map()
 // eslint-disable-next-line new-cap
 const mapRouter = require('express').Router()
 
-mapRouter.get('/')
-mapRouter.get('/:speciesId')
-mapRouter.get('/:speciesId/atlas/current', map.createGridForCurrentBirdData())
-mapRouter.get('/:speciesId/atlas/:atlasId', map.createGridForBirdData())
-mapRouter.get('/:speciesId/change')
-mapRouter.get('/:speciesId/change/:atlasId')
+//mapRouter.get('/')
+mapRouter.get('/:speciesId/atlas', map.createGridForCurrentBirdData())
+//mapRouter.get('/:speciesId/atlas/:atlasId', map.createGridForBirdData())
+//mapRouter.get('/:speciesId/change')
+//mapRouter.get('/:speciesId/change/:atlasId')
 
 
 module.exports = mapRouter

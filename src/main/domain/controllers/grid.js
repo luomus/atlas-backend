@@ -4,6 +4,7 @@ const AtlasGridSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
 const querier = Querier()
 const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const gridDao = new GridDao(querier)
+const urlRemover = require('../../helpers/urlRemover')
 
 class Grid {
   /**
@@ -11,8 +12,14 @@ class Grid {
    * @returns {JSON}
    */
   getAll() {
-    return (req, res) => gridDao.getAll()
-        .then((data) => res.json(data), () => res.send(null))
+    return async (req, res) => {
+      try {
+        const data = await gridDao.getAll()
+        return res.json(data)
+      } catch (e) {
+        return res.status(500).send(e.message)
+      }
+    }
   }
 
   // eslint-disable-next-line max-lines-per-function
@@ -23,7 +30,7 @@ class Grid {
       if (typeof speciesId !== 'undefined') {
         // Return collection of area resources with species data
         speciesId = speciesId.split('.')[1]
-        let data = await atlasGridSPeciesDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => [])
+        let data = await atlasGridSpeciesDataDao.getDataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => [])
         data = data.map((area) => ({
           id: area.grid.toString(),
           coordinateN: parseInt(area.grid.toString().substring(0, 3)),
@@ -47,19 +54,26 @@ class Grid {
    * @returns {JSON}
    */
   getGridInfo() {
-    return (req, res) => gridDao.getById(req.params.areaId)
-        .then((data) => res.json(data), () => res.send(null))
+    return async (req, res) => {
+      try {
+        const id = `http://tun.fi/YKJ.${req.params.gridId}`
+        const data = await gridDao.getById(id)
+        return res.json(data)
+      } catch (e) {
+        return res.status(500).send(e.message)
+      }
+    }
   }
 
 
   /**
-   * Returns list of species for each breaading category for one area point.
+   * Returns list of species for each breeding category for one area point.
    * @returns {JSON}
    */
   getGridStats() {
     return async (req, res) => {
       const {areaId, atlasId} = req.params
-      const birdList = await atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(areaId, atlasId).catch((e) => [])
+      const birdList = await atlasGridSpeciesDataDao.getListOfDistinctBirdsForGridAndAtlas(areaId, atlasId).catch((e) => [])
       const categories = [1, 2, 3, 4].map((int) => ({categoryNumber: int, sum: 0, speciesList: []}))
       birdList.forEach((s) => {
         if (s.atlasClass === 0) return
@@ -77,14 +91,25 @@ class Grid {
    */
   getGridStatsActive() {
     return async (req, res) => {
+      try {
       const { areaId } = req.params
-      const birdList = await gridDao.getGridForActiveAtlas(areaId)
+      const birdList = await atlasGridSpeciesDataDao.getListOfDistinctBirdsForGridAndActiveAtlas(areaId)
 
-      console.log(birdList)
+      const results = birdList.data.results.map(result => {
+        return {
+          speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
+          atlasCode: urlRemover(result.atlasCodeMax),
+          atlasClass: urlRemover(result.atlasClassMax),
+        }
+      })
 
-      return res.json(birdList.data)
+      return res.json(results)
+      } catch (e) {
+        return res.status(500).send(e.message)
+      }
     }
   }
+
   /**
    * Returns all atlas data for one area point.
    * @returns {JSON}

@@ -1,9 +1,9 @@
 const Querier = require('../../dao/querier')
-const AtlasSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
+const AtlasGridSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
 const AtlasDao = require('../../dao/atlas_dao')
 const querier = Querier()
-const atlasSpeciesDataDao = new AtlasSpeciesDataDao(querier)
 const atlasDao = new AtlasDao(querier)
+const atlasSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 
 class Taxon {
   /**

@@ -1,9 +1,7 @@
 const oracledb = require('oracledb')
 const config = require('./dbConfig.js');
 
-// const fs = require('fs');
-// const pass = fs.readFileSync("pass.txt")
-// const pw = pass.toString()
+let connection
 
 /**
  * Provides a method for querying a SQLite database
@@ -12,27 +10,28 @@ const config = require('./dbConfig.js');
  */
 // eslint-disable-next-line max-lines-per-function
 function Querier() {
-  //   return (methodName, query, params = []) => {
-  //     return new Promise((resolve, reject) => {
-  //       db[methodName](query, params, function(err, data) {
-  //         // console.log(data)
-  //         // correctMxFormatting(data)
-  //         if (err) {
-  //           console.log('Error running sql: ' + query)
-  //           console.log(err)
-  //           reject(err)
-  //         } else
-  //           resolve(data || this.lastID)
-  //       })
-  //     })
+  //return (methodName, query, params = []) => {
+    // return new Promise((resolve, reject) => {
+    //   db[methodName](query, params, function(err, data) {
+    //     // console.log(data)
+    //     // correctMxFormatting(data)
+    //     if (err) {
+    //       console.log('Error running sql: ' + query)
+    //       console.log(err)
+    //       reject(err)
+    //     } else
+    //       resolve(data || this.lastID)
+    //   })
+    // })
 
   // eslint-disable-next-line max-lines-per-function
   return async (methodName, query, params = []) => {
     try {
       connection = await oracledb.getConnection(config)
-      result = await connection.execute(query, params, {outFormat: oracledb.OBJECT})
+      result = await connection.execute(query, params, { outFormat: oracledb.OBJECT, autoCommit: true })
     } catch (err) {
-      return new Error(err.message)
+      console.log(err)
+      throw new Error(err.message)
     } finally {
       if (connection)
         try {
@@ -42,10 +41,9 @@ function Querier() {
         }
     }
 
-    if (result.rows.length === 0)
+    if (result.rows?.length === 0)
       return 'Empty result'
     else {
-      correctMxFormating(result.rows)
       return result.rows
     }
   }
@@ -54,11 +52,11 @@ function Querier() {
     // eslint-disable-next-line guard-for-in
     for (const val in data) {
       if (data[val].hasOwnProperty('species_mxcode')) {
-        data[val].species_id = 'MX.' + data[val].species_mxcode
+        data[val].species = 'MX.' + data[val].species_mxcode
         delete data[val].species_mxcode
       }
       if (data[val].hasOwnProperty('mxCode')) {
-        data[val].species_id = 'MX.' + data[val].mxCode
+        data[val].species = 'MX.' + data[val].mxCode
         delete data[val].mxCode
       }
     }

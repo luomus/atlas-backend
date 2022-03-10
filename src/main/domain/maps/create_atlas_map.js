@@ -12,14 +12,79 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
   const overlayCircleRadius = 0.5
   const YKJgridRatio = 10
   const numberOfYKJsquaresE = 8
-  const baseMap = drawBaseMap(geoJsonArray, SvgImage())
 
+  let baseMap = createGlobalStyleDoc(SvgImage())
+  baseMap = drawBaseMap(geoJsonArray, baseMap)
   const overlay = drawGrid(gridArray, SvgImage())
   const scaleFactor = getScaleFactorForMerge(baseMap, overlay)
   const atlasMap = baseMap.mergeSvg(moveOverlay(baseMap, overlay), scaleFactor)
 
-
   return atlasMap
+
+  function createGlobalStyleDoc(svgImage) {
+    svgImage.addGlobalStyle(`
+      text {
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      .back {
+          width: 1px;
+          height: 1px;
+          display: block;
+          opacity: 0.7;
+      }
+
+      .cir {
+          display: block;
+      }
+
+      .black {
+          fill: black;
+          display: none;
+      }
+
+      .category5 {
+          fill: ${config.activityCategoryColour.category5};
+      }
+      .category4 {
+          fill: ${config.activityCategoryColour.category4};
+      }
+      .category3 {
+          fill: ${config.activityCategoryColour.category3};
+      }
+      .category2 {
+          fill: ${config.activityCategoryColour.category2};
+      }
+      .category1 {
+          fill: ${config.activityCategoryColour.category1};
+      }
+      .category0 {
+          fill: ${config.activityCategoryColour.category0};
+      }
+
+      .classD, .classC, .classB {
+          stroke-width: 0.03;
+          stroke: #000;
+      }
+
+      .classD {
+          fill: ${config.atlasClassColour.categoryD};
+      }
+      .classC {
+          fill: ${config.atlasClassColour.categoryC};
+      }
+      .classB {
+          fill: ${config.atlasClassColour.categoryB};
+          stroke-width: 0.06;
+          stroke: #000;
+      }
+      .classA {
+        fill: rgba(124,240,10,0.0) 
+      }`
+    )
+
+    return svgImage
+  }
 
   function drawBaseMap(geoJsonArray, svgImage) {
     svgImage.setBackgroundColour(config.mapBackground)
@@ -175,41 +240,43 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
   }
 
   function drawBreedingLegend(svgImage) {
-    svgImage.addElement('rect', config.legendBox.breedingColourBox, 'legendBox')
-        .addElement('text', config.legend.breedingColourTitle, 'legend')
-        .addElement('rect', config.legend.breedingColourBox4, 'legend')
-        .setAttributesOfElement(config.legend.breedingColourBox4.id, {fill: config.atlasClassColour.category4})
-        .addElement('text', config.legend.breedingColourTitle4, 'legend')
-        .addElement('rect', config.legend.breedingColourBox3, 'legend')
-        .setAttributesOfElement(config.legend.breedingColourBox3.id, {fill: config.atlasClassColour.category3})
-        .addElement('text', config.legend.breedingColourTitle3, 'legend')
-        .addElement('rect', config.legend.breedingColourBox2, 'legend')
-        .setAttributesOfElement(config.legend.breedingColourBox2.id, {fill: config.atlasClassColour.category2})
-        .addElement('text', config.legend.breedingColourTitle2, 'legend')
+    svgImage.addElement('g', {id: 'breedingLegend'})
+        .addElement('rect', config.legendBox.breedingColourBox, 'breedingLegend')
+        .addElement('text', config.legend.breedingColourTitle, 'breedingLegend')
+        .addElement('rect', config.legend.breedingColourBox4, 'breedingLegend')
+        .setAttributesOfElement(config.legend.breedingColourBox4.id, {class: 'classD'})
+        .addElement('text', config.legend.breedingColourTitle4, 'breedingLegend')
+        .addElement('rect', config.legend.breedingColourBox3, 'breedingLegend')
+        .setAttributesOfElement(config.legend.breedingColourBox3.id, {class: 'classC'})
+        .addElement('text', config.legend.breedingColourTitle3, 'breedingLegend')
+        .addElement('rect', config.legend.breedingColourBox2, 'breedingLegend')
+        .setAttributesOfElement(config.legend.breedingColourBox2.id, {class: 'classB'})
+        .addElement('text', config.legend.breedingColourTitle2, 'breedingLegend')
     return svgImage
   }
 
   function drawActivityLegend(svgImage) {
-    svgImage.addElement('rect', config.legendBox.activityColourBox, 'legendBox')
-        .addElement('text', config.legend.activityColourTitle, 'legend')
-        .addElement('rect', config.legend.activityColourBox5, 'legend')
-        .setAttributesOfElement(config.legend.activityColourBox5.id, {fill: config.activityCategoryColour.category5})
-        .addElement('text', config.legend.activityColourTitle5, 'legend')
-        .addElement('rect', config.legend.activityColourBox4, 'legend')
-        .setAttributesOfElement(config.legend.activityColourBox4.id, {fill: config.activityCategoryColour.category4})
-        .addElement('text', config.legend.activityColourTitle4, 'legend')
-        .addElement('rect', config.legend.activityColourBox3, 'legend')
-        .setAttributesOfElement(config.legend.activityColourBox3.id, {fill: config.activityCategoryColour.category3})
-        .addElement('text', config.legend.activityColourTitle3, 'legend')
-        .addElement('rect', config.legend.activityColourBox2, 'legend')
-        .setAttributesOfElement(config.legend.activityColourBox2.id, {fill: config.activityCategoryColour.category2})
-        .addElement('text', config.legend.activityColourTitle2, 'legend')
-        .addElement('rect', config.legend.activityColourBox1, 'legend')
-        .setAttributesOfElement(config.legend.activityColourBox1.id, {fill: config.activityCategoryColour.category1})
-        .addElement('text', config.legend.activityColourTitle1, 'legend')
-        .addElement('rect', config.legend.activityColourBox0, 'legend')
-        .setAttributesOfElement(config.legend.activityColourBox0.id, {fill: config.activityCategoryColour.category0})
-        .addElement('text', config.legend.activityColourTitle0, 'legend')
+    svgImage.addElement('g', {id: 'activityLegend'})
+        .addElement('rect', config.legendBox.activityColourBox, 'activityLegend')
+        .addElement('text', config.legend.activityColourTitle, 'activityLegend')
+        .addElement('rect', config.legend.activityColourBox5, 'activityLegend')
+        .setAttributesOfElement(config.legend.activityColourBox5.id, {class: 'category5'})
+        .addElement('text', config.legend.activityColourTitle5, 'activityLegend')
+        .addElement('rect', config.legend.activityColourBox4, 'activityLegend')
+        .setAttributesOfElement(config.legend.activityColourBox4.id, {class: 'category4'})
+        .addElement('text', config.legend.activityColourTitle4, 'activityLegend')
+        .addElement('rect', config.legend.activityColourBox3, 'activityLegend')
+        .setAttributesOfElement(config.legend.activityColourBox3.id, {class: 'category3'})
+        .addElement('text', config.legend.activityColourTitle3, 'activityLegend')
+        .addElement('rect', config.legend.activityColourBox2, 'activityLegend')
+        .setAttributesOfElement(config.legend.activityColourBox2.id, {class: 'category2'})
+        .addElement('text', config.legend.activityColourTitle2, 'activityLegend')
+        .addElement('rect', config.legend.activityColourBox1, 'activityLegend')
+        .setAttributesOfElement(config.legend.activityColourBox1.id, {class: 'category1'})
+        .addElement('text', config.legend.activityColourTitle1, 'activityLegend')
+        .addElement('rect', config.legend.activityColourBox0, 'activityLegend')
+        .setAttributesOfElement(config.legend.activityColourBox0.id, {class: 'category0'})
+        .addElement('text', config.legend.activityColourTitle0, 'activityLegend')
     return svgImage
   }
 }

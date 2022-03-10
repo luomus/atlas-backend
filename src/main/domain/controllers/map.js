@@ -66,42 +66,51 @@ class Map {
   /* eslint-disable max-len */
   createGridForBirdData() {
     return async (req, res) => {
-      const {speciesId, atlasId} = req.params
-      const breedingData = await atlasGridSpeciesDataDao.getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => {return res.json(e.message)})
-      const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch((e) => {return res.json(e.message)})
-      if (breedingData === 'Empty result' || atlasGrid === 'Empty result')
-        return res.json('Error: Empty result')
-      else
-      if (req.query.type === 'png') {
-        const callback = (png) => res.send(png)
-        res.setHeader('Content-Type', 'image/png')
-        mapService.getSpeciesMap(breedingData, atlasGrid, callback, 'png', req.query.scaling, req.query.language, atlasId)
-      } else {
-        res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(mapService.getSpeciesMap(breedingData, atlasGrid, undefined, 'svg', req.query.scaling, req.query.language, atlasId))
+      try {
+        const {speciesId, atlasId} = req.params
+        const breedingData = await atlasGridSpeciesDataDao.getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId).catch((e) => {return res.json(e.message)})
+        const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(atlasId).catch((e) => {return res.json(e.message)})
+        if (breedingData === 'Empty result' || atlasGrid === 'Empty result')
+          return res.json('Error: Empty result')
+        else
+        if (req.query.type === 'png') {
+          const callback = (png) => res.send(png)
+          res.setHeader('Content-Type', 'image/png')
+          mapService.getSpeciesMap(breedingData, atlasGrid, callback, 'png', req.query.scaling, req.query.language, atlasId)
+        } else {
+          res.setHeader('Content-Type', 'image/svg+xml')
+          res.send(mapService.getSpeciesMap(breedingData, atlasGrid, undefined, 'svg', req.query.scaling, req.query.language, atlasId))
+        }
+      } catch (e) {
+        res.status(500).send(e.message)
       }
     }
   }
 
   createGridForCurrentBirdData() {
     return async (req, res) => {
-      const { speciesId } = req.params
-      let breedingData = await atlasGridSpeciesDataDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId).catch((e) => {return res.json(e.message)})
-      breedingData = breedingData.data.results.map((data) => {
-        return {
-          grid: `http://tun.fi/YKJ.${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`,
-          atlasClass: data.atlasClassMax,
-        }
-      })
+      try {
+        const { speciesId } = req.params
+        let breedingData = await atlasGridSpeciesDataDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId)
+        let species = (await atlasGridSpeciesDataDao.getSpecies(speciesId)).data
 
-      if (req.query.type === 'png') {
-        const callback = (png) => res.send(png)
-        res.setHeader('Content-Type', 'image/png')
-        mapService.getSpeciesMap(breedingData, [], callback, 'png', req.query.scaling, req.query.language, __latestAtlas)
-      } else {
-        console.log(req.query.language)
-        res.setHeader('Content-Type', 'image/svg+xml')
-        res.send(mapService.getSpeciesMap(breedingData, [], undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas))
+        breedingData = breedingData.data.results.map((data) => {
+          return {
+            grid: `http://tun.fi/YKJ.${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`,
+            atlasClass: data.atlasClassMax,
+          }
+        })
+
+        if (req.query.type === 'png') {
+          const callback = (png) => res.send(png)
+          res.setHeader('Content-Type', 'image/png')
+          mapService.getSpeciesMap(breedingData, [], species, callback, 'png', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true")
+        } else {
+          res.setHeader('Content-Type', 'image/svg+xml')
+          res.send(mapService.getSpeciesMap(breedingData, [], species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
+        }
+      } catch (e) {
+        res.status(500).send(e.message)
       }
     }
   }

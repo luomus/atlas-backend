@@ -11,8 +11,6 @@ class GridDao {
    */
   constructor(querier) {
     this.#querier = querier
-
-    this.createTableGrid()
   }
 
   /**
@@ -20,16 +18,16 @@ class GridDao {
    * @returns {Promise}
    */
   createTableGrid() {
-    const sql = `CREATE TABLE IF NOT EXISTS Grid (\
-            id VARCHAR(100) PRIMARY KEY, \
-            coordinates VARCHAR(7), \
-            birdAssociationArea VARCHAR(100), \
-            name VARCHAR(100), \
-            level1 INTEGER, \
-            level2 FLOAT, \
-            level3 FLOAT, \
-            level4 FLOAT, \
-            level5 FLOAT)`
+    const sql = 'CREATE TABLE IF NOT EXISTS Grid (' +
+      'id VARCHAR(100) PRIMARY KEY, ' +
+      'coordinates VARCHAR(7), ' +
+      'birdAssociationArea VARCHAR(100), ' +
+      'name VARCHAR(100), ' +
+      'level1 FLOAT, ' +
+      'level2 FLOAT, ' +
+      'level3 FLOAT, ' +
+      'level4 FLOAT, ' +
+      'level5 FLOAT)'
     return this.#querier('run', sql)
   }
 
@@ -40,15 +38,8 @@ class GridDao {
    */
   addGrid(grid) {
     const {id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5} = grid
-    const sql = `INSERT INTO Grid (id, \
-      coordinates, \
-      birdAssociationArea, \
-      name, \
-      level1, \
-      level2, \
-      level3, \
-      level4, \
-      level5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    const sql = 'INSERT INTO Grid(id, coordinates, birdAssociationArea, name, ' +
+      'level1, level2, level3, level4, level5) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9)'
     return this.#querier('run', sql,
       [id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5])
   }
@@ -60,18 +51,8 @@ class GridDao {
    */
   updateGrid(grid) {
     const {id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5} = grid
-    const sql = `UPDATE Grid \
-      SET \
-      id = ?, \
-      coordinates = ?, \
-      birdAssociationArea = ?, \
-      name = ?, \
-      level1 = ?, \
-      level2 = ?, \
-      level3 = ?, \
-      level4 = ?, \
-      level5 = ? \
-      WHERE id = ?`
+    const sql = 'UPDATE Grid SET id = ?, coordinates = ?, birdAssociationArea = ?, name = ?, ' +
+      'level1 = ?, level2 = ?, level3 = ?, level4 = ?, level5 = ? WHERE id = ?'
     return this.#querier('run', sql,
       [id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5, id])
   }
@@ -91,7 +72,15 @@ class GridDao {
    * @returns {Promise}
    */
   getById(id) {
-    return this.#querier('get', `SELECT * FROM Grid WHERE id = :id`, [id])
+    return this.#querier('get', 'SELECT id AS "id", ' +
+    'coordinates AS "coordinates", ' +
+    'birdAssociationArea AS "birdAssociationArea", ' +
+    'name AS "name", ' +
+    'level1 AS "level1", ' +
+    'level2 AS "level2", ' +
+    'level3 AS "level3", ' +
+    'level4 AS "level4", ' +
+    'level5 AS "level5" FROM Grid WHERE id=:1', [id])
   }
 
   /**
@@ -100,30 +89,15 @@ class GridDao {
    */
   getAll() {
     return this.#querier('all',
-      `SELECT * FROM Grid`)
-  }
-
-  /**
-   * 
-   * @param {*} grid
-   * @returns 
-   */
-  getGridForActiveAtlas(grid) {
-    const params = {
-      aggregateBy: 'unit.linkings.taxon.speciesId,unit.linkings.taxon.speciesNameEnglish,unit.linkings.taxon.speciesNameFinnish,unit.linkings.taxon.speciesNameSwedish,unit.linkings.taxon.speciesScientificName,unit.linkings.taxon.speciesTaxonomicOrder',
-      orderBy: 'unit.linkings.taxon.speciesTaxonomicOrder',
-      atlasCounts: true,
-      taxonId: 'MX.37580',
-      time: '2022/2025',
-      coordinateAccuracyMax: 10000,
-      ykj10kmCenter: grid,
-      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
-      hasValue: 'unit.atlasClass',
-      pageSize: 100,
-      page: 1,
-      cache: true,
-    }
-    return axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+      'SELECT id AS "id", ' +
+      'coordinates AS "coordinates", ' +
+      'birdAssociationArea AS "birdAssociationArea", ' +
+      'name AS "name", ' +
+      'level1 AS "level1", ' +
+      'level2 AS "level2", ' +
+      'level3 AS "level3", ' +
+      'level4 AS "level4", ' +
+      'level5 AS "level5" FROM Grid')
   }
 }
 

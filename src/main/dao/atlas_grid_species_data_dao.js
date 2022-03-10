@@ -12,8 +12,6 @@ class AtlasGridSpeciesDataDao {
    */
   constructor(querier) {
     this.#querier = querier
-
-    this.createTableBirdData()
   }
 
 
@@ -22,13 +20,13 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   createTableBirdData() {
-    const sql = `CREATE TABLE IF NOT EXISTS AtlasGridSpeciesData (\
-      id INTEGER PRIMARY KEY AUTOINCREMENT, \
-      speciesId VARCHAR(100), \
-      grid VARCHAR(100) REFERENCES grid, \
-      atlas INTEGER REFERENCES atlas, \
-      atlasCode VARCHAR(100), \
-      atlasClass VARCHAR(100))`
+    const sql = 'CREATE TABLE IF NOT EXISTS AtlasGridSpeciesData (' +
+      'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+      'speciesId VARCHAR(100), ' +
+      'grid VARCHAR(100) REFERENCES Grid, ' +
+      'atlas INTEGER REFERENCES Atlas, ' +
+      'atlasCode VARCHAR(100), ' +
+      'atlasClass VARCHAR(100))'
     return this.#querier('run', sql)
   }
 
@@ -59,13 +57,13 @@ class AtlasGridSpeciesDataDao {
    */
   getDataForSpecies(speciesId) {
     return this.#querier('all',
-      `SELECT id AS "id", \
-      species AS "species", \
-      grid AS "grid", \
-      atlasCode AS "atlasCode", \
-      atlasClass AS "atlasClass" \
-      FROM AtlasGridSpeciesData \
-      WHERE species = :speciesId`, [speciesId])
+      'SELECT id AS "id", ' +
+      'species AS "species", ' +
+      'grid AS "grid", ' +
+      'atlasCode AS "atlasCode", ' +
+      'atlasClass AS "atlasClass" ' +
+      'FROM AtlasGridSpeciesData ' +
+      'WHERE species = :speciesId', [speciesId])
   }
 
   /**
@@ -85,16 +83,16 @@ class AtlasGridSpeciesDataDao {
    */
   getDataForSpeciesAndAtlas(speciesId, atlasId) {
     return this.#querier('all',
-      `SELECT id AS "id", \
-      AtlasGridSpeciesData.species AS "species", \
-      AtlasGridSpeciesData.grid AS "grid", \
-      grid.coordinates AS "coordinates", \
-      AtlasGridSpeciesData.atlasCode AS "atlasCode", \
-      AtlasGridSpeciesData.atlasClass AS "atlasClass" \
-      FROM AtlasGridSpeciesData JOIN grid \
-      ON grid.id = AtlasGridSpeciesData.grid \
-      WHERE species = :speciesId \
-      AND atlas = :atlasId`, [speciesId, atlasId])
+      'SELECT id AS "id", ' +
+      'AtlasGridSpeciesData.species AS "species", ' +
+      'AtlasGridSpeciesData.grid AS "grid", ' +
+      'grid.coordinates AS "coordinates", ' +
+      'AtlasGridSpeciesData.atlasCode AS "atlasCode", ' +
+      'AtlasGridSpeciesData.atlasClass AS "atlasClass" ' +
+      'FROM AtlasGridSpeciesData JOIN grid ' +
+      'ON grid.id = AtlasGridSpeciesData.grid ' +
+      'WHERE species = :speciesId ' +
+      'AND atlas = :atlasId', [speciesId, atlasId])
   }
 
 
@@ -105,12 +103,12 @@ class AtlasGridSpeciesDataDao {
    */
   getGridAndBreedingdataForSpecies(speciesId) {
     return this.#querier('all',
-      `SELECT AtlasGridSpeciesData.grid AS "grid", \
-      grid.coordinates AS "coordinates" , \
-      AtlasGridSpeciesData.atlasClass AS "atlasClass" \
-      FROM AtlasGridSpeciesData JOIN grid \
-      ON grid.id = AtlasGridSpeciesData.grid \
-      WHERE AtlasGridSpeciesData.species = :speciesId`, [speciesId])
+      'SELECT AtlasGridSpeciesData.grid AS "grid", ' +
+      'grid.coordinates AS "coordinates" , ' +
+      'AtlasGridSpeciesData.atlasClass AS "atlasClass" ' +
+      'FROM AtlasGridSpeciesData JOIN grid ' +
+      'ON grid.id = AtlasGridSpeciesData.grid ' +
+      'WHERE AtlasGridSpeciesData.species = :speciesId', [speciesId])
   }
 
 
@@ -123,13 +121,13 @@ class AtlasGridSpeciesDataDao {
    */
   getGridAndBreedingdataForSpeciesAndAtlas(speciesId, atlasId) {
     return this.#querier('all',
-      `SELECT grid.id AS "grid", \
-      grid.coordinates AS "coordinates", \
-      AtlasGridSpeciesData.atlasClass AS "atlasClass" \
-      FROM AtlasGridSpeciesData JOIN grid \
-      ON grid.id = AtlasGridSpeciesData.grid \
-      WHERE AtlasGridSpeciesData.species = :speciesId \
-      AND AtlasGridSpeciesData.atlas = :atlasId`, [speciesId, atlasId])
+      'SELECT grid.id AS "grid", ' +
+      'grid.coordinates AS "coordinates", ' +
+      'AtlasGridSpeciesData.atlasClass AS "atlasClass" ' +
+      'FROM AtlasGridSpeciesData JOIN grid ' +
+      'ON grid.id = AtlasGridSpeciesData.grid ' +
+      'WHERE AtlasGridSpeciesData.species = :speciesId ' +
+      'AND AtlasGridSpeciesData.atlas = :atlasId', [speciesId, atlasId])
   }
 
 
@@ -141,14 +139,14 @@ class AtlasGridSpeciesDataDao {
    */
   getDataForGridAndAtlas(gridId, atlasId) {
     return this.#querier('all',
-      `SELECT id AS "id", \
-      species AS "species", \
-      grid AS "grid", \
-      atlasClass AS "atlasClass", \
-      atlasCode AS "atlasCode" \
-      FROM AtlasGridSpeciesData \
-      WHERE AtlasGridSpeciesData.grid = :gridId \
-      AND AtlasGridSpeciesData.atlas = :atlasId`, [gridId, atlasId])
+      'SELECT id AS "id", ' +
+      'species AS "species", ' +
+      'grid AS "grid", ' +
+      'atlasClass AS "atlasClass", ' +
+      'atlasCode AS "atlasCode" ' +
+      'FROM AtlasGridSpeciesData ' +
+      'WHERE AtlasGridSpeciesData.grid = :gridId ' +
+      'AND AtlasGridSpeciesData.atlas = :atlasId', [gridId, atlasId])
   }
 
 
@@ -158,8 +156,8 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getNumOfBreedingCategoriesForGrid(gridId) {
-    return this.#querier('all', `SELECT atlasClass AS "atlasClass", count(*) AS "num" FROM AtlasGridSpeciesData \
-      WHERE grid = :gridId GROUP BY atlasClass`, [gridId])
+    return this.#querier('all', 'SELECT atlasClass AS "atlasClass", count(*) AS "num" FROM AtlasGridSpeciesData ' +
+      'WHERE grid = :gridId GROUP BY atlasClass', [gridId])
   }
 
 
@@ -170,8 +168,8 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getNumOfBreedingCategoriesForGridAndAtlas(gridId, atlasId) {
-    return this.#querier('all', `SELECT atlasClass AS "atlasClass", count(*) AS "num" FROM AtlasGridSpeciesData \
-      WHERE grid = :gridId AND atlas = :atlasId GROUP BY atlasClass`, [gridId, atlasId])
+    return this.#querier('all', 'SELECT atlasClass AS "atlasClass", count(*) AS "num" FROM AtlasGridSpeciesData ' +
+      'WHERE grid = :gridId AND atlas = :atlasId GROUP BY atlasClass', [gridId, atlasId])
   }
 
 
@@ -181,9 +179,9 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getListOfDistinctBirdsForGrid(gridId) {
-    return this.#querier('all', `SELECT distinct AtlasGridSpeciesData., species.speciesFi \
-      FROM AtlasGridSpeciesData, species WHERE species.mxCode=AtlasGridSpeciesData. \
-      AND AtlasGridSpeciesData.grid= :gridId AND visibility=1`, [gridId])
+    return this.#querier('all', 'SELECT distinct AtlasGridSpeciesData., species.speciesFi ' +
+      'FROM AtlasGridSpeciesData, species WHERE species.mxCode=AtlasGridSpeciesData. ' +
+      'AND AtlasGridSpeciesData.grid= :gridId AND visibility=1', [gridId])
   }
 
 
@@ -194,11 +192,34 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getListOfDistinctBirdsForGridAndAtlas(gridId, atlasId) {
-    return this.#querier('all', `SELECT distinct AtlasGridSpeciesData. AS "", \
-      AtlasGridSpeciesData.atlasClass AS "atlasClass" \
-      FROM AtlasGridSpeciesData WHERE AtlasGridSpeciesData.grid = :gridId \ 
-      AND AtlasGridSpeciesData.atlas = :atlasId`, [gridId, atlasId])
+    return this.#querier('all', 'SELECT distinct AtlasGridSpeciesData.species AS "species", ' +
+      'AtlasGridSpeciesData.atlasClass AS "atlasClass" ' +
+      'FROM AtlasGridSpeciesData WHERE AtlasGridSpeciesData.grid = :gridId ' +
+      'AND AtlasGridSpeciesData.atlas = :atlasId', [gridId, atlasId])
   }
+
+    /**
+   * Gets the currently active atlas data for queried YKJ-square from laji.fi-api
+   * @param {Object} grid
+   * @returns {Promise}
+   */
+     getListOfDistinctBirdsForGridAndActiveAtlas(grid, page = 1) {
+      const params = {
+        aggregateBy: 'unit.linkings.taxon.speciesId,unit.linkings.taxon.speciesNameEnglish,unit.linkings.taxon.speciesNameFinnish,unit.linkings.taxon.speciesNameSwedish,unit.linkings.taxon.speciesScientificName,unit.linkings.taxon.speciesTaxonomicOrder',
+        orderBy: 'unit.linkings.taxon.speciesTaxonomicOrder',
+        atlasCounts: true,
+        taxonId: 'MX.37580',
+        time: '2022/2025',
+        coordinateAccuracyMax: 10000,
+        ykj10kmCenter: grid,
+        recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+        hasValue: 'unit.atlasClass',
+        pageSize: 1000,
+        page: page,
+        cache: true,
+      }
+      return axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+    }
 
   /**
    * Returns the database search result for list of species for given grid and atlas.
@@ -207,9 +228,9 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getatlasClassSumForSpecies(speciesId, atlasId) {
-    return this.#querier('all', `SELECT atlasClass AS "atlasClass", count(*) "categorySum" \
-      FROM AtlasGridSpeciesData WHERE  = :speciesId AND atlas= :atlasId \
-      GROUP BY atlasClass`, [speciesId, atlasId])
+    return this.#querier('all', 'SELECT atlasClass AS "atlasClass", count(*) "categorySum" ' +
+      'FROM AtlasGridSpeciesData WHERE  = :speciesId AND atlas= :atlasId ' +
+      'GROUP BY atlasClass', [speciesId, atlasId])
   }
 
   /**
@@ -231,6 +252,14 @@ class AtlasGridSpeciesDataDao {
       cache: true,
     }
     return axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+  }
+
+  getSpecies(speciesId) {
+    const params = {
+      lang: 'multi',
+      selectedFields: 'scientificName,vernacularName'
+    }
+    return axios.get(`https://laji.fi/api/taxa/${speciesId}`, {params})
   }
 }
 
