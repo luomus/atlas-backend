@@ -45,9 +45,17 @@ function MapService(atlasMap, config) {
         speciesMap.removeElementById('activityLegend')
       }
 
-      const width = speciesMap.getWidth() * scaleFactor
-      const height = speciesMap.getHeight() * scaleFactor
-      speciesMap.setDimensions(width, height)
+      let width = speciesMap.getWidth()
+      let height = speciesMap.getHeight()
+      
+      if (scaleFactor > 0) {
+        width = width * scaleFactor
+        height = height * scaleFactor
+        speciesMap.setDimensions(width, height)
+      } else {
+        speciesMap.setDimensions('100%', '100%')
+      }
+  
       setLegend(speciesMap, species, language, atlas, showActivity)
       if (type === 'png')
         convertToPng(speciesMap, callback, width, height)
