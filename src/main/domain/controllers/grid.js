@@ -92,9 +92,9 @@ class Grid {
   getGridStatsActive() {
     return async (req, res) => {
       try {
-      const { areaId } = req.params
-      const birdList = await atlasGridSpeciesDataDao.getListOfDistinctBirdsForGridAndActiveAtlas(areaId)
-
+      const { gridId } = req.params
+      const birdList = await atlasGridSpeciesDataDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
+      const grid = (await gridDao.getById(`http://tun.fi/YKJ.${gridId}`))[0]
       const results = birdList.data.results.map(result => {
         return {
           speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
@@ -103,7 +103,9 @@ class Grid {
         }
       })
 
-      return res.json(results)
+      grid.data = results
+
+      return res.json(grid)
       } catch (e) {
         return res.status(500).send(e.message)
       }

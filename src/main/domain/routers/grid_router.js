@@ -5,7 +5,7 @@ const grid = new Grid()
 
 gridRouter.get('/', grid.getAll() )
 gridRouter.get('/:gridId', grid.getGridInfo())
-gridRouter.get('/:areaId/atlas', grid.getGridStatsActive())
+gridRouter.get('/:gridId/atlas', grid.getGridStatsActive())
 //gridRouter.get('/:areaId/atlas/:atlasId', grid.getGridStats())
 //gridRouter.get('/:areaId/atlas/:atlasId/data', grid.getGridData())
 
