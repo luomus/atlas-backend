@@ -3,8 +3,8 @@ kind: ImageStream
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: atlas-backend
-  name: atlas-backend
+    io.kompose.service: atlas-backend-dev
+  name: atlas-backend-dev
 spec:
   lookupPolicy:
     local: false

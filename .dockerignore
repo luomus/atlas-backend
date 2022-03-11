@@ -21,7 +21,7 @@
 **/secrets.dev.yaml
 **/values.dev.yaml
 **/dokumentaatio
-**/immporters
+**/inporters
 birds.db
 pass.txt
 README.md

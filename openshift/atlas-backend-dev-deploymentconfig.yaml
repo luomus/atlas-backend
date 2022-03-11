@@ -3,19 +3,19 @@ kind: DeploymentConfig
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: atlas-backend
-  name: atlas-backend
+    io.kompose.service: atlas-backend-dev
+  name: atlas-backend-dev
 spec:
   replicas: 1
   selector:
-    io.kompose.service: atlas-backend
+    io.kompose.service: atlas-backend-dev
   strategy:
     resources: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: atlas-backend
+        io.kompose.service: atlas-backend-dev
     spec:
       containers:
         - env:
@@ -35,7 +35,7 @@ spec:
                   key: NODE_ORACLEDB_USER
                   name: atlas-oracle
           image: luomus/atlas-backend
-          name: atlas-backend
+          name: atlas-backend-dev
           ports:
             - containerPort: 3000
           resources: {}
@@ -46,10 +46,10 @@ spec:
     - imageChangeParams:
         automatic: true
         containerNames:
-          - atlas-backend
+          - atlas-backend-dev
         from:
           kind: ImageStreamTag
-          name: atlas-backend:latest
+          name: atlas-backend-dev:testing
       type: ImageChange
 status:
   availableReplicas: 0
