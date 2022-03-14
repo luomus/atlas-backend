@@ -97,7 +97,9 @@ class GridDao {
       'level2 AS "level2", ' +
       'level3 AS "level3", ' +
       'level4 AS "level4", ' +
-      'level5 AS "level5" FROM Grid')
+      'level5 AS "level5" ' +
+      'FROM Grid ' +
+      'ORDER BY name')
   }
 }
 
