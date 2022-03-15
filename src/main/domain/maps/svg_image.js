@@ -124,7 +124,8 @@ function SvgImage(svgDocument) {
      */
     setAttributesOfElement: function(id, propertyMap) {
       const element = doc.getElementById(id)
-      // console.log("elementti svg-imagessa: ", element)
+      //if element does not exist ignore it
+      if (!element) return this 
       mapPropertiesToAttributes(propertyMap, element)
       return this
     },
