@@ -1,10 +1,14 @@
 const Querier = require('../../dao/querier')
-const GridDao = require('../../dao/grid_dao')
-const AtlasGridSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
 const querier = Querier()
+const GridDao = require('../../dao/grid_dao')
+const CachedAxios = require('../../dao/cachedAxios')
+const cachedAxios = CachedAxios()
+const AtlasGridSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
 const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const gridDao = new GridDao(querier)
 const urlRemover = require('../../helpers/urlRemover')
+const ApiDao = require('../../dao/apiDao')
+const apiDao = new ApiDao()
 
 class Grid {
   /**
@@ -93,15 +97,36 @@ class Grid {
     return async (req, res) => {
       try {
       const { gridId } = req.params
-      const birdList = await atlasGridSpeciesDataDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
+      const birdList = await apiDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
       const grid = (await gridDao.getById(`http://tun.fi/YKJ.${gridId}`))[0]
-      const results = birdList.data.results.map(result => {
-        return {
-          speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
-          atlasCode: urlRemover(result.atlasCodeMax),
-          atlasClass: urlRemover(result.atlasClassMax),
+      const results = []
+
+      const atlasCode = (await apiDao.getEnumRange('MY.atlasCodeEnum')).data
+      const atlasClass = (await apiDao.getEnumRange('MY.atlasClassEnum')).data
+      
+      console.log(atlasClass)
+      for ( const result of birdList.data.results) {
+        let speciesName
+
+        switch (req.query.language) {
+          case 'en':
+            speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameEnglish']
+            break
+          case 'sv':
+            speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameSwedish']
+            break
+          default:
+            speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameFinnish']
         }
-      })
+
+        const lang = req.query.language || 'fi'
+        results.push({
+          speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
+          speciesName: speciesName,
+          atlasCode: atlasCode[urlRemover(result.atlasCodeMax)][lang],
+          atlasClass: atlasClass[urlRemover(result.atlasClassMax)][lang],
+        })
+      }
 
       grid.data = results
 

@@ -7,6 +7,8 @@ const Querier = require('../../dao/querier')
 const GridDao = require('../../dao/grid_dao')
 const AtlasGridSPeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
 const AtlasGridDao = require('../../dao/atlas_grid_dao')
+const ApiDao = require('../../dao/apiDao')
+const apiDao = new ApiDao()
 const querier = Querier()
 const atlasGridSpeciesDataDao = new AtlasGridSPeciesDataDao(querier)
 const atlasGridDao = new AtlasGridDao(querier)
@@ -91,8 +93,8 @@ class Map {
     return async (req, res) => {
       try {
         const { speciesId } = req.params
-        let breedingData = await atlasGridSpeciesDataDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId)
-        let species = (await atlasGridSpeciesDataDao.getSpecies(speciesId)).data
+        let breedingData = await apiDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId)
+        let species = (await apiDao.getSpecies(speciesId)).data
 
         breedingData = breedingData.data.results.map((data) => {
           return {
