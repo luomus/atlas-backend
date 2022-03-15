@@ -104,7 +104,6 @@ class Grid {
       const atlasCode = (await apiDao.getEnumRange('MY.atlasCodeEnum')).data
       const atlasClass = (await apiDao.getEnumRange('MY.atlasClassEnum')).data
       
-      console.log(atlasClass)
       for ( const result of birdList.data.results) {
         let speciesName
 
@@ -120,11 +119,19 @@ class Grid {
         }
 
         const lang = req.query.language || 'fi'
+        const atlasCodeKey = urlRemover(result.atlasCodeMax)
+        const atlasClassKey = urlRemover(result.atlasClassMax)
         results.push({
           speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
           speciesName: speciesName,
-          atlasCode: atlasCode[urlRemover(result.atlasCodeMax)][lang],
-          atlasClass: atlasClass[urlRemover(result.atlasClassMax)][lang],
+          atlasCode: {
+            key: atlasCodeKey,
+            value: atlasCode[atlasCodeKey][lang]
+          },
+          atlasClass: {
+            key: atlasClassKey, 
+            value: atlasClass[atlasClassKey][lang]
+          },
         })
       }
 
