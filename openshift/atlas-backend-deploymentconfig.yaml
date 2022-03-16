@@ -23,17 +23,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: NODE_ORACLEDB_CONNECTIONSTRING
-                  name: atlas-oracle
+                  name: atlas-prod
             - name: NODE_ORACLEDB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: NODE_ORACLEDB_PASSWORD
-                  name: atlas-oracle
+                  name: atlas-prod
             - name: NODE_ORACLEDB_USER
               valueFrom:
                 secretKeyRef:
                   key: NODE_ORACLEDB_USER
-                  name: atlas-oracle
+                  name: atlas-prod
+            - name: LAJI_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: LAJI_ACCESS_TOKEN
+                  name: atlas-prod
           image: luomus/atlas-backend
           name: atlas-backend
           ports:

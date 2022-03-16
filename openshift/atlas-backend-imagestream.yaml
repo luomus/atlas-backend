@@ -12,9 +12,9 @@ spec:
     - annotations: null
       from:
         kind: DockerImage
-        name: luomus/atlas-backend:testing
+        name: luomus/atlas-backend:latest
       generation: null
       importPolicy: {}
-      name: "testing"
+      name: "latest"
 status:
   dockerImageRepository: "luomus/atlas-backend"
