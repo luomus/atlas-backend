@@ -18,16 +18,18 @@ function MapService(atlasMap, config) {
 
   return {
     /**
-         * Returns the SVGImage of species breeding map with given parameters.
-         * @param {Object} data
-         * @param {Object} species
-         * @param {Object} callback
-         * @param {string} type
-         * @param {number} scaleFactor
-         * @param {string} language
-         * @param {number} atlas
-         * @returns {SvgImage}
-         */
+     * Returns the SVGImage of species breeding map with given parameters.
+     * @param {Object} data
+     * @param {Object} grid
+     * @param {Object} species
+     * @param {Object} callback
+     * @param {string} type
+     * @param {number} scaleFactor
+     * @param {string} language
+     * @param {number} atlas
+     * @param {boolean} showActivity
+     * @returns {SvgImage}
+     */
     getSpeciesMap: function(data, grid, species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas, showActivity) {
       const speciesMap = atlasMap.copy()
       for (let i = 0; i < data.length; i++) {

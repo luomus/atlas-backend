@@ -26,9 +26,11 @@ class Grid {
     }
   }
 
-  // eslint-disable-next-line max-lines-per-function
+  /**
+   * Returns the atlas species data for specific species and atlas
+   * @returns {JSON}
+   */
   getCollection() {
-    // eslint-disable-next-line max-lines-per-function
     return async (req, res) => {
       let {speciesId, atlasId = __latestAtlas} = req.query
       if (typeof speciesId !== 'undefined') {
@@ -62,6 +64,11 @@ class Grid {
       try {
         const id = `http://tun.fi/YKJ.${req.params.gridId}`
         const data = await gridDao.getById(id)
+
+        if (Array.isArray(data)) {
+          return res.json(data[0])
+        }
+
         return res.json(data)
       } catch (e) {
         return res.status(500).send(e.message)
@@ -90,7 +97,7 @@ class Grid {
   }
 
   /**
-   * 
+   * Returns atlas data and grid data for specified grid square for currently active atlas, species data fetched from laji api 
    * @returns {JSON}
    */
   getGridStatsActive() {

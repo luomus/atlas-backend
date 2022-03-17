@@ -6,7 +6,6 @@ const geojson2svg = require('geojson2svg')
  * @returns {SvgImage}
  * @constructor
  */
-// eslint-disable-next-line max-lines-per-function
 function createAtlasMap(gridArray, geoJsonArray, config) {
   const overlayPadding = 15
   const overlayCircleRadius = 0.5
@@ -239,6 +238,11 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
     return svgImage
   }
 
+  /**
+   * Draws species data legend.
+   * @param {SvgImage} svgImage 
+   * @returns {SvgImage}
+   */
   function drawBreedingLegend(svgImage) {
     svgImage.addElement('g', {id: 'breedingLegend'})
         .addElement('rect', config.legendBox.breedingColourBox, 'breedingLegend')

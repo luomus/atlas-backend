@@ -1,5 +1,4 @@
 parameters:
-
   speciesId:
     in: path
     name: speciesId
@@ -8,13 +7,13 @@ parameters:
       type: string
     description: MX code of the wanted species.
 
-  areaId:
+  gridId:
     in: path
-    name: areaId
+    name: gridId
     required: true
     schema:
-      type: integer
-    description: Location of the wanted area. Six digits, first three digits are degrees north and last three are degrees east.
+      type: string
+    description: Location of the wanted area, in the format of NNN:EEE.
 
   atlasId:
     in: path
@@ -24,531 +23,180 @@ parameters:
       type: integer
     description: ID of the atlas.
 
-
 schemas:
-
-  links:
-    type: array
-    items:
-      type: object
-      properties:
-        rel:
-          type: string
-          description: Defines the type of link relationship between the current resource and the resource which the link points to.
-          # https://www.iana.org/assignments/link-relations/link-relations.xhtml
-        href:
-          type: string
-          description: Hypertext reference
-      required:
-        - rel
-        - href
-    description: An array of link objects each identifying a relationship for the resource.
-
-  SpeciesId:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: ID (MX code) of the species.
-    required:
-      - id
-
-  AreaId:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: ID of the square area in the atlas grid.
-    required:
-      - id
-
-  Species:
-    allOf:
-      - $ref: "#/schemas/SpeciesId"
-      - type: object
-        properties:
-          speciesFI:
-            type: string
-            description: Finnish name
-          speciesEN:
-            type: string
-            description: English name
-          speciesSCI:
-            type: string
-            description: Scientific name
-          speciesAbbr:
-            type: string
-            description: Abbreviation of the scientific name
-          speciesGroupId:
-            type: integer
-            description: Group ID
-          visibility:
-            type: integer
-            description: Visibility of the species.
-          speciesSV:
-            type: string
-            description: Swedish name
-          links:
-            $ref: "#/schemas/links"
-
   Atlas:
     type: object
     properties:
       id:
         type: integer
         description: ID of the atlas.
-      period:
-        type: object
-        properties:
-          from:
-            type: integer
-            description: Start year
-          to:
-            type: integer
-            description: End year
-        required:
-          - from
-          - to
-    required:
-      - id
-      - period
-
-  SpeciesAtlasDataCollection:
-    type: object
-    properties:
-      species:
-        $ref: "#/schemas/SpeciesId"
-      collection:
-        type: array
-        items:
-          $ref: '#/schemas/SpeciesAtlasData'
-        description: A collection of atlas data resources for a species.
-    required:
-      - species
-      - collection
-
-  SpeciesAtlasData:
-    type: object
-    properties:
-      type:
+      startingYear:
+        type: integer
+        desciption: Starting year of the atlas
+      endingYear:
+        type: integer
+        desciption: Ending year of the atlas
+      name:
         type: string
-        description: Type of the resource.
-      atlas:
-        $ref: "#/schemas/Atlas"
-      statistics:
-        $ref: "#/schemas/SpeciesAtlasStatistics"
-      links:
-        $ref: "#/schemas/links"
-    required:
-      - type
-      - atlas
-      - statistics
-      - links
+        desciption: Name of the atlas
 
-  OneSpeciesAtlasData:
-    allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            description: Type of the resource.
-        required:
-          - type
-      - type: object
-        properties:
-          species:
-            $ref: "#/schemas/SpeciesId"
-        required:
-          - species
-      - $ref: '#/schemas/SpeciesAtlasData'
-
-  AreaAtlasDataCollection:
-    type: object
-    properties:
-      area:
-        $ref: "#/schemas/AreaId"
-      collection:
-        type: array
-        items:
-          $ref: '#/schemas/AreaAtlasData'
-        description: A collection of atlas data resources for an area.
-    required:
-      - area
-      - collection
-
-  AreaAtlasStatistics:
-    type: object
-
-  AreaAtlasData:
-    type: object
-    properties:
-      type:
-        type: string
-        description: Type of the resource.
-      atlas:
-        $ref: "#/schemas/Atlas"
-      statistics:
-        $ref: "#/schemas/AreaAtlasStatistics"
-      links:
-        $ref: "#/schemas/links"
-    required:
-      - atlas
-      - statistics
-
-  SpeciesAtlasStatistics:
-    type: object
-
-  BasicAreaData:
+  GridData:
     type: object
     properties:
       id:
-        type: integer
-        description: ID of a square area in the atlas grid.
-      coordinateN:
-        type: integer
-        description: North coordinate.
-      coordinateE:
-        type: integer
-        description: East coordinate.
-    required:
-      - id
-      - coordinateN
-      - coordinateE
-
-  AreaData:
-    allOf:
-      - $ref: "#/schemas/BasicAreaData"
-      - type: object
-        description: Represents a square area in the atlas grid.
-        properties:
-          statistics:
-            type: object
-            description: "Statistics for the area; sum of data points, number of different species, number of \
-              atlases with data points."
-            properties:
-          links:
-            $ref: "#/schemas/links"
-
-  BirdSpecificAreaData:
-    type: object
-    properties:
-      breedingCategory:
-        type: integer
-        description: Breeding category of the bird species for an area.
-      breedingIndex:
-        type: integer
-        description: Breeding index of the bird species for an area.
-    description: Bird species specific area data.
-
-  BirdAreaData:
-    allOf:
-      - $ref: "#/schemas/BasicAreaData"
-      - $ref: "#/schemas/BirdSpecificAreaData"
-    description: "Represents a square area in the atlas grid. Contains information about a bird species \
-      observed in that area."
-
-  PlantSpecificAreaData:
-    type: object
-    properties:
-      plantData:
         type: string
-        description: Some plant info.
-    description: Plant species specific area data.
+        description: ID of a square area in the atlas grid, formatted as http://tun.fi/YKJ.NNN:EEE.
+      coordinates:
+        type: string
+        description: Coordinates of the grid square in NNN:EEE-format
+      birdAssociationArea:
+        type: string
+        description: ID of the bird association responsible of the grid square
+      name:
+        type: string
+        description: Name of the grid square
+      level1:
+        type: number
+        description: Lower limit for atlas category 1
+      level2:
+        type: number
+        description: Lower limit for atlas category 2
+      level3:
+        type: number
+        description: Lower limit for atlas category 3
+      level4:
+        type: number
+        description: Lower limit for atlas category 4
+      level5:
+        type: number
+        description: Lower limit for atlas category 5
 
-  PlantAreaData:
+  AtlasData:
+    type: object
+    properties:
+      speciesId:
+        type: string
+        description: MX-code of the species.
+      speciesName:
+        type: string
+        descriptiom: Name of the species
+      atlasCode:
+        type: object
+        properties:
+          key:
+            type: string
+            description: Enum key of the atlas code
+          value:
+            type: string
+            description:  Eum value of the atlas code
+      atlasClass:
+        type: object
+        properties:
+          key:
+            type: string
+            description: Enum key of the atlas class
+          value:
+            type: string
+            description:  Eum value of the atlas class
+  
+  GridAtlasData:
     allOf:
-      - $ref: "#/schemas/BasicAreaData"
-      - $ref: "#/schemas/PlantSpecificAreaData"
-    description: "Represents a square area in the atlas grid. Contains information about a plant species \
-      observed in that area."
-
-  AreaDataCollection:
-    type: object
-    properties:
-      area:
-        $ref: "#/schemas/AreaId"
-      data:
-        type: array
-        items:
-          anyOf:
-            - allOf:
-                - type: object
-                  properties:
-                    species:
-                      $ref: "#/schemas/SpeciesId"
-                - $ref: "#/schemas/BirdSpecificAreaData"
-            - allOf:
-                - type: object
-                  properties:
-                    species:
-                      $ref: "#/schemas/SpeciesId"
-                - $ref: "#/schemas/PlantSpecificAreaData"
-
-  SpeciesMapCollections:
-    type: object
-    properties:
-      species:
-        $ref: "#/schemas/SpeciesId"
-      collection:
-        type: array
-        items:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the resource.
-            links:
-              $ref: "#/schemas/links"
-
-  SpeciesAtlasMapCollection:
-    type: object
-    properties:
-      species:
-        $ref: "#/schemas/SpeciesId"
-      collection:
-        type: array
-        items:
-          type: object
-          properties:
-            type:
-              type: string
-              description: Type of the resource.
-            atlas:
-              $ref: "#/schemas/Atlas"
-            links:
-              $ref: "#/schemas/links"
-
-  SpeciesMap:
-    type: object
-    properties:
-      species:
-        $ref: "#/schemas/SpeciesId"
-      collection:
-
+      - $ref: '#/schemas/GridData'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/schemas/AtlasData'
 
 examples:
-
-  bird:
+  grid1:
     value:
-      id: MX.25836
-      speciesFI: Kaakkuri
-      speciesSV: Smålom
-      speciesEN: Red-throated Diver
-      speciesSCI: Gavia stellata
-      speciesAbbr: GAVSTE
-      speciesGroupId: 1
-      visibility: 1
-      links:
-        - rel: related
-          href: "/taxon/MX.25836/atlas"
-
-  birdCollection:
+      id: http://tun.fi/YKJ.667:337
+      coordinates: 667:337
+      birdAssociationArea: ML.1091
+      name: Espoo, Espoon keskusta
+      level1: 1
+      level2: 110.9
+      level3: 222.8
+      level4: 270.4
+      level5: 319.1
+  grid2:
     value:
-      - id: MX.25836
-        speciesFI: Kaakkuri
-        speciesSV: Smålom
-        speciesEN: Red-throated Diver
-        speciesSCI: Gavia stellata
-        speciesAbbr: GAVSTE
-        speciesGroupId: 1
-        visibility: 1
-        
-        links:
-          - rel: related
-            href: "/taxon/MX.25836/atlas"
-      - id: MX.25837
-        speciesFI: Kuikka
-        speciesSV: Storlom
-        speciesEN: Black-throated Diver
-        speciesSCI: Gavia arctica
-        speciesAbbr: GAVARC
-        speciesGroupId: 1
-        visibility: 1
-
-        links:
-          - rel: related
-            href: "/taxon/MX.25837/atlas"
-
-  birdAtlasDataCollection:
+      id: http://tun.fi/YKJ.667:338
+      coordinates: 667:338
+      birdAssociationArea: ML.1091
+      name: Helsinki, Helsingin keskusta
+      level1: 1
+      level2: 102.4
+      level3: 205.8
+      level4: 250.2
+      level5: 295.6
+  grid3:
     value:
-      species:
-        id: MX.25836
-      collection:
-        - type: species_atlas_data
-          atlas:
-            id: 1
-            period:
-              from: 1974
-              to: 1979
-          statistics: { }
-          links:
-            - rel: related
-              href: '/area?speciesId=MX.25836&atlasId=1'
-        - type: species_atlas_data
-          atlas:
-            id: 2
-            period:
-              from: 1986
-              to: 1989
-          statistics: { }
-          links:
-            - rel: related
-              href: '/area?speciesId=MX.25837&atlasId=2'
-
-  birdAtlasData:
+      id: http://tun.fi/YKJ.667:339
+      coordinates: 667:339
+      birdAssociationArea: ML.1091
+      name: Helsinki, Santahamina
+      level1: 1
+      level2: 98.4
+      level3: 197.8
+      level4: 240.6
+      level5: 284.4
+  grids:
     value:
-      type: species_atlas_data
-      species:
-        id: MX.25836
-      atlas:
-        id: 1
-        period:
-          from: 1974
-          to: 1979
-      statistics: { }
-      links:
-        - rel: related
-          href: '/area?speciesId=MX.25836&atlasId=1'
-
-  birdAreaDataCollection:
+      - id: http://tun.fi/YKJ.667:337
+        coordinates: 667:337
+        birdAssociationArea: ML.1091
+        name: Espoo, Espoon keskusta
+        level1: 1
+        level2: 110.9
+        level3: 222.8
+        level4: 270.4
+        level5: 319.1
+      - id: http://tun.fi/YKJ.667:338
+        coordinates: 667:338
+        birdAssociationArea: ML.1091
+        name: Helsinki, Helsingin keskusta
+        level1: 1
+        level2: 102.4
+        level3: 205.8
+        level4: 250.2
+        level5: 295.6
+      - id: http://tun.fi/YKJ.667:339
+        coordinates: 667:339
+        birdAssociationArea: ML.1091
+        name: Helsinki, Santahamina
+        level1: 1
+        level2: 98.4
+        level3: 197.8
+        level4: 240.6
+        level5: 284.4
+  atlasDataExample:
     value:
-      species:
-        id: MX.25836
-      atlas:
-        id: 1
-      collection:
-        - id: 664329
-          coordinateN: 664
-          coordinateE: 329
-          breedingIndex: 50
-          breedingCategory: 1
-        - id: 664331
-          coordinateN: 664
-          coordinateE: 331
-          breedingIndex: 50
-          breedingCategory: 1
-        - id: 666328
-          coordinateN: 666
-          coordinateE: 328
-          breedingIndex: 40
-          breedingCategory: 2
-        
-
-  areaData:
-    value:
-      - id: 664329
-        coordinateN: 664
-        coordinateE: 329
-        statistics: {}
-        links:
-          - rel: related
-            href: '/area/664329/atlas'
-
-  areaAtlasDataCollection:
-    value:
-      area:
-        id: 664329
-      collection:
-        - type: area_atlas_data
-          atlas:
-            id: 1
-            period:
-              from: 1974
-              to: 1979
-          statistics: { }
-          links:
-            - rel: related
-              href: '/area/664329/atlas/1/data'
-        - type: area_atlas_data
-          atlas:
-            id: 2
-            period:
-              from: 1986
-              to: 1989
-          statistics: { }
-          links:
-            - rel: related
-              href: '/area/664329/atlas/2/data'
-
-  areaAtlasData:
-    value:
-      type: area_atlas_data
-      area:
-        id: 664329
-      atlas:
-        id: 1
-        period:
-          from: 1974
-          to: 1979
-      statistics: { }
-      links:
-        - rel: related
-          href: '/area/664329/atlas/1/data'
-
-  areaDataCollection:
-    value:
-      area:
-        id: 664329
-      data:
-        - species:
-            id: MX.25836
-          breedingIndex: 50
-          breedingCategory: 1
-        - species:
-            id: MX.25837
-          breedingIndex: 40
-          breedingCategory: 2
-          
-
-  speciesMapCollections:
-    value:
-      species:
-        id: MX.25836
-      collection:
-        - type: atlas_map_collection
-          links:
-            - rel: self
-              href: '/map/MX.25836/atlas'
-
-  speciesMapCollectionsCollection:
-    value:
-      - species:
-          id: MX.25836
-        collection:
-          - type: atlas_map_collection
-            links:
-              - rel: self
-                href: '/map/MX.25836/atlas'
-      - species:
-          id: MX.25837
-        collection:
-          - type: atlas_map_collection
-            links:
-              - rel: self
-                href: '/map/MX.25837/atlas'
-
-  speciesAtlasMapCollection:
-    value:
-      species:
-        id: MX.25836
-      collection:
-        - type: atlas_map
-          atlas:
-            id: 1
-            period:
-              from: 1974
-              to: 1979
-          links:
-            - rel: self
-              href: '/map/MX.25836/atlas/1'
-        - type: atlas_map
-          atlas:
-            id: 2
-            period:
-              from: 1986
-              to: 1989
-          links:
-            - rel: self
-              href: '/map/MX.25836/atlas/2'
-
-
+        id: http://tun.fi/YKJ.667:338
+        coordinates: 667:338
+        birdAssociationArea: ML.1091
+        name: Helsinki, Helsingin keskusta
+        level1: 1
+        level2: 102.4
+        level3: 205.8
+        level4: 250.2
+        level5: 295.6
+        data:
+          - speciesId: MX.27748
+            speciesName: kalalokki
+            atlasCode:
+              key: MY.atlasCodeEnum1,
+              value: '1 Epätodennäköinen pesintä: havaittu lajin yksilö, havainto ei viittaa pesintään'
+            atlasClass:
+              key: MY.atlasClassEnumA
+              value: Epätodennäköinen pesintä
+          - speciesId: MX.27903,
+            speciesName: kalliokyyhky
+            atlasCode:
+              key: MY.atlasCodeEnum4
+              value: '4 Todennäköinen pesintä: koiras reviirillä (esim. laulaa) eri päivinä'
+            atlasClass:
+              key: MY.atlasClassEnumC
+              value: Todennäköinen pesintä

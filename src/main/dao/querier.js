@@ -8,7 +8,6 @@ let connection
  * @param {Database} SQLite database
  * @returns {Promise}
  */
-// eslint-disable-next-line max-lines-per-function
 function Querier() {
   //return (methodName, query, params = []) => {
     // return new Promise((resolve, reject) => {

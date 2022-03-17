@@ -12,8 +12,6 @@ const app = express()
 // })
 const gridRouter = require('./domain/routers/grid_router')
 const mapRouter = require('./domain/routers/map_router')
-const taxonRouter = require('./domain/routers/taxon_router')
-
 
 const path = __dirname + '/openAPI.yaml'
 try {
@@ -30,7 +28,6 @@ app.get('/', (req, res) => res.redirect('/doc'))
 
 app.use(express.static(__rootdir + '/static'))
 
-app.use('/api/v1/taxon', taxonRouter)
 app.use('/api/v1/grid', gridRouter)
 app.use('/api/v1/map', mapRouter)
 

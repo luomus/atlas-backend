@@ -65,7 +65,6 @@ class Map {
    * Creates an image of the grid with a bird's breeding data.
    * @returns {SVGElement}
    */
-  /* eslint-disable max-len */
   createGridForBirdData() {
     return async (req, res) => {
       try {
@@ -89,6 +88,11 @@ class Map {
     }
   }
 
+
+  /**
+   * Creates an image of the grid with a bird's breeding data for current active atlas, breedig data fetched from laji api
+   * @returns {SVGElement}
+   */
   createGridForCurrentBirdData() {
     return async (req, res) => {
       try {

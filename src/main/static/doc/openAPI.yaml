@@ -9,365 +9,95 @@ servers:
 
 paths:
 
-  /taxon:
-    get:
-      summary: Get a collection of species.
-      description: Can be used to populate a list or table.
-      tags:
-        - taxon
-      parameters:
-        - name: group
-          in: query
-          description: Name of the species group. If omitted the collection of all species is returned.
-          required: false
-          explode: true
-          schema:
-            type: string
-            default: ""
-            enum:
-              - birds
-      responses:
-        200:
-          description: A collection of species.
-          content:
-            application/x-collection+json:
-              schema:
-                type: array
-                items:
-                  $ref: 'components.yaml#/schemas/Species'
-              examples:
-                "Collection of bird species":
-                  $ref: "components.yaml#/examples/birdCollection"
-
-  /taxon/find:
-    get:
-      deprecated: true
-      parameters:
-        - name: name
-          in: query
-          description: A substring of a name of some species
-          required: false
-          schema:
-            type: string
-      summary: Find species by different features
-      tags:
-        - taxon
-      responses:
-        '200':
-          description: A collection of found species
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: 'components.yaml#/schemas/Species'
-              examples:
-                "Collection of bird species":
-                  $ref: "components.yaml#/examples/birdCollection"
-
-  /taxon/{speciesId}:
-    get:
-      tags:
-        - taxon
-      summary: Get a species.
-      parameters:
-        - $ref: 'components.yaml#/parameters/speciesId'
-      responses:
-        200:
-          description: A species.
-          content:
-            application/x-resource+json:
-              schema:
-                $ref: 'components.yaml#/schemas/Species'
-              examples:
-                "A bird species":
-                  $ref: "components.yaml#/examples/bird"
-          links:
-            related:
-              description: The collection of atlas data resources for the species.
-
-  /taxon/{speciesId}/atlas:
-    get:
-      deprecated: true
-      tags:
-        - taxon
-      summary: Get atlas data collection for a species.
-      description: A collection of atlas data resources for a species.
-      parameters:
-        - $ref: 'components.yaml#/parameters/speciesId'
-      responses:
-        200:
-          description: Atlas data collection for a species.
-          content:
-            application/x-collection+json:
-              schema:
-                $ref: 'components.yaml#/schemas/SpeciesAtlasDataCollection'
-              examples:
-                "For a bird species":
-                  $ref: "components.yaml#/examples/birdAtlasDataCollection"
-
-  /taxon/{speciesId}/atlas/{atlasId}:
-    get:
-      parameters:
-        - $ref: 'components.yaml#/parameters/speciesId'
-        - $ref: 'components.yaml#/parameters/atlasId'
-      summary: Get an atlas data for a species.
-      description: "An atlas data resource for a species contains statistics about the species in the atlas. \
-        It also contains information about the atlas and the species, including a link to the related collection \
-        of area data resources i.e. an array of area mapped data for the species in the atlas."
-      tags:
-        - taxon
-      responses:
-        '200':
-          description: An atlas data resource for a species.
-          content:
-            application/x-resource+json:
-              schema:
-                $ref: "components.yaml#/schemas/OneSpeciesAtlasData"
-              examples:
-                "For a bird species":
-                  $ref: "components.yaml#/examples/birdAtlasData"
-          links:
-            related:
-              description: "A link to the related collection of area data resources for the species in the atlas."
-
-  /map/:
-    get:
-      deprecated: true
-      summary: Get a collection of map collections for species.
-      description: "There is no parameters for this endpoint at the moment. Response will include map \
-        collections for all the species."
-      tags: 
-        - map
-      responses:
-        '200':
-          description: The collection of map collections for all the species.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "components.yaml#/schemas/SpeciesMapCollections"
-              examples:
-                "For two species":
-                  $ref: "components.yaml#/examples/speciesMapCollectionsCollection"
-
-
-  /map/{speciesId}:
-    get:
-      deprecated: true
-      summary: Get map collections for a species.
-      parameters:
-        - $ref: 'components.yaml#/parameters/speciesId'
-      description: "Atlas map collection is the only map collection available for any species at the moment."
-      tags: 
-        - map
-      responses:
-        '200':
-          description: Map collections for a species.
-          content:
-            application/x-collection+json:
-              schema:
-                $ref: 'components.yaml#/schemas/SpeciesMapCollections'
-              examples:
-                "For a species":
-                  $ref: "components.yaml#/examples/speciesMapCollections"
-          links:
-            self:
-              description: "A link pointing to the collection itself."
-
   /map/{speciesId}/atlas:
-    get:      
-      deprecated: true
+    get:
       parameters:
-        - $ref: 'components.yaml#/parameters/speciesId'
+        - $ref: "components.yaml#/parameters/speciesId"
+        - name: type
+          in: query
+          type: string
+          description: Selects the image format the map is returned in, possible values png or svg, default svg.
+        - name: language
+          in: query
+          type: string
+          description: Language of the map, possible values fi, en, sv.
+        - name: scaling
+          in: query
+          type: number
+          description: Scaling factor for the map resolution, if not set map has no resolution and width and height are set to 100%.
+        - name: showActivity
+          in: query
+          type: boolean
+          description: Selects if grid square activity category and its legend is rendered, defaults to false.
       summary: Get atlas map collection for a species.
       description: Atlas map collection contains all the atlas maps that are available for the concerned species.
       tags: 
         - map
       responses:
         '200':
-          description: A collection of atlas maps.
-          content:
-            application/x-collection+json:
-              schema:
-                $ref: 'components.yaml#/schemas/SpeciesAtlasMapCollection'
-              examples:
-                "For a species":
-                  $ref: "components.yaml#/examples/speciesAtlasMapCollection"
-          links:
-            self:
-              description: "A link pointing to the map itself."
-
-  /map/{speciesId}/atlas/{atlasId}:
-    get:
-      summary: Get an atlas map for a species.
-      tags:
-        - map
-      parameters:
-        - $ref: 'components.yaml#/parameters/speciesId'
-        - $ref: 'components.yaml#/parameters/atlasId'
-        - name: scaling
-          in: query
-          schema:
-            type: string
-          example: '5'
-        - name: type
-          in: query
-          schema:
-            type: string
-          example: 'svg'
-        - name: language
-          in: query
-          schema:
-            type: string
-          example: 'fi'
-      responses:
-        200:
-          description: SVG or PNG image
+          description: A an svg or png image for given species' atlas data.
           content:
             image/*:
-              schema:
-
-  /area:
+              type: string
+              format: png or svg
+  /grid:
     get:
-      summary: Get a collection of areas.
-      description: "Each area resource represents a square area in the atlas grid and may include \
-        information about a species observed in that area."
-      tags:
-        - area
-      parameters:
-        - name: speciesId
-          in: query
-          description: "Give ID of the wanted species to include species data. If omitted, each area \
-            resource is returned without any species data."
-          required: false
-          schema:
-            type: string
-        - name: atlasId
-          in: query
-          description: "The ID of the wanted atlas. Relevant only if species ID is given and species \
-            data will be included. If omitted, species data from the latest atlas is used."
-          required: false
-          schema:
-            type: integer
+      summary: Get a array of all atlas grid squares.
+      description: "Each square resource represents a square area in the atlas grid."
+      tags: 
+        - grid
       responses:
         200:
-          description: A collection of area resources.
+          description: An array of grid resources.
           content:
-            application/x-collection+json:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: 'components.yaml#/schemas/GridData'
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/grids'
+
+  /grid/{gridId}:
+    get:
+      parameters:
+        - $ref: 'components.yaml#/parameters/gridId'
+      summary: Get a single atlas grid square.
+      description: "Represents a square area in the atlas grid corresponding to the given gridId."
+      tags: 
+        - grid
+      responses:
+        200:
+          description: A grid square object.
+          content:
+            application/json:
               schema:
                 type: object
-                properties:
-                  species:
-                    $ref: 'components.yaml#/schemas/SpeciesId'
-                  atlas:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        description: ID of the atlas.
-                    required:
-                      - id
-                  collection:
-                    type: array
-                    items:
-                      oneOf:
-                        - $ref: 'components.yaml#/schemas/AreaData'
-                        - $ref: 'components.yaml#/schemas/BirdAreaData'
-                        - $ref: 'components.yaml#/schemas/PlantAreaData'
-                required:
-                  - collection
-              examples:
-                "For a bird species":
-                  $ref: "components.yaml#/examples/birdAreaDataCollection"
-
-  /area/{areaId}:
-    get:
-      summary: Get an area from the atlas grid.
-      description: "A square area in the atlas grid."
-      tags: 
-        - area
-      parameters:
-        - $ref: 'components.yaml#/parameters/areaId'
-      responses:
-        '200':
-          description: An area resource.
-          content:
-            application/x-resource+json:
-              schema:
-                oneOf:
-                  - $ref: 'components.yaml#/schemas/AreaData'
-                  - $ref: 'components.yaml#/schemas/BirdAreaData'
-                  - $ref: 'components.yaml#/schemas/PlantAreaData'
-              examples:
-                "An area":
-                  $ref: "components.yaml#/examples/areaData"
-          links:
-            related:
-              description: "A link to the related atlas data collection for the area."
-
-  /area/{areaId}/atlas:
+                $ref: 'components.yaml#/schemas/GridData'
+              examples: 
+                JSON:
+                  $ref: 'components.yaml#/examples/grid1'
+  /grid/{gridId}/atlas:
     get:      
-      deprecated: true
       parameters:
-        - $ref: 'components.yaml#/parameters/areaId'
+        - $ref: 'components.yaml#/parameters/gridId'
+        - name: language
+          in: query
+          type: string
+          description: Language of the map, possible values fi, en, sv.
       summary: Get atlas data collection for an area.
       description: A collection of atlas data resources for an area.
       tags: 
-        - area
+        - grid
       responses:
         '200':
           description: Atlas data collection for an area.
           content:
-            application/x-collection+json:
-              schema:
-                $ref: 'components.yaml#/schemas/AreaAtlasDataCollection'
-              examples:
-                "For an area":
-                  $ref: "components.yaml#/examples/areaAtlasDataCollection"
-
-  /area/{areaId}/atlas/{atlasId}:
-    get:
-      parameters:
-        - $ref: 'components.yaml#/parameters/areaId'
-        - $ref: 'components.yaml#/parameters/atlasId'
-      summary: Get an atlas data for an area.
-      description: "An atlas data resource for an area contains statistics about the area in the atlas. \
-        It also contains information about the atlas and the area, including a link to all data for the area from \
-        the atlas."
-      tags:
-        - area
-      responses:
-        '200':
-          description: An atlas data resource for an area.
-          # content:
-          #   application/x-resource+json:
-          #     schema:
-          #       $ref: 'components.yaml#/schemas/AreaAtlasData'
-          #     examples:
-          #       "For an area":
-          #         $ref: "components.yaml#/examples/areaAtlasData"
-          # links:
-          #   related:
-          #     description: A link to all data for the area from the atlas.
-
-  /area/{areaId}/atlas/{atlasId}/data:
-    get:
-      parameters:
-        - $ref: 'components.yaml#/parameters/areaId'
-        - $ref: 'components.yaml#/parameters/atlasId'
-      summary: Get all data for an area from an atlas.
-      description: Retrieves all data for an area from an atlas.
-      tags: 
-        - area
-      responses:
-        '200':
-          description: All data for an area.
-          content:
             application/json:
               schema:
-                $ref: 'components.yaml#/schemas/AreaDataCollection'
+                $ref: 'components.yaml#/schemas/GridAtlasData'
               examples:
-                "For an area":
-                  $ref: "components.yaml#/examples/areaDataCollection"
+                JSON:
+                  $ref: 'components.yaml#/examples/atlasDataExample'
