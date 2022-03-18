@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  name: atlas-backend
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'atlas-backend:latest'
+  runPolicy: Serial
+  source:
+    git:
+      uri: 'https://github.com/luomus/atlas-backend.git'
+      ref: 'master'
+  strategy:
+    type: Docker
+  triggers:
+    - github:
+        secretReference:
+          name: atlas-backend-webhook
+      type: GitHub
