@@ -10,8 +10,8 @@ const app = express()
 //   if (err) console.log('Could not connect to database', err)
 //   else console.log('Connected to database')
 // })
-const gridRouter = require('./domain/routers/grid_router')
-const mapRouter = require('./domain/routers/map_router')
+const gridRouter = require('./domain/routers/gridRouter')
+const mapRouter = require('./domain/routers/mapRouter')
 
 const path = __dirname + '/openAPI.yaml'
 try {

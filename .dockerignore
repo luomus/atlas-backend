@@ -22,6 +22,7 @@
 **/values.dev.yaml
 **/dokumentaatio
 **/inporters
+**/openshift
 birds.db
 pass.txt
 README.md

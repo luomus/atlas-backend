@@ -1,7 +1,7 @@
 const Querier = require('../../dao/querier')
 const querier = Querier()
 const GridDao = require('../../dao/gridDao')
-const AtlasGridSpeciesDataDao = require('../../dao/atlas_grid_species_data_dao')
+const AtlasGridSpeciesDataDao = require('../../dao/atlasGridSpeciesDataDao')
 const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const gridDao = new GridDao(querier)
 const urlRemover = require('../../helpers/urlRemover')
