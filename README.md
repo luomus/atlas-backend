@@ -2,26 +2,22 @@
 
 ![actions badge](https://github.com/ATLAS-ohtuprojekti/ATLAS/actions/workflows/node.js.yml/badge.svg)
 
-Helsinki University / Department of Computer Science / Software Engineering Project Course, autumn 2021
+Atlas data refers to the observations collected and stored in connection with the national bird and plant surveys. This project concentrated on the data on the distribution of Finnish bird species, which has been studied in three atlas surveys: the third atlas was conducted in 2006-10, the second one during 1986-89 and the first one 1974-79. The fourth atlas has begun in 2022.
 
-Client: Luomus (Finnish Museum of Natural History)
-
-Objective: Develop a new API to serve Atlas data dissemination and publishing
-
-Atlas data refers to the observations collected and stored in connection with the national bird and plant surveys. This project concentrated on the data on the distribution of Finnish bird species, which has been studied in three atlas surveys: the third atlas was conducted in 2006-10, the second one during 1986-89 and the first one 1974-79. The fourth atlas is coming up in 2022.
-
-The API is in this ATLAS repository, whereas [Lintuatlas](https://github.com/ATLAS-ohtuprojekti/Lintuatlas) repository contains a simple front-end example. The project focus has been on developing the API.
+This repostory contains only the backend API responsible for storing old atlas data and the grids, and retrieving the data for currently ongoing 4th atlas from laji.fi:s API.
 
 ## Quick link
 
-[API in Rahti container platform (staging)](https://atlas-staging.rahtiapp.fi)
+[API in Rahti container platform (staging)](https://atlas-api-dev.rahtiapp.fi)
+[API in Rahti container platform (production)](https://atlas-api.rahtiapp.fi)
 
 ## Documentation
 
-* [Map Service structure](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/mapservice.png)
+<!--* [Map Service structure](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/mapservice.png)
 * [Database structure](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/database_diagram.png)
-* [JSDoc](https://atlas-ohtuprojekti.github.io/ATLAS/index.html)
-* [OpenAPI](https://atlas-staging.rahtiapp.fi/doc/)
+* [JSDoc](https://atlas-ohtuprojekti.github.io/ATLAS/index.html)-->
+* [OpenAPI (staging)](https://atlas-api-dev.rahtiapp.fi/doc/)
+* [OpenAPI (production)](https://atlas-api.rahtiapp.fi/doc/)
 
 ## Deployment locally
 
@@ -35,15 +31,6 @@ While at the root of the project install dependencies with `npm install`. For a 
 
 Run program with `node .\src\main\start.js`. You can now see the available API endpoints in your browser on http://localhost:3000. Stop the program with Ctrl+C.
 
+## Deployment of new versions to Rahti
 
-
-
-
-
-
-## Project management files
-
-* [Working Hours](https://docs.google.com/spreadsheets/d/19Y2sjV4hNleklp-nDP_OXDvz_ATXy6dcdp0JDMt3L9Q/edit#gid=1182794126)
-* [Product and sprint backlogs](https://docs.google.com/spreadsheets/d/19Y2sjV4hNleklp-nDP_OXDvz_ATXy6dcdp0JDMt3L9Q/edit#gid=1236889651)
-* [Definition of Done](https://github.com/ATLAS-ohtuprojekti/ATLAS/blob/main/dokumentaatio/dod.md)
-
+The repository has webhooks set up that trigger automatic builds on Rahti, simply pushing changes to development- and main-branches will update staging and production versions, respectively.

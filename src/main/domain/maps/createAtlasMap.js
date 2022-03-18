@@ -1,4 +1,4 @@
-const SvgImage = require('./svg_image.js')
+const SvgImage = require('./svgImage.js')
 const geojson2svg = require('geojson2svg')
 
 /**
