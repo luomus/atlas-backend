@@ -1,4 +1,4 @@
-const AtlasDataDao = require('../main/dao/atlas_data_dao')
+const AtlasGridSpeciesDataDao = require('../main/dao/atlasGridSpeciesDataDao')
 
 jest.mock('../main/dao/querier')
 const querier = require('../main/dao/querier')
@@ -6,11 +6,11 @@ const querier = require('../main/dao/querier')
 beforeEach(() => {
   querier.mockClear()
 })
-
+/**
 test('getDataForGrid calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getDataForGrid(1)
-  atlasDataDao.getDataForGrid(2)
+  const atlasGridSPeciesDataDao = new AtlasGridSpeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getDataForGrid(1)
+  atlasGridSPeciesDataDao.getDataForGrid(2)
 
   expect(querier).toHaveBeenCalledTimes(2)
   expect(querier.mock.calls[0][1]).toContain('atlas')
@@ -20,16 +20,16 @@ test('getDataForGrid calls querier correctly', () => {
 })
 
 test('getAllAtlasData calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getAllData()
+  const atlasGridSPeciesDataDao = new AtlasGridSPeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getAllData()
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
   expect(querier.mock.calls[0][1]).toContain('bird_data')
 })
 
 test('getGridAndBreedingdataForSpecies calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getGridAndBreedingdataForSpecies(1)
+  const atlasGridSPeciesDataDao = new AtlasGridSPeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getGridAndBreedingdataForSpecies(1)
 
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
@@ -37,8 +37,8 @@ test('getGridAndBreedingdataForSpecies calls querier correctly', () => {
 })
 
 test('getDataForGrid calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getDataForGrid(1)
+  const atlasGridSPeciesDataDao = new AtlasGridSPeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getDataForGrid(1)
 
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
@@ -46,8 +46,8 @@ test('getDataForGrid calls querier correctly', () => {
 })
 
 test('getBreedingCategorySumForSpecies calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getBreedingCategorySumForSpecies(25836)
+  const atlasGridSPeciesDataDao = new AtlasGridSPeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getBreedingCategorySumForSpecies(25836)
 
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
@@ -55,8 +55,8 @@ test('getBreedingCategorySumForSpecies calls querier correctly', () => {
 })
 
 test('getListOfDistinctBirdsForGridAndAtlas calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getListOfDistinctBirdsForGridAndAtlas(664329)
+  const atlasGridSPeciesDataDao = new AtlasGridSPeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getListOfDistinctBirdsForGridAndAtlas(664329)
 
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
@@ -64,10 +64,11 @@ test('getListOfDistinctBirdsForGridAndAtlas calls querier correctly', () => {
 })
 
 test('getNumOfBreedingCategoriesForGridAndAtlas calls querier correctly', () => {
-  const atlasDataDao = new AtlasDataDao(querier)
-  atlasDataDao.getNumOfBreedingCategoriesForGridAndAtlas(664329)
+  const atlasGridSPeciesDataDao = new AtlasGridSPeciesDataDao(querier)
+  atlasGridSPeciesDataDao.getNumOfBreedingCategoriesForGridAndAtlas(664329)
 
   expect(querier).toHaveBeenCalledTimes(1)
   expect(querier.mock.calls[0][0]).toEqual('all')
   expect(querier.mock.calls[0][1]).toContain('bird_data')
 })
+*/

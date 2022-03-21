@@ -1,6 +1,6 @@
-const createAtlasMap = require('../main/domain/maps/create_atlas_map')
-jest.mock('../main/dao/grid_dao')
-const GridDao = require('../main/dao/grid_dao')
+const createAtlasMap = require('../main/domain/maps/createAtlasMap')
+jest.mock('../main/dao/gridDao')
+const GridDao = require('../main/dao/gridDao')
 const fs = require('fs')
 
 let atlasMap
@@ -14,7 +14,7 @@ beforeEach(() => {
   const config = JSON.parse(configFile)
   const gridDao = new GridDao()
   gridDao.getAll().then((returnedGridArray) => {
-    gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinateN, e: rect.coordinateE}))
+    gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinates.split(':')[0], e: rect.coordinates.split(':')[1]}))
     atlasMap = createAtlasMap(gridArray, geoJsonArray, config)
     serializedMap = atlasMap.serialize()
   })
@@ -37,7 +37,7 @@ test('Created map contains groups from geoJsons', () => {
 })
 
 test('Overlay and base map are aligned correctly', () => {
-  const alignmentCircleId = `${alignmentCoordN}0${alignmentCoordE}0`
+  const alignmentCircleId = `http://tun.fi/YKJ.${alignmentCoordN}0:${alignmentCoordE}0`
   const overlayX = atlasMap.getElementCoordsById(alignmentCircleId).x
   const overlayY = atlasMap.getElementCoordsById(alignmentCircleId).y
   const baseMapX = atlasMap.getElementCoordsById(alignmentCoordE).x

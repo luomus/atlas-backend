@@ -5,8 +5,10 @@ const AtlasGridSpeciesDataDao = require('../../dao/atlasGridSpeciesDataDao')
 const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const gridDao = new GridDao(querier)
 const urlRemover = require('../../helpers/urlRemover')
+const axios = require('axios')
+const CachedAxios = require('../../dao/cachedAxios')
 const ApiDao = require('../../dao/apiDao')
-const apiDao = new ApiDao()
+const apiDao = new ApiDao(axios, CachedAxios())
 
 class Grid {
   /**
@@ -108,8 +110,8 @@ class Grid {
 
       const atlasCode = (await apiDao.getEnumRange('MY.atlasCodeEnum')).data
       const atlasClass = (await apiDao.getEnumRange('MY.atlasClassEnum')).data
-      
-      for ( const result of birdList.data.results) {
+ 
+      for ( const result of birdList.data.results ) {
         let speciesName
 
         switch (req.query.language) {

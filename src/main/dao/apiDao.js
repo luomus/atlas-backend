@@ -1,16 +1,12 @@
-const axios = require('axios')
-const CachedAxios = require('./cachedAxios')
-const cachedAxios = CachedAxios()
 const access_token = process.env.LAJI_ACCESS_TOKEN
 
 class ApiDao {
-  getEnumRange(range) {
-    const params = {
-      lang: 'multi',
-      asLookupObject: true,
-      access_token: access_token
-    }
-    return cachedAxios(`https://api.laji.fi/v0/metadata/ranges/${range}`, params)
+  axios
+  cachedAxios
+
+  constructor(axios, cachedAxios) {
+    this.axios = axios,
+    this.cachedAxios = cachedAxios
   }
 
   /**
@@ -33,7 +29,7 @@ class ApiDao {
       page: page,
       cache: true,
     }
-    return axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+    return this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
   }
 
   /**
@@ -54,7 +50,7 @@ class ApiDao {
     page: 1,
     cache: true,
   }
-  return axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+  return this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
   }
 
   /**
@@ -63,11 +59,26 @@ class ApiDao {
    * @returns {Promise}
    */
   getSpecies(speciesId) {
-  const params = {
-    lang: 'multi',
-    selectedFields: 'scientificName,vernacularName'
+    const params = {
+      lang: 'multi',
+      selectedFields: 'scientificName,vernacularName'
+    }
+
+    return this.cachedAxios(`https://laji.fi/api/taxa/${speciesId}`, {params})
   }
-  return axios.get(`https://laji.fi/api/taxa/${speciesId}`, {params})
+
+  /**
+   * Returns the enum lookup object for given range
+   * @param {string} range 
+   * @returns {Promise}
+   */
+  getEnumRange(range) {
+    const params = {
+      lang: 'multi',
+      asLookupObject: true,
+      access_token: access_token
+    }
+    return this.cachedAxios(`https://laji.fi/api/metadata/ranges/${range}`, params)
   }
 }
 

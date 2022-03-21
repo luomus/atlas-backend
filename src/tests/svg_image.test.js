@@ -1,4 +1,4 @@
-const SvgImage = require('../main/domain/maps/svg_image')
+const SvgImage = require('../main/domain/maps/svgImage')
 
 let svgImage
 
