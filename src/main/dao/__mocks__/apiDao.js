@@ -4,7 +4,8 @@ class ApiDao {
     breedingData: [],
     speciesData: {},
     atlasCode: {},
-    atlasClass: {}
+    atlasClass: {},
+    birdAssociationAreas: {}
   }
 
   constructor() {
@@ -1154,42 +1155,39 @@ class ApiDao {
         sv: 'Bekräftad avel'
       }
     }
+    this.#data.birdAssociationAreas = {
+      'ML.1091': 'Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.',
+      'ML.1099': 'Pirkanmaan Lintutieteellinen Yhdistys r.y.',
+      'ML.1105': 'Suomenselän Lintutieteellinen Yhdistys r.y.',
+      'ML.1116': 'Rauman Seudun Lintuharrastajat r.y.',
+    }
+    
   }
 
   getListOfDistinctBirdsForGridAndActiveAtlas(grid, page) {
-    return Promise.resolve({ 
-      data: {
-        results: this.#data.gridData
-      }
-    })
+    return Promise.resolve(this.#data.gridData)
   }
 
   getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId) {
-    return Promise.resolve({
-      data: {
-        results: this.#data.breedingData
-      }
-    })
+    return Promise.resolve(this.#data.breedingData)
   }
 
   getSpecies(speciesId) {
-    return Promise.resolve({
-      data: this.#data.speciesData
-    })
+    return Promise.resolve(this.#data.speciesData)
   }
 
   getEnumRange(range) {
     if (range === 'MY.atlasCodeEnum') {
-      return Promise.resolve({
-        data: this.#data.atlasCode
-      })
+      return Promise.resolve(this.#data.atlasCode)
     } else if (range === 'MY.atlasClassEnum') {
-      return Promise.resolve({
-        data: this.#data.atlasClass
-      })
+      return Promise.resolve(this.#data.atlasClass)
     } else {
       return Promise.reject()
     }
+  }
+
+  getBirdAssociationAreas() {
+    return Promise.resolve(this.#data.birdAssociationAreas)
   }
 }
 

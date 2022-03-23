@@ -8,9 +8,9 @@ const GridDao = require('../../dao/gridDao')
 const AtlasGridSPeciesDataDao = require('../../dao/atlasGridSpeciesDataDao')
 const AtlasGridDao = require('../../dao/atlasGridDao')
 const axios = require('axios')
-const CachedAxios = require('../../dao/cachedAxios')
+const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
-const apiDao = new ApiDao(axios, CachedAxios())
+const apiDao = new ApiDao(axios, Cache())
 const querier = Querier()
 const atlasGridSpeciesDataDao = new AtlasGridSPeciesDataDao(querier)
 const atlasGridDao = new AtlasGridDao(querier)
@@ -100,9 +100,9 @@ class Map {
       try {
         const { speciesId } = req.params
         let breedingData = await apiDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId)
-        let species = (await apiDao.getSpecies(speciesId)).data
+        let species = await apiDao.getSpecies(speciesId)
 
-        breedingData = breedingData.data.results.map((data) => {
+        breedingData = breedingData.map((data) => {
           return {
             grid: `http://tun.fi/YKJ.${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`,
             atlasClass: data.atlasClassMax,
@@ -118,6 +118,7 @@ class Map {
           res.send(mapService.getSpeciesMap(breedingData, [], species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
         }
       } catch (e) {
+        console.log(e)
         res.status(500).send(e.message)
       }
     }

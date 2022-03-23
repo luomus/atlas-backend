@@ -29,7 +29,7 @@ beforeEach(async () => {
   const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao()
   const returnedGridArray = await gridDao.getAll().catch((e) => [])
   const breedingData = await atlasGridSpeciesDataDao.getDataForSpeciesAndAtlas('MX.36287', 4).catch((e) => [])
-  speciesData = (await apiDao.getSpecies('MX.36287')).data
+  speciesData = (await apiDao.getSpecies('MX.36287'))
   const gridArray = returnedGridArray.map((rect) => ({...rect, n: rect.coordinates.split(':')[0], e: rect.coordinates.split(':')[1]}))
   atlasData = breedingData.map((datapoint) => ({...datapoint, id: datapoint.grid}))
   atlasMap = createAtlasMap(gridArray, geoJsonArray, config)

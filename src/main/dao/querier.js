@@ -41,23 +41,9 @@ function Querier() {
     }
 
     if (result.rows?.length === 0)
-      return 'Empty result'
+      return undefined
     else {
       return result.rows
-    }
-  }
-
-  function correctMxFormating(data) {
-    // eslint-disable-next-line guard-for-in
-    for (const val in data) {
-      if (data[val].hasOwnProperty('species_mxcode')) {
-        data[val].species = 'MX.' + data[val].species_mxcode
-        delete data[val].species_mxcode
-      }
-      if (data[val].hasOwnProperty('mxCode')) {
-        data[val].species = 'MX.' + data[val].mxCode
-        delete data[val].mxCode
-      }
     }
   }
 }

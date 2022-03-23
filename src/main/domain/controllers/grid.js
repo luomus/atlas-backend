@@ -6,9 +6,9 @@ const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const gridDao = new GridDao(querier)
 const urlRemover = require('../../helpers/urlRemover')
 const axios = require('axios')
-const CachedAxios = require('../../dao/cachedAxios')
+const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
-const apiDao = new ApiDao(axios, CachedAxios())
+const apiDao = new ApiDao(axios, Cache())
 
 class Grid {
   /**
@@ -19,7 +19,19 @@ class Grid {
     return async (req, res) => {
       try {
         const data = await gridDao.getAll()
-        return res.json(data)
+        const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
+
+        const toReturn = data.map(grid => {
+          return {
+            ...grid,
+            birdAssociationArea: {
+              key: grid.birdAssociationArea,
+              value: birdAssociationAreas[grid.birdAssociationArea]
+            }
+          }
+        })     
+   
+        return res.json(toReturn)
       } catch (e) {
         return res.status(500).send(e.message)
       }
@@ -64,12 +76,22 @@ class Grid {
       try {
         const id = `http://tun.fi/YKJ.${req.params.gridId}`
         const data = await gridDao.getById(id)
+        const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
 
-        if (Array.isArray(data)) {
-          return res.json(data[0])
+        if (!data) {
+          return res.status(404).send()
         }
 
-        return res.json(data)
+        const toReturn = data.map(grid => {
+          return {
+            ...grid,
+            birdAssociationArea: {
+              key: grid.birdAssociationArea,
+              value: birdAssociationAreas[grid.birdAssociationArea]
+            }
+          }
+        })
+        return res.json(toReturn[0])
       } catch (e) {
         return res.status(500).send(e.message)
       }
@@ -104,14 +126,20 @@ class Grid {
     return async (req, res) => {
       try {
       const { gridId } = req.params
+      const grid = (await gridDao.getById(`http://tun.fi/YKJ.${gridId}`))?.[0]
+      const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
+
+      if (!grid) {
+        return res.status(404).send()
+      }
+
       const birdList = await apiDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
-      const grid = (await gridDao.getById(`http://tun.fi/YKJ.${gridId}`))[0]
       const results = []
 
-      const atlasCode = (await apiDao.getEnumRange('MY.atlasCodeEnum')).data
-      const atlasClass = (await apiDao.getEnumRange('MY.atlasClassEnum')).data
- 
-      for ( const result of birdList.data.results ) {
+      const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
+      const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
+
+      for ( const result of birdList ) {
         let speciesName
 
         switch (req.query.language) {
@@ -142,6 +170,10 @@ class Grid {
         })
       }
 
+      grid.birdAssociationArea = {
+        key: grid.birdAssociationArea,
+        value: birdAssociationAreas[grid.birdAssociationArea]
+      }
       grid.data = results
 
       return res.json(grid)

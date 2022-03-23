@@ -50,8 +50,14 @@ schemas:
         type: string
         description: Coordinates of the grid square in NNN:EEE-format
       birdAssociationArea:
-        type: string
-        description: ID of the bird association responsible of the grid square
+        type: object
+        properties:
+          key:
+            type: string
+            description: Id key of the bird association
+          value:
+            type: string
+            description:  Name of the bird association
       name:
         type: string
         description: Name of the grid square
@@ -114,7 +120,9 @@ examples:
     value:
       id: http://tun.fi/YKJ.667:337
       coordinates: 667:337
-      birdAssociationArea: ML.1091
+      birdAssociationArea:
+        key: ML.1091
+        value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
       name: Espoo, Espoon keskusta
       level1: 1
       level2: 110.9
@@ -125,7 +133,9 @@ examples:
     value:
       id: http://tun.fi/YKJ.667:338
       coordinates: 667:338
-      birdAssociationArea: ML.1091
+      birdAssociationArea:
+        key: ML.1091
+        value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
       name: Helsinki, Helsingin keskusta
       level1: 1
       level2: 102.4
@@ -136,7 +146,9 @@ examples:
     value:
       id: http://tun.fi/YKJ.667:339
       coordinates: 667:339
-      birdAssociationArea: ML.1091
+      birdAssociationArea:
+        key: ML.1091
+        value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
       name: Helsinki, Santahamina
       level1: 1
       level2: 98.4
@@ -147,7 +159,9 @@ examples:
     value:
       - id: http://tun.fi/YKJ.667:337
         coordinates: 667:337
-        birdAssociationArea: ML.1091
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
         name: Espoo, Espoon keskusta
         level1: 1
         level2: 110.9
@@ -156,7 +170,9 @@ examples:
         level5: 319.1
       - id: http://tun.fi/YKJ.667:338
         coordinates: 667:338
-        birdAssociationArea: ML.1091
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
         name: Helsinki, Helsingin keskusta
         level1: 1
         level2: 102.4
@@ -165,7 +181,9 @@ examples:
         level5: 295.6
       - id: http://tun.fi/YKJ.667:339
         coordinates: 667:339
-        birdAssociationArea: ML.1091
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
         name: Helsinki, Santahamina
         level1: 1
         level2: 98.4
@@ -176,7 +194,9 @@ examples:
     value:
         id: http://tun.fi/YKJ.667:338
         coordinates: 667:338
-        birdAssociationArea: ML.1091
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
         name: Helsinki, Helsingin keskusta
         level1: 1
         level2: 102.4
