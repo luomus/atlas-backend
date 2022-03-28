@@ -127,6 +127,31 @@ class ApiDao {
 
     return data
   }
+
+  async getBirdList() {
+    const params = {
+      taxonRanks: 'MX.species',
+      lang: 'multi',
+      langFallback: true,
+      typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      selectedFields: 'id,scientificName,vernacularName',
+      onlyFinnish: true,
+      sortOrder: 'taxonomic',
+      pageSize: 1000
+    }
+
+
+    const data = this.cache.getCache('TaxonList')
+
+    if(data === undefined) {
+      const response = await this.axios.get(`https://laji.fi/api/taxa/MX.37580/species`, { params })
+
+      this.cache.setCache('TaxonList', response.data.results)
+      return response.data.results
+    }
+
+    return data
+  }
 }
 
 module.exports = ApiDao
