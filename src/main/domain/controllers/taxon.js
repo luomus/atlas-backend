@@ -14,14 +14,9 @@ class Taxon {
   getTaxonList() {
     return async (req, res) => {
       try {
-        const lang = req.query.language || 'fi'
         const taxonList = await apiDao.getBirdList()
         
-        const toReturn = taxonList.map(taxon => ({
-          ...taxon,
-          vernacularName: taxon.vernacularName[lang]
-        }))
-        return res.json(toReturn)
+        return res.json(taxonList)
       } catch (e) {
         return res.status(500).send(e.message)
       }
@@ -55,15 +50,8 @@ class Taxon {
 
         const toReturn = {
           ...taxon,
-          vernacularName: taxon.vernacularName[lang],
-          prev: {
-            ...prevTaxon,
-            vernacularName: prevTaxon.vernacularName[lang],
-          },
-          next: {
-            ...nextTaxon,
-            vernacularName: nextTaxon.vernacularName[lang]
-          }
+          prev: prevTaxon,
+          next: nextTaxon,
         }
         return res.json(toReturn)
       } catch (e) {
