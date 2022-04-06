@@ -1,5 +1,5 @@
 const Querier = require('../../dao/querier')
-const querier = Querier()
+const querier = new Querier()
 const GridDao = require('../../dao/gridDao')
 const AtlasGridSpeciesDataDao = require('../../dao/atlasGridSpeciesDataDao')
 const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
@@ -8,7 +8,7 @@ const urlRemover = require('../../helpers/urlRemover')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
-const apiDao = new ApiDao(axios, Cache())
+const apiDao = new ApiDao(axios, new Cache())
 
 class Grid {
   /**

@@ -4,10 +4,20 @@ const cache = new NodeCache({
   checkPeriod: 120
 })
 
-function Cache() {
-  return {
-    setCache: (key, data) => cache.set(key, data),
-    getCache: (key) => cache.get(key)
+class Cache {
+  setCache(key, data, ttl) {cache.set(key, data, ttl)}
+  getCache(key) {cache.get(key)}
+  async wrapper(key, fn, ttl) {
+    let data = this.getCache(key)
+
+    if(data === undefined) {
+      data = await fn()
+
+      this.setCache(key, data, ttl)
+      return data
+    }
+
+    return data
   }
 }
 

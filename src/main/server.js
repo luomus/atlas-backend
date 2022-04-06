@@ -5,6 +5,9 @@ const cors = require('cors')
 const sqlite3 = require('sqlite3')
 const fs = require('fs')
 const YAML = require('yamljs')
+const cron = require('node-cron')
+const AtlasGridUpdater = require('./domain/updater/atlasGridUpdater')
+const atlasGridUpdater = new AtlasGridUpdater()
 const app = express()
 // global.db = new sqlite3.Database('./birds.db', (err) => {
 //   if (err) console.log('Could not connect to database', err)
@@ -33,5 +36,5 @@ app.use('/api/v1/grid', gridRouter)
 app.use('/api/v1/map', mapRouter)
 app.use('/api/v1/taxon/', taxonRouter)
 
-
+cron.schedule('0 0 0 * * *', () => atlasGridUpdater.update())
 module.exports = app

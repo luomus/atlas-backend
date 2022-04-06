@@ -27,7 +27,7 @@ class AtlasGridSpeciesDataDao {
       'atlas INTEGER REFERENCES Atlas, ' +
       'atlasCode VARCHAR(100), ' +
       'atlasClass VARCHAR(100))'
-    return this.#querier('run', sql)
+    return this.#querier.execute(sql)
   }
 
   /**
@@ -35,7 +35,7 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getAllData() {
-    return this.#querier('all',
+    return this.#querier.execute(
     `SELECT id AS "id", ' +
     'species AS "species", ' +
     'grid AS "grid", ' +
@@ -52,7 +52,7 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getAllDataForAtlas(atlasId) {
-    return this.#querier('all',
+    return this.#querier.execute(
     `SELECT id AS "id", ' +
     'species AS "species", ' +
     'grid AS "grid", ' +
@@ -69,7 +69,7 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getDataForSpecies(speciesId) {
-    return this.#querier('all',
+    return this.#querier.execute(
       'SELECT id AS "id", ' +
       'species AS "species", ' +
       'grid AS "grid", ' +
@@ -87,7 +87,7 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getDataForSpeciesAndAtlas(speciesId, atlasId) {
-    return this.#querier('all',
+    return this.#querier.execute(
       'SELECT id AS "id", ' +
       'speciesId AS "speciesId", ' +
       'grid AS "grid", ' +
@@ -105,7 +105,7 @@ class AtlasGridSpeciesDataDao {
    * @returns {Promise}
    */
   getDataForGridAndAtlas(gridId, atlasId) {
-    return this.#querier('all',
+    return this.#querier.execute(
       'SELECT id AS "id", ' +
       'species AS "species", ' +
       'grid AS "grid", ' +

@@ -23,7 +23,7 @@ class AtlasGridDao {
       'grid VARCHAR(100) REFERENCES Grid, ' +
       'atlasClassSum INTEGER, ' +
       'activityCategory VARCHAR(100))'
-    return this.#querier('run', sql)
+    return this.#querier.execute(sql)
   }
 
   /**
@@ -32,19 +32,18 @@ class AtlasGridDao {
    * @returns {Promise}
    */
   getAlasGridInfoForGrid(gridId) {
-    return this.#querier('get', `SELECT * FROM AtlasGrid WHERE grid = ?`, [gridId])
+    return this.#querier.execute(`SELECT * FROM AtlasGrid WHERE grid = ?`, [gridId])
   }
-
 
   /**
    * Returns the database search result for all grid info in given bird atlas, and levels from grids.
    * @returns {Promise}
    */
   getAllGridInfoForAtlas(atlasId) {
-    return this.#querier('all',
+    return this.#querier.execute(
       'SELECT AtlasGrid.id AS "id", ' +
-      'AtlasGrid.grid AS "gridId", ' +
-      'AtlasGrid.atlas AS "atlasId", ' +
+      'AtlasGrid.grid AS "grid", ' +
+      'AtlasGrid.atlas AS "atlas", ' +
       'Grid.level1 AS "level1", ' +
       'Grid.level2 AS "level2", ' +
       'Grid.level3 AS "level3", ' +
@@ -52,18 +51,47 @@ class AtlasGridDao {
       'Grid.level5 AS "level5", ' +
       'AtlasGrid.atlasClassSum AS "atlasClassSum", ' +
       'AtlasGrid.activityCategory AS "activityCategory" ' +
-      'FROM AtlasGrid JOIN Grid' +
-      'ON Grid.id = AtlasGrid.grid' +
-      'WHERE atlas = :atlasId', [atlasId])
+      'FROM AtlasGrid JOIN Grid ' +
+      'ON Grid.id = AtlasGrid.grid ' +
+      'WHERE AtlasGrid.atlas = :1', [atlasId])
   }
 
+  addAtlasGridData(atlasGrid) {
+    const { atlas, grid, atlasClassSum, activityCategory } = atlasGrid
+
+    const sql = 'INSERT INTO AtlasGrid (atlas, grid, atlasClassSum, activityCategory) ' +
+      'VALUES (:1, :2, :3, :4)'
+
+    return this.#querier.execute(sql, [atlas, grid, atlasClassSum, activityCategory])
+  }
+
+  addAtlasGridDataMany(atlasGrids) {
+    const sql = 'INSERT INTO AtlasGrid (atlas, grid, atlasClassSum, activityCategory) ' +
+    'VALUES (:atlas, :grid, :atlasClassSum, :activityCategory)'
+
+    return this.#querier.executeMany(sql, atlasGrids)
+  }
+
+  updateAtlasGridData(atlasGrid) {
+    const { id, atlasClassSum, activityCategory } = atlasGrid
+
+    const sql = 'UPDATE AtlasGrid SET atlasClassSum = :1, activityCategory = :2 WHERE id = :3'
+
+    return this.#querier.execute(sql, [atlasClassSum, activityCategory, id])
+  }
+
+  updateAtlasGridDataMany(atlasGrids) {
+    const sql = 'UPDATE AtlasGrid SET atlasClassSum = :atlasClassSum, activityCategory = :activityCategory WHERE id = :id'
+
+    return this.#querier.executeMany(sql, atlasGrids)
+  }
 
   /**
    * Returns the database search result for all grid info in bird atlas.
    * @returns {Promise}
    */
   getAllGridInfo() {
-    return this.#querier('all', `SELECT * FROM AtlasGrid`)
+    return this.#querier.execute(`SELECT * FROM AtlasGrid`)
   }
 }
 

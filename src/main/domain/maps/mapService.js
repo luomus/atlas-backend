@@ -30,7 +30,7 @@ function MapService(atlasMap, config) {
      * @param {boolean} showActivity
      * @returns {SvgImage}
      */
-    getSpeciesMap: function(data, grid, species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas, showActivity) {
+    getSpeciesMap: function(data, grid = [], species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas, showActivity) {
       const speciesMap = atlasMap.copy()
       for (let i = 0; i < data.length; i++) {
         const cssClass = getClassForAtlasClass(data[i].atlasClass)
@@ -121,11 +121,11 @@ function MapService(atlasMap, config) {
   }
 
   function getClassForActivityCategory(activityCategory) {
-    const cssClass = activityCategory === 5 ? 'category5' :
-      activityCategory === 4 ? 'category4' :
-      activityCategory === 3 ? 'category3' :
-      activityCategory === 2 ? 'category2' :
-      activityCategory === 1 ? 'category1' :
+    const cssClass = activityCategory === 'MY.atlasActivityCategoryEnum5' ? 'category5' :
+      activityCategory === 'MY.atlasActivityCategoryEnum4' ? 'category4' :
+      activityCategory === 'MY.atlasActivityCategoryEnum3' ? 'category3' :
+      activityCategory === 'MY.atlasActivityCategoryEnum2' ? 'category2' :
+      activityCategory === 'MY.atlasActivityCategoryEnum1' ? 'category1' :
       'category0'
     return cssClass
   }

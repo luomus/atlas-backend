@@ -22,7 +22,7 @@ class AtlasDao {
       'startingYear INTEGER, ' +
       'endingYear INTEGER, ' +
       'name VARCHAR(100))'
-    return this.#querier('run', sql)
+    return this.#querier.execute(sql)
   }
 
   /**
@@ -30,15 +30,15 @@ class AtlasDao {
    * @returns {Promise}
    */
   getById(atlasId) {
-    return this.#querier('get', `SELECT * FROM Atlas WHERE id = :atlasId`, [atlasId])
+    return this.#querier.execute(`SELECT * FROM Atlas WHERE id = :atlasId`, [atlasId])
   }
 
   /**
    * Returns the database search result for all atlas info.
    * @returns {Promise}
    */
-  getAllAtlasInfo() {
-    return this.#querier('all', 'SELECT' +
+  getAll() {
+    return this.#querier.execute('SELECT' +
     'id as "id", ' +
     'startingYear as "startingYear"' +
     'endingYear as "endingYear"' +

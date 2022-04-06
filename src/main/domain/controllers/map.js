@@ -10,8 +10,8 @@ const AtlasGridDao = require('../../dao/atlasGridDao')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
-const apiDao = new ApiDao(axios, Cache())
-const querier = Querier()
+const apiDao = new ApiDao(axios, new Cache())
+const querier = new Querier()
 const atlasGridSpeciesDataDao = new AtlasGridSPeciesDataDao(querier)
 const atlasGridDao = new AtlasGridDao(querier)
 const gridDao = new GridDao(querier)
@@ -100,7 +100,8 @@ class Map {
       try {
         const { speciesId } = req.params
         let breedingData = await apiDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId)
-        let species = await apiDao.getSpecies(speciesId)
+        const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(__latestAtlas)
+        const species = await apiDao.getSpecies(speciesId)
 
         breedingData = breedingData.map((data) => {
           return {
@@ -112,10 +113,10 @@ class Map {
         if (req.query.type === 'png') {
           const callback = (png) => res.send(png)
           res.setHeader('Content-Type', 'image/png')
-          mapService.getSpeciesMap(breedingData, [], species, callback, 'png', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true")
+          mapService.getSpeciesMap(breedingData, atlasGrid, species, callback, 'png', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true")
         } else {
           res.setHeader('Content-Type', 'image/svg+xml')
-          res.send(mapService.getSpeciesMap(breedingData, [], species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
+          res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
         }
       } catch (e) {
         console.log(e)

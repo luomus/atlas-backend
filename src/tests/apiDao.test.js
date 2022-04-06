@@ -1,18 +1,14 @@
 const ApiDao = require('../main/dao/apiDao')
 
 const mockValue = { value: 'value' }
-const setCache = jest.fn()
-const getCache = jest.fn()
-const cache = {
-  setCache,
-  getCache
-}
+const cache = require('../main/dao/cache')
+jest.mock('../main/dao/cache')
 const axios = require('axios')
 jest.mock('axios')
 
 beforeEach(() => {
-  setCache.mockClear()
-  getCache.mockClear()
+  cache.setCache.mockClear()
+  cache.getCache.mockClear()
   axios.get.mockClear()
 })
 
@@ -39,14 +35,13 @@ test('getGridAndBreedingdataForSpeciesAndActiveAtlas calls axios correctly', asy
 })
 
 test('getSpecies calls cache and axios correctly on cache hit', async () => {
-  getCache.mockImplementationOnce(() => mockValue)
-
+  cache.getCache.mockImplementationOnce(() => mockValue)
   const apiDao = new ApiDao(axios, cache) 
 
   await apiDao.getSpecies('MX.37580')
 
-  expect(getCache).toHaveBeenCalledTimes(1)
-  expect(getCache.mock.calls[0][0]).toEqual('MX.37580')
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('MX.37580')
   expect(axios.get).toHaveBeenCalledTimes(0)
 })
 
@@ -57,13 +52,13 @@ test('getSpecies calls cache and axios correctly on cache miss', async () => {
 
   await apiDao.getSpecies('MX.37580')
 
-  expect(getCache).toHaveBeenCalledTimes(1)
-  expect(getCache.mock.calls[0][0]).toEqual('MX.37580')
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('MX.37580')
   expect(axios.get).toHaveBeenCalledTimes(1)
   expect(axios.get.mock.calls[0][0]).toEqual('https://laji.fi/api/taxa/MX.37580')
-  expect(setCache).toHaveBeenCalledTimes(1)
-  expect(setCache.mock.calls[0][0]).toEqual('MX.37580')
-  expect(setCache.mock.calls[0][1]).toEqual(mockValue)
+  expect(cache.setCache).toHaveBeenCalledTimes(1)
+  expect(cache.setCache.mock.calls[0][0]).toEqual('MX.37580')
+  expect(cache.setCache.mock.calls[0][1]).toEqual(mockValue)
 
 
 
@@ -76,8 +71,8 @@ test('getEnumRange calls cache and axios correctly on cache hit', async () => {
 
   await apiDao.getEnumRange('MY.atlasCodeEnum')
 
-  expect(getCache).toHaveBeenCalledTimes(1)
-  expect(getCache.mock.calls[0][0]).toEqual('MY.atlasCodeEnum')
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('MY.atlasCodeEnum')
   expect(axios.get).toHaveBeenCalledTimes(0)
 })
 
@@ -89,10 +84,10 @@ test('getEnumRange calls cache and axios correctly on cache miss', async () => {
 
   await apiDao.getEnumRange('MY.atlasCodeEnum')
 
-  expect(getCache).toHaveBeenCalledTimes(1)
-  expect(getCache.mock.calls[0][0]).toEqual('MY.atlasCodeEnum')
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('MY.atlasCodeEnum')
   expect(axios.get).toHaveBeenCalledTimes(1)
-  expect(setCache).toHaveBeenCalledTimes(1)
+  expect(cache.setCache).toHaveBeenCalledTimes(1)
 })
 
 test('getBirdAssociationAreas calls cache and axios correctly on cache hit', async () => {
@@ -102,7 +97,46 @@ test('getBirdAssociationAreas calls cache and axios correctly on cache hit', asy
 
   await apiDao.getBirdAssociationAreas()
 
-  expect(getCache).toHaveBeenCalledTimes(1)
-  expect(getCache.mock.calls[0][0]).toEqual('MNP.birdAssociationArea')
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('MNP.birdAssociationArea')
   expect(axios.get).toHaveBeenCalledTimes(0)
+})
+
+test('getBirdAssociationAreas calls cache and axios correctly on cache miss', async () => {
+  axios.get.mockImplementationOnce(() => ({ data: {results: [mockValue]}}))
+
+  const apiDao = new ApiDao(axios, cache) 
+
+  await apiDao.getBirdAssociationAreas()
+
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('MNP.birdAssociationArea')
+  expect(axios.get).toHaveBeenCalledTimes(1)
+  expect(cache.setCache).toHaveBeenCalledTimes(1)
+})
+
+
+test('getBirdList calls cache and axios correctly on cache hit', async () => {
+  cache.getCache.mockImplementationOnce(() => mockValue)
+
+  const apiDao = new ApiDao(axios, cache) 
+
+  await apiDao.getBirdList()
+
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('TaxonList')
+  expect(axios.get).toHaveBeenCalledTimes(0)
+})
+
+test('getBirdList calls cache and axios correctly on cache miss', async () => {
+  axios.get.mockImplementationOnce(() => ({ data: {results: [mockValue]}}))
+
+  const apiDao = new ApiDao(axios, cache) 
+
+  await apiDao.getBirdList()
+
+  expect(cache.getCache).toHaveBeenCalledTimes(1)
+  expect(cache.getCache.mock.calls[0][0]).toEqual('TaxonList')
+  expect(axios.get).toHaveBeenCalledTimes(1)
+  expect(cache.setCache).toHaveBeenCalledTimes(1)
 })

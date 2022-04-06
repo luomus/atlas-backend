@@ -15,7 +15,7 @@ class ApiDao {
    * @param {string} grid
    * @returns {Promise}
    */
-    async getListOfDistinctBirdsForGridAndActiveAtlas(grid, page = 1) {
+  async getListOfDistinctBirdsForGridAndActiveAtlas(grid) {
     const params = {
       aggregateBy: 'unit.linkings.taxon.speciesId,unit.linkings.taxon.speciesNameEnglish,unit.linkings.taxon.speciesNameFinnish,unit.linkings.taxon.speciesNameSwedish,unit.linkings.taxon.speciesScientificName,unit.linkings.taxon.speciesTaxonomicOrder',
       orderBy: 'unit.linkings.taxon.speciesTaxonomicOrder',
@@ -26,8 +26,7 @@ class ApiDao {
       ykj10kmCenter: grid,
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
       hasValue: 'unit.atlasClass',
-      pageSize: 1000,
-      page: page,
+      pageSize: 10000,
       cache: true,
     }
     const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
@@ -36,26 +35,50 @@ class ApiDao {
   }
 
   /**
+   * Gets the currently active atlas data for all ykj-grids
+   * @param {number} page
+   * @returns {Promise}
+   */
+  async getListOfDistinctBirdsForActiveAtlasPaginated(page = 1) {
+    const params = {
+      aggregateBy: 'unit.linkings.taxon.speciesId,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      atlasCounts: true,
+      taxonId: 'MX.37580',
+      time: '2022/2025',
+      coordinateAccuracyMax: 10000,
+      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+      hasValue: 'unit.atlasClass',
+      pageSize: 10000,
+      page: page,
+      cache: true,
+    }
+    const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+
+    return response.data
+  }
+
+  /**
    * Returns the species atlas data for current bird atlas from laji.fi api
    * @param {string} speciesId
    * @returns {Promise}
    */
   async getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId) {
-  const params = {
-    aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
-    atlasCounts: true,
-    excludeNulls: true,
-    taxonId: speciesId,
-    time: '2022/2025',
-    recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
-    hasValue: 'unit.atlasClass',
-    pageSize: 1000,
-    page: 1,
-    cache: true,
-  }
-  const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      atlasCounts: true,
+      excludeNulls: true,
+      taxonId: speciesId,
+      time: '2022/2025',
+      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+      hasValue: 'unit.atlasClass',
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+    }
+    const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
 
-  return response.data.results
+    return response.data.results
   }
 
   /**
@@ -64,21 +87,15 @@ class ApiDao {
    * @returns {Promise}
    */
   async getSpecies(speciesId) {
-    const params = {
-      lang: 'multi',
-      selectedFields: 'scientificName,vernacularName'
-    }
-
-    const data = this.cache.getCache(speciesId)
-
-    if (data === undefined) {
+    return await this.cache.wrapper(speciesId, async () => {
+      const params = {
+        lang: 'multi',
+        selectedFields: 'scientificName,vernacularName'
+      }
+    
       const response = await this.axios.get(`https://laji.fi/api/taxa/${speciesId}`, { params })
-
-      this.cache.setCache(speciesId, response.data)
       return response.data
-    }
-
-    return data
+    })
   }
 
   /**
@@ -87,33 +104,27 @@ class ApiDao {
    * @returns {Promise}
    */
   async getEnumRange(range) {
-    const params = {
-      lang: 'multi',
-      asLookupObject: true,
-      access_token: access_token
-    }
-
-    const data = this.cache.getCache(range)
-    if (data === undefined) {
+    return await this.cache.wrapper(range, async () => {
+      const params = {
+        lang: 'multi',
+        asLookupObject: true,
+        access_token: access_token
+      }
+  
       const response = await this.axios.get(`https://laji.fi/api/metadata/ranges/${range}`, { params })
-
-      this.cache.setCache(range, response.data)
-      return response.data
-    }
-
-    return data
+  
+      return response.data  
+    })
   }
 
   async getBirdAssociationAreas() {
-    const params = {
-      type: 'birdAssociationArea',
-      pageSize: 100,
-      access_token: access_token
-    }
+    return await this.cache.wrapper('MNP.birdAssociationArea', async () => {
+      const params = {
+        type: 'birdAssociationArea',
+        pageSize: 100,
+        access_token: access_token
+      }
 
-    const data = this.cache.getCache('MNP.birdAssociationArea')
-
-    if (data === undefined) {
       const response = await this.axios.get('ttps://laji.fi/api/areas', { params })
       const associationLookupTable = {}
         
@@ -121,36 +132,28 @@ class ApiDao {
         associationLookupTable[association.id] = association.name
       })
   
-      this.cache.setCache('MNP.birdAssociationArea', associationLookupTable)
       return associationLookupTable
-    }
-
-    return data
+    })
   }
 
+
   async getBirdList() {
-    const params = {
-      taxonRanks: 'MX.species',
-      lang: 'multi',
-      langFallback: true,
-      typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
-      selectedFields: 'id,scientificName,vernacularName',
-      onlyFinnish: true,
-      sortOrder: 'taxonomic',
-      pageSize: 1000
-    }
-
-
-    const data = this.cache.getCache('TaxonList')
-
-    if(data === undefined) {
+    return await this.cache.wrapper('TaxonList', async () => {
+      const params = {
+        taxonRanks: 'MX.species',
+        lang: 'multi',
+        langFallback: true,
+        typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+        selectedFields: 'id,scientificName,vernacularName',
+        onlyFinnish: true,
+        sortOrder: 'taxonomic',
+        pageSize: 1000
+      }
+      
       const response = await this.axios.get(`https://laji.fi/api/taxa/MX.37580/species`, { params })
 
-      this.cache.setCache('TaxonList', response.data.results)
       return response.data.results
-    }
-
-    return data
+    })
   }
 }
 

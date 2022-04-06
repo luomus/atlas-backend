@@ -28,7 +28,7 @@ class GridDao {
       'level3 FLOAT, ' +
       'level4 FLOAT, ' +
       'level5 FLOAT)'
-    return this.#querier('run', sql)
+    return this.#querier.execute(sql)
   }
 
   /**
@@ -40,7 +40,7 @@ class GridDao {
     const {id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5} = grid
     const sql = 'INSERT INTO Grid(id, coordinates, birdAssociationArea, name, ' +
       'level1, level2, level3, level4, level5) VALUES (:1, :2, :3, :4, :5, :6, :7, :8, :9)'
-    return this.#querier('run', sql,
+    return this.#querier.execute(sql,
       [id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5])
   }
 
@@ -53,7 +53,7 @@ class GridDao {
     const {id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5} = grid
     const sql = 'UPDATE Grid SET id = ?, coordinates = ?, birdAssociationArea = ?, name = ?, ' +
       'level1 = ?, level2 = ?, level3 = ?, level4 = ?, level5 = ? WHERE id = ?'
-    return this.#querier('run', sql,
+    return this.#querier.execute(sql,
       [id, coordinates, birdAssociationArea, name, level1, level2, level3, level4, level5, id])
   }
 
@@ -63,7 +63,7 @@ class GridDao {
    * @returns {Promise}
    */
   deleteGrid(id) {
-    return this.#querier('run', `DELETE FROM Grid WHERE id = ?`, [id])
+    return this.#querier.execute(`DELETE FROM Grid WHERE id = ?`, [id])
   }
 
   /**
@@ -72,7 +72,7 @@ class GridDao {
    * @returns {Promise}
    */
   getById(id) {
-    return this.#querier('get', 'SELECT id AS "id", ' +
+    return this.#querier.execute('SELECT id AS "id", ' +
     'coordinates AS "coordinates", ' +
     'birdAssociationArea AS "birdAssociationArea", ' +
     'name AS "name", ' +
@@ -88,7 +88,7 @@ class GridDao {
    * @returns {Promise}
    */
   getAll() {
-    return this.#querier('all',
+    return this.#querier.execute(
       'SELECT id AS "id", ' +
       'coordinates AS "coordinates", ' +
       'birdAssociationArea AS "birdAssociationArea", ' +

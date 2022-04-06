@@ -25,7 +25,7 @@ class AtlasDao {
         'id': 4,
         'startingYear': 2022,
         'endingYear': 2025,
-        'name': 'LIntuatlas 4',
+        'name': 'Lintuatlas 4',
       }
     ]
   }

@@ -8,7 +8,6 @@ servers:
 
 
 paths:
-
   /map/{speciesId}/atlas:
     get:
       parameters:
@@ -101,3 +100,40 @@ paths:
               examples:
                 JSON:
                   $ref: 'components.yaml#/examples/atlasDataExample'
+  /taxon:
+    get:
+      summary: Get list of atlas species.
+      description: A collection of species having been observed in atlas.
+      tags:
+        - taxon
+      responses:
+        '200':
+          description: Collection of taxons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: 'components.yaml#/schemas/Taxon'
+                examples:
+                  JSON:
+                    $ref: 'components.yaml#/examples/taxa'
+  /taxon/{taxonId}:
+    get:
+      parameters:
+        - $ref: "components.yaml#/parameters/taxonId"
+      summary: Get a single taxon and its neighbours in the taxonomic order
+      tags:
+        - taxon
+      responses:
+        '200':
+          description: Taxon and its taxonomic order neighbours in the atlas species
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: 'components.yaml#/schemas/TaxonWithNeighbours'
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/taxon'

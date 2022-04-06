@@ -5,7 +5,8 @@ class ApiDao {
     speciesData: {},
     atlasCode: {},
     atlasClass: {},
-    birdAssociationAreas: {}
+    birdAssociationAreas: {},
+    speciesList: []
   }
 
   constructor() {
@@ -1161,7 +1162,48 @@ class ApiDao {
       'ML.1105': 'Suomenselän Lintutieteellinen Yhdistys r.y.',
       'ML.1116': 'Rauman Seudun Lintuharrastajat r.y.',
     }
-    
+    this.#data.speciesList  = [
+      {
+        vernacularName: {
+          fi:	'kyhmyjoutsen',
+          sv:	'knölsvan',
+          en:	'Mute Swan',
+        },
+        scientificName:	'Cygnus olor',
+        id:	'MX.26277',
+        intellectualRights:	'MZ.intellectualRightsCC-BY-4.0'
+      },
+      {
+        vernacularName: {
+          fi:	'laulujoutsen',
+          sv:	'sångsvan',
+          en:	'Whooper Swan'
+        },
+        scientificName:	'Cygnus cygnus',
+        id:	'MX.26280',
+        intellectualRights:	'MZ.intellectualRightsCC-BY-4.0'
+      },
+      {	
+        vernacularName: {
+          fi:	'metsähanhi',
+          sv:	'sädgås',
+          en:	'Bean Goose'
+        },
+        scientificName:	'Anser fabalis',
+        id:	'MX.26287',
+        intellectualRights:	'MZ.intellectualRightsCC-BY-4.0'
+      },
+      {
+        vernacularName: {	
+          fi:	'kiljuhanhi',
+          sv:	'fjällgås',
+          en:	'Lesser White-fronted Goose'
+        },
+        scientificName:	'Anser erythropus',
+        id:	'MX.26290',
+        intellectualRights:	'MZ.intellectualRightsCC-BY-4.0'
+      }
+    ]
   }
 
   getListOfDistinctBirdsForGridAndActiveAtlas(grid, page) {
@@ -1188,6 +1230,10 @@ class ApiDao {
 
   getBirdAssociationAreas() {
     return Promise.resolve(this.#data.birdAssociationAreas)
+  }
+
+  getBirdList() {
+    return Promise.resolve(this.#data.speciesList)
   }
 }
 

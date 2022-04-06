@@ -5,7 +5,7 @@ parameters:
     required: true
     schema:
       type: string
-    description: MX code of the wanted species.
+    description: MX code of the species.
 
   gridId:
     in: path
@@ -22,6 +22,14 @@ parameters:
     schema:
       type: integer
     description: ID of the atlas.
+
+  taxonId:
+    in: path
+    name: taxonId
+    required: true
+    schema:
+      type: string
+    description: MX code of the species.
 
 schemas:
   Atlas:
@@ -114,6 +122,39 @@ schemas:
             type: array
             items:
               $ref: '#/schemas/AtlasData'
+  Taxon:
+    type: object
+    properties:
+      id:
+        type: string
+        description: MX-code of the species.
+      vernacularName:
+        type: object
+        properties:
+          fi:
+            type: string
+            description: Species vernacular name in Finnish
+          en:
+            type: string
+            description: Species vernacular name in English
+          sv:
+            type: string
+            description: Species vernacular name in Swedish
+      scientificName:
+        type: string
+        description: Scientific name of the species
+      intellectualRights:
+        type: string
+        description: Intellectual rights of the taxon
+  TaxonWithNeighbours:
+    allOf:
+      - $ref: '#/schemas/Taxon'
+      - next:
+          type: object
+          ref: '#/schemas/Taxon'
+      - prev:
+          type: object
+          ref: '#/schemas/Taxon'
 
 examples:
   grid1:
@@ -220,3 +261,58 @@ examples:
             atlasClass:
               key: MY.atlasClassEnumC
               value: Todennäköinen pesintä
+  taxa:
+    value:
+      - id:	MX.26277
+        vernacularName:	
+          sv:	knölsvan
+          fi:	kyhmyjoutsen
+          en:	Mute Swan
+        scientificName:	Cygnus olor
+        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
+      - id:	MX.26280
+        vernacularName:
+          fi: laulujoutsen
+          sv:	sångsvan
+          en:	Whooper Swan
+        scientificName:	Cygnus cygnus
+        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
+      - id:	MX.26287
+        vernacularName:
+          fi: metsähanhi
+          sv:	sädgås
+          en: Bean Goose
+        scientificName:	Anser fabalis
+        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
+      - id:	MX.26290
+        vernacularName:
+          fi:	kiljuhanhi
+          sv: fjällgås
+          en:	Lesser White-fronted Goose
+        scientificName:	Anser erythropus
+        intellectualRights: MZ.intellectualRightsCC-BY-4.0
+  taxon:
+    value:
+      id:	MX.26277
+      vernacularName:
+        fi:	kyhmyjoutsen
+        sv:	knölsvan
+        en:	Mute Swan
+      scientificName:	Cygnus olor
+      intellectualRights:	MZ.intellectualRightsCC-BY-4.0
+      next:
+        id:	MX.26280
+        vernacularName:
+          fi: laulujoutsen
+          sv:	sångsvan
+          en:	Whooper Swan
+        scientificName:	Cygnus cygnus
+        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
+      prev:
+        id:	MX.26290
+        vernacularName:
+          fi:	kiljuhanhi
+          sv: fjällgås
+          en:	Lesser White-fronted Goose
+        scientificName:	Anser erythropus
+        intellectualRights: MZ.intellectualRightsCC-BY-4.0

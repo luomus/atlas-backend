@@ -48,6 +48,22 @@ describe('Collection GRID', () => {
   })
 })
 
+describe('Collection TAXON', () => {
+  describe('Get taxon information from API', () => {
+    test('GET /api/v1/taxon responds with JSON', (done) => {
+      request(app)
+        .get('/api/v1/taxon')
+        .expect(200, done)
+        .expect('content-type', /application\/json/)
+    })
+    test('GET /api/v1/taxon/:taxonId returns correct species and expected neigbours', async () => {
+      const res = await request(app).get('/api/v1/taxon/MX.26277')
+        expect(res.text).toContain('MX.26277')
+        expect(res.text).toContain('MX.26280')
+        expect(res.text).toContain('MX.26290')
+    })
+  })
+})
 
 // eslint-disable-next-line max-lines-per-function
 describe('Collection MAP', () => {
