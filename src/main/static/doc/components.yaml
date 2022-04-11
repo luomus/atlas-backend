@@ -111,13 +111,28 @@ schemas:
             description: Enum key of the atlas class
           value:
             type: string
-            description:  Eum value of the atlas class
+            description:  Enum value of the atlas class
   
   GridAtlasData:
     allOf:
       - $ref: '#/schemas/GridData'
       - type: object
         properties:
+          atlas:
+            type: number
+            description: id of the atlas from which atlasClassSum and activityCategry are from
+          atlasClassSum:
+            type: number
+            description: The weighted sum of grid observations atlasClasses
+          activityCategory:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Enum key of activityCategry/atlasActivityCategory
+              value:
+                type: string
+                description: Enum value of activityCategry/atlasActivityCategory
           data:
             type: array
             items:
@@ -244,6 +259,11 @@ examples:
         level3: 205.8
         level4: 250.2
         level5: 295.6
+        atlas: 4
+        atlasClassSum: 3
+        activityCaegory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
         data:
           - speciesId: MX.27748
             speciesName: kalalokki
