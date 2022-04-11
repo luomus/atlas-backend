@@ -50,10 +50,28 @@ class AtlasGridDao {
       'Grid.level4 AS "level4", ' +
       'Grid.level5 AS "level5", ' +
       'AtlasGrid.atlasClassSum AS "atlasClassSum", ' +
-      'AtlasGrid.activityCategory AS "activityCategory" ' +
+      'AtlasGrid.activityCategory AS "activityCategory", ' +
+      'Grid.birdAssociationArea AS "birdAssociationArea" ' +
       'FROM AtlasGrid JOIN Grid ' +
       'ON Grid.id = AtlasGrid.grid ' +
       'WHERE AtlasGrid.atlas = :1', [atlasId])
+  }
+
+  getAtlasGridAndGridInfoForGridAndAtlas(gridId, atlasId) {
+    return this.#querier.execute(
+      'SELECT Grid.id AS "id", ' +
+      'AtlasGrid.atlas AS "atlas", ' +
+      'Grid.level1 AS "level1", ' +
+      'Grid.level2 AS "level2", ' +
+      'Grid.level3 AS "level3", ' +
+      'Grid.level4 AS "level4", ' +
+      'Grid.level5 AS "level5", ' +
+      'AtlasGrid.atlasClassSum AS "atlasClassSum", ' +
+      'AtlasGrid.activityCategory AS "activityCategory", ' +
+      'Grid.birdAssociationArea AS "birdAssociationArea" ' +
+      'FROM AtlasGrid JOIN Grid ' +
+      'ON Grid.id = AtlasGrid.grid ' +
+      'WHERE AtlasGrid.grid = :1 AND AtlasGrid.atlas = :2', [gridId, atlasId])
   }
 
   addAtlasGridData(atlasGrid) {

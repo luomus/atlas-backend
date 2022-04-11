@@ -1,9 +1,11 @@
 const Querier = require('../../dao/querier')
 const querier = new Querier()
 const GridDao = require('../../dao/gridDao')
+const gridDao = new GridDao(querier)
+const AtlasGridDao = require('../../dao/atlasGridDao')
+const atlasGridDao = new AtlasGridDao(querier)
 const AtlasGridSpeciesDataDao = require('../../dao/atlasGridSpeciesDataDao')
 const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
-const gridDao = new GridDao(querier)
 const urlRemover = require('../../helpers/urlRemover')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
@@ -125,8 +127,9 @@ class Grid {
   getGridStatsActive() {
     return async (req, res) => {
       try {
+      const lang = req.query.language || 'fi'
       const { gridId } = req.params
-      const grid = (await gridDao.getById(`http://tun.fi/YKJ.${gridId}`))?.[0]
+      const grid = (await atlasGridDao.getAtlasGridAndGridInfoForGridAndAtlas(`http://tun.fi/YKJ.${gridId}`, __latestAtlas))?.[0]
       const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
 
       if (!grid) {
@@ -138,6 +141,7 @@ class Grid {
 
       const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
       const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
+      const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
 
       for ( const result of birdList ) {
         let speciesName
@@ -153,7 +157,6 @@ class Grid {
             speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameFinnish']
         }
 
-        const lang = req.query.language || 'fi'
         const atlasCodeKey = urlRemover(result.atlasCodeMax)
         const atlasClassKey = urlRemover(result.atlasClassMax)
         results.push({
@@ -166,13 +169,17 @@ class Grid {
           atlasClass: {
             key: atlasClassKey, 
             value: atlasClass[atlasClassKey][lang]
-          },
+          }
         })
       }
 
       grid.birdAssociationArea = {
         key: grid.birdAssociationArea,
         value: birdAssociationAreas[grid.birdAssociationArea]
+      }
+      grid.activityCategory = {
+        key: grid.activityCategory,
+        value: activityCategory[grid.activityCategory][lang]
       }
       grid.data = results
 
