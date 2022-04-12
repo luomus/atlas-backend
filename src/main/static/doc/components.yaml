@@ -84,6 +84,21 @@ schemas:
       level5:
         type: number
         description: Lower limit for atlas category 5
+      atlas:
+        type: number
+        description: id of the atlas from which atlasClassSum and activityCategry are from
+      atlasClassSum:
+        type: number
+        description: The weighted sum of grid observations atlasClasses
+      activityCategory:
+        type: object
+        properties:
+          key:
+            type: string
+            description: Enum key of activityCategry/atlasActivityCategory
+          value:
+            type: string
+            description: Enum value of activityCategry/atlasActivityCategory
 
   AtlasData:
     type: object
@@ -118,21 +133,6 @@ schemas:
       - $ref: '#/schemas/GridData'
       - type: object
         properties:
-          atlas:
-            type: number
-            description: id of the atlas from which atlasClassSum and activityCategry are from
-          atlasClassSum:
-            type: number
-            description: The weighted sum of grid observations atlasClasses
-          activityCategory:
-            type: object
-            properties:
-              key:
-                type: string
-                description: Enum key of activityCategry/atlasActivityCategory
-              value:
-                type: string
-                description: Enum value of activityCategry/atlasActivityCategory
           data:
             type: array
             items:
@@ -185,6 +185,11 @@ examples:
       level3: 222.8
       level4: 270.4
       level5: 319.1
+      atlas: 4
+      atlasClassSum: 3
+      activityCaegory:
+        key: MY.atlasActivityCategoryEnum1
+        value: Satunnaishavaintoja
   grid2:
     value:
       id: http://tun.fi/YKJ.667:338
@@ -198,6 +203,11 @@ examples:
       level3: 205.8
       level4: 250.2
       level5: 295.6
+      atlas: 4
+      atlasClassSum: 3
+      activityCaegory:
+        key: MY.atlasActivityCategoryEnum1
+        value: Satunnaishavaintoja
   grid3:
     value:
       id: http://tun.fi/YKJ.667:339
@@ -211,6 +221,11 @@ examples:
       level3: 197.8
       level4: 240.6
       level5: 284.4
+      atlas: 4
+      atlasClassSum: 3
+      activityCaegory:
+        key: MY.atlasActivityCategoryEnum1
+        value: Satunnaishavaintoja
   grids:
     value:
       - id: http://tun.fi/YKJ.667:337
@@ -224,6 +239,11 @@ examples:
         level3: 222.8
         level4: 270.4
         level5: 319.1
+        atlas: 4
+        atlasClassSum: 3
+        activityCaegory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
       - id: http://tun.fi/YKJ.667:338
         coordinates: 667:338
         birdAssociationArea:
@@ -235,6 +255,11 @@ examples:
         level3: 205.8
         level4: 250.2
         level5: 295.6
+        atlas: 4
+        atlasClassSum: 3
+        activityCaegory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
       - id: http://tun.fi/YKJ.667:339
         coordinates: 667:339
         birdAssociationArea:
@@ -246,6 +271,11 @@ examples:
         level3: 197.8
         level4: 240.6
         level5: 284.4
+        atlas: 4
+        atlasClassSum: 3
+        activityCaegory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
   atlasDataExample:
     value:
         id: http://tun.fi/YKJ.667:338

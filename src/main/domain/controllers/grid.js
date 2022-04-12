@@ -20,12 +20,25 @@ class Grid {
   getAll() {
     return async (req, res) => {
       try {
-        const data = await gridDao.getAll()
+        const lang = req.query.language || 'fi'
+        const data = await gridDao.getAllAndAtlasGridForAtlas()
         const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
+        const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
 
         const toReturn = data.map(grid => {
           return {
             ...grid,
+            atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
+            atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+            activityCategory: grid.activityCategory !== null ?
+              {
+                key: grid.activityCategory,
+                value: activityCategory[grid.activityCategory][lang]
+              } :
+              {
+                key: 'MY.atlasActivityCategoryEnum0',
+                value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
+              },
             birdAssociationArea: {
               key: grid.birdAssociationArea,
               value: birdAssociationAreas[grid.birdAssociationArea]
@@ -76,9 +89,11 @@ class Grid {
   getGridInfo() {
     return async (req, res) => {
       try {
+        const lang = req.query.language || 'fi'
         const id = `http://tun.fi/YKJ.${req.params.gridId}`
-        const data = await gridDao.getById(id)
+        const data = await gridDao.getByIdAndAtlasGridForAtlas(id, __latestAtlas)
         const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
+        const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
 
         if (!data) {
           return res.status(404).send()
@@ -87,6 +102,17 @@ class Grid {
         const toReturn = data.map(grid => {
           return {
             ...grid,
+            atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
+            atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+            activityCategory: grid.activityCategory !== null ?
+              {
+                key: grid.activityCategory,
+                value: activityCategory[grid.activityCategory][lang]
+              } :
+              {
+                key: 'MY.atlasActivityCategoryEnum0',
+                value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
+              },
             birdAssociationArea: {
               key: grid.birdAssociationArea,
               value: birdAssociationAreas[grid.birdAssociationArea]
@@ -129,7 +155,7 @@ class Grid {
       try {
       const lang = req.query.language || 'fi'
       const { gridId } = req.params
-      const grid = (await atlasGridDao.getAtlasGridAndGridInfoForGridAndAtlas(`http://tun.fi/YKJ.${gridId}`, __latestAtlas))?.[0]
+      const grid = (await gridDao.getByIdAndAtlasGridForAtlas(`http://tun.fi/YKJ.${gridId}`, __latestAtlas))?.[0]
       const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
 
       if (!grid) {
@@ -172,14 +198,20 @@ class Grid {
           }
         })
       }
-
+      grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
+      grid.atlasClassSum = grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+      grid.activityCategory = grid.activityCategory !== null ?
+      {
+        key: grid.activityCategory,
+        value: activityCategory[grid.activityCategory][lang]
+      } :
+      {
+        key: 'MY.atlasActivityCategoryEnum0',
+        value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
+      },
       grid.birdAssociationArea = {
         key: grid.birdAssociationArea,
         value: birdAssociationAreas[grid.birdAssociationArea]
-      }
-      grid.activityCategory = {
-        key: grid.activityCategory,
-        value: activityCategory[grid.activityCategory][lang]
       }
       grid.data = results
 
