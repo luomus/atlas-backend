@@ -1,4 +1,5 @@
 const access_token = process.env.LAJI_ACCESS_TOKEN
+const url_root = process.env.LAJI_API_URL
 
 class ApiDao {
   axios
@@ -30,7 +31,7 @@ class ApiDao {
       cache: true,
     }
 
-    const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+    const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
 
     return response.data.results
   }
@@ -54,7 +55,7 @@ class ApiDao {
       page: page,
       cache: true,
     }
-    const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+    const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
 
     return response.data
   }
@@ -76,7 +77,7 @@ class ApiDao {
       pageSize: 10000,
       cache: true,
     }
-    const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
+    const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
 
     return response.data.results
   }
@@ -93,7 +94,7 @@ class ApiDao {
         selectedFields: 'scientificName,vernacularName'
       }
     
-      const response = await this.axios.get(`https://laji.fi/api/taxa/${speciesId}`, { params })
+      const response = await this.axios.get(`${url_root}/taxa/${speciesId}`, { params })
       return response.data
     })
   }
@@ -111,7 +112,7 @@ class ApiDao {
         access_token: access_token
       }
   
-      const response = await this.axios.get(`https://laji.fi/api/metadata/ranges/${range}`, { params })
+      const response = await this.axios.get(`${url_root}/metadata/ranges/${range}`, { params })
   
       return response.data  
     })
@@ -125,7 +126,7 @@ class ApiDao {
         access_token: access_token
       }
 
-      const response = await this.axios.get('ttps://laji.fi/api/areas', { params })
+      const response = await this.axios.get('ttps://dev.laji.fi/api/areas', { params })
       const associationLookupTable = {}
         
       response.data.results.forEach(association => {
@@ -150,7 +151,7 @@ class ApiDao {
         pageSize: 1000
       }
       
-      const response = await this.axios.get(`https://laji.fi/api/taxa/MX.37580/species`, { params })
+      const response = await this.axios.get(`${url_root}/taxa/MX.37580/species`, { params })
 
       return response.data.results
     })

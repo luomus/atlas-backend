@@ -39,6 +39,11 @@ spec:
                 secretKeyRef:
                   key: LAJI_ACCESS_TOKEN
                   name: atlas-oracle
+            - name: LAJI_API_URL
+              valueFrom:
+                secretKeyRef:
+                  key: LAJI_API_URL
+                  name: atlas-oracle
           image: luomus/atlas-backend
           name: atlas-backend-dev
           ports:
