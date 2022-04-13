@@ -29,6 +29,7 @@ class ApiDao {
       pageSize: 10000,
       cache: true,
     }
+
     const response = await this.axios.get('https://laji.fi/api/warehouse/query/unit/aggregate', { params })
 
     return response.data.results

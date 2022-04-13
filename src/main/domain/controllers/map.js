@@ -100,7 +100,7 @@ class Map {
       try {
         const { speciesId } = req.params
         let breedingData = await apiDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId)
-        const atlasGrid = await atlasGridDao.getAllGridInfoForAtlas(__latestAtlas)
+        const atlasGrid = await atlasGridDao.getAllForAtlasId(__latestAtlas)
         const species = await apiDao.getSpecies(speciesId)
 
         breedingData = breedingData.map((data) => {
@@ -119,7 +119,6 @@ class Map {
           res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
         }
       } catch (e) {
-        console.log(e)
         res.status(500).send(e.message)
       }
     }

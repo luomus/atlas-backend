@@ -14,9 +14,9 @@ class AtlasGridUpdater {
   }
 
   async update () {
-    const grids = await this.gridDao.getAll()
-    const atlasGrids = await this.atlasGridDao.getAllGridInfoForAtlas(4)
-    
+    const grids = await this.gridDao.getAllAndAtlasGridForAtlas(4)
+    const atlasGrids = await this.atlasGridDao.getAllForAtlasId(4)
+ 
     let speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated()
     const gridClassSumLookup = {}
 
@@ -99,8 +99,6 @@ class AtlasGridUpdater {
     if (updateTable.length) {
       this.atlasGridDao.updateAtlasGridDataMany(updateTable)
     }
-
-    console.log(insertionTable, updateTable)
   }
 }
 

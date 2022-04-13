@@ -34,6 +34,16 @@ class AtlasGridDao {
   getAlasGridInfoForGrid(gridId) {
     return this.#querier.execute(`SELECT * FROM AtlasGrid WHERE grid = ?`, [gridId])
   }
+
+  getAllForAtlasId(atlasId) {
+    return this.#querier.execute(
+      'SELECT id AS "id", ' +
+      'grid AS "grid", ' +
+      'atlas AS "atlas", ' +
+      'atlasClassSum AS "atlasClassSum", ' +
+      'activityCategory AS "activityCategory" ' +
+      'FROM AtlasGrid WHERE atlas = :1', [atlasId])
+  }
   
   addAtlasGridData(atlasGrid) {
     const { atlas, grid, atlasClassSum, activityCategory } = atlasGrid
