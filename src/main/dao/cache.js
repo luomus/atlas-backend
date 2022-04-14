@@ -5,8 +5,8 @@ const cache = new NodeCache({
 })
 
 class Cache {
-  setCache(key, data, ttl) {cache.set(key, data, ttl)}
-  getCache(key) {cache.get(key)}
+  setCache(key, data, ttl) { return cache.set(key, data, ttl)}
+  getCache(key) {return cache.get(key)}
   async wrapper(key, fn, ttl) {
     let data = this.getCache(key)
 
