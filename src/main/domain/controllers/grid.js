@@ -172,6 +172,7 @@ class Grid {
       const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
       const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
       const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
+      const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
 
       for ( const result of birdList ) {
         let speciesName
@@ -204,7 +205,7 @@ class Grid {
       }
       grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
       grid.atlasClassSum = grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
-      grid.speciesCount = birdList.length,
+      grid.speciesCount = gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
       grid.activityCategory = grid.activityCategory !== null ?
       {
         key: grid.activityCategory,

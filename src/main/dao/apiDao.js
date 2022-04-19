@@ -162,11 +162,10 @@ class ApiDao {
       const params = {
         aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
         taxonCounts: true,
-        //atlasClass: 'MY.atlasClassEnumA,MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
+        atlasClass: 'MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
         time: '2022/2025',
         coordinateAccuracyMax: 10000,
         taxonId: 'MX.37580',
-        hasValue: 'unit.atlasClass',
         recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
         pageSize: 10000
       }

@@ -99,6 +99,9 @@ schemas:
           value:
             type: string
             description: Enum value of activityCategry/atlasActivityCategory
+      speciesCount:
+        type: number
+        description: Number of species observed in this grid, not including species whit observations in the lowest atlasClass
 
   AtlasData:
     type: object
@@ -190,6 +193,7 @@ examples:
       activityCaegory:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
+      speciesCount: 4
   grid2:
     value:
       id: http://tun.fi/YKJ.667:338
@@ -208,6 +212,7 @@ examples:
       activityCaegory:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
+      speciesCount: 1
   grid3:
     value:
       id: http://tun.fi/YKJ.667:339
@@ -226,6 +231,7 @@ examples:
       activityCaegory:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
+      speciesCount: 1
   grids:
     value:
       - id: http://tun.fi/YKJ.667:337
@@ -244,6 +250,7 @@ examples:
         activityCaegory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
+        speciesCount: 4
       - id: http://tun.fi/YKJ.667:338
         coordinates: 667:338
         birdAssociationArea:
@@ -260,6 +267,7 @@ examples:
         activityCaegory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
+        speciesCount: 1
       - id: http://tun.fi/YKJ.667:339
         coordinates: 667:339
         birdAssociationArea:
@@ -276,6 +284,7 @@ examples:
         activityCaegory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
+        speciesCount: 1
   atlasDataExample:
     value:
         id: http://tun.fi/YKJ.667:338
@@ -294,6 +303,7 @@ examples:
         activityCaegory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
+        speciesCount: 2
         data:
           - speciesId: MX.27748
             speciesName: kalalokki
