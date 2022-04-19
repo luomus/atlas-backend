@@ -24,12 +24,14 @@ class Grid {
         const data = await gridDao.getAllAndAtlasGridForAtlas()
         const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
-
+        const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
+        
         const toReturn = data.map(grid => {
           return {
             ...grid,
             atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
             atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+            speciesCount: gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
             activityCategory: grid.activityCategory !== null ?
               {
                 key: grid.activityCategory,
@@ -42,7 +44,7 @@ class Grid {
             birdAssociationArea: {
               key: grid.birdAssociationArea,
               value: birdAssociationAreas[grid.birdAssociationArea]
-            }
+            },
           }
         })     
    
@@ -94,6 +96,7 @@ class Grid {
         const data = await gridDao.getByIdAndAtlasGridForAtlas(id, __latestAtlas)
         const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
+        const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
 
         if (!data) {
           return res.status(404).send()
@@ -104,6 +107,7 @@ class Grid {
             ...grid,
             atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
             atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+            speciesCount: gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
             activityCategory: grid.activityCategory !== null ?
               {
                 key: grid.activityCategory,
@@ -200,6 +204,7 @@ class Grid {
       }
       grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
       grid.atlasClassSum = grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+      grid.speciesCount = birdList.length,
       grid.activityCategory = grid.activityCategory !== null ?
       {
         key: grid.activityCategory,

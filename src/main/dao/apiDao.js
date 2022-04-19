@@ -156,6 +156,34 @@ class ApiDao {
       return response.data.results
     })
   }
+
+  async getSpeciesCountForGrids() {
+    return await this.cache.wrapper('SpeciesCountList', async () => {
+      const params = {
+        aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+        taxonCounts: true,
+        //atlasClass: 'MY.atlasClassEnumA,MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
+        time: '2022/2025',
+        coordinateAccuracyMax: 10000,
+        taxonId: 'MX.37580',
+        hasValue: 'unit.atlasClass',
+        recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+        pageSize: 10000
+      }
+  
+      const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
+
+      const toReturn = {}
+      //for counts into lookup object to speed up grid list forming
+      response.data.results.forEach(data => {
+        const grid = `http://tun.fi/YKJ.${data.aggregateBy['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data.aggregateBy['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`
+
+        toReturn[grid] = data.speciesCount
+      })
+
+      return toReturn
+    })
+  }
 }
 
 module.exports = ApiDao
