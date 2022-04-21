@@ -126,7 +126,7 @@ class ApiDao {
         access_token: access_token
       }
 
-      const response = await this.axios.get('ttps://dev.laji.fi/api/areas', { params })
+      const response = await this.axios.get(`${url_root}/areas`, { params })
       const associationLookupTable = {}
         
       response.data.results.forEach(association => {
