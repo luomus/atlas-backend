@@ -190,7 +190,7 @@ examples:
       level5: 319.1
       atlas: 4
       atlasClassSum: 3
-      activityCaegory:
+      activityCategory:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
       speciesCount: 4
@@ -209,7 +209,7 @@ examples:
       level5: 295.6
       atlas: 4
       atlasClassSum: 3
-      activityCaegory:
+      activityCategory:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
       speciesCount: 1
@@ -228,7 +228,7 @@ examples:
       level5: 284.4
       atlas: 4
       atlasClassSum: 3
-      activityCaegory:
+      activityCategory:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
       speciesCount: 1
@@ -247,7 +247,7 @@ examples:
         level5: 319.1
         atlas: 4
         atlasClassSum: 3
-        activityCaegory:
+        activityCategory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
         speciesCount: 4
@@ -264,7 +264,7 @@ examples:
         level5: 295.6
         atlas: 4
         atlasClassSum: 3
-        activityCaegory:
+        activityCategory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
         speciesCount: 1
@@ -281,7 +281,7 @@ examples:
         level5: 284.4
         atlas: 4
         atlasClassSum: 3
-        activityCaegory:
+        activityCategory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
         speciesCount: 1
@@ -300,7 +300,7 @@ examples:
         level5: 295.6
         atlas: 4
         atlasClassSum: 3
-        activityCaegory:
+        activityCategory:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
         speciesCount: 2

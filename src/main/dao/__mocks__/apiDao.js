@@ -1156,6 +1156,38 @@ class ApiDao {
         sv: 'Bekräftad avel'
       }
     }
+    this.#data.activityCategory = {
+      "MY.atlasActivityCategoryEnum0": {
+        en: "No observations",
+        fi: "Ei havaintoja",
+        sv: "Inga observationer"
+      },
+      "MY.atlasActivityCategoryEnum1": {
+        en: "Occasional",
+        fi: "Satunnaishavaintoja",
+        sv: "Enstaka"
+      },
+      "MY.atlasActivityCategoryEnum2": {
+        en: "Fairly-well",
+        fi: "Välttävä",
+        sv: "Ganska bra"
+      },
+      "MY.atlasActivityCategoryEnum3": {
+        fi: "Tyydyttävä",
+        en: "Satisfactory",
+        sv: "Tillfredsställande"
+      },
+      "MY.atlasActivityCategoryEnum4": {
+        fi: "Hyvä",
+        en: "Well",
+        sv: "Väl"
+      },
+      "MY.atlasActivityCategoryEnum5": {
+        fi: "Erinomainen",
+        en: "Thoroughly",
+        sv: "Grundligt"
+      }
+    }
     this.#data.birdAssociationAreas = {
       'ML.1091': 'Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.',
       'ML.1099': 'Pirkanmaan Lintutieteellinen Yhdistys r.y.',
@@ -1204,6 +1236,11 @@ class ApiDao {
         intellectualRights:	'MZ.intellectualRightsCC-BY-4.0'
       }
     ]
+    this.#data.speciesCounts = {
+      "http://tun.fi/YKJ.678:332": 6,
+      "http://tun.fi/YKJ.678:333": 11,
+      "http://tun.fi/YKJ.679:332": 3
+    }
   }
 
   getListOfDistinctBirdsForGridAndActiveAtlas(grid, page) {
@@ -1223,6 +1260,8 @@ class ApiDao {
       return Promise.resolve(this.#data.atlasCode)
     } else if (range === 'MY.atlasClassEnum') {
       return Promise.resolve(this.#data.atlasClass)
+    } else if (range === 'MY.atlasActivityCategoryEnum') {
+      return Promise.resolve(this.#data.activityCategory)
     } else {
       return Promise.reject()
     }
@@ -1234,6 +1273,9 @@ class ApiDao {
 
   getBirdList() {
     return Promise.resolve(this.#data.speciesList)
+  }
+  getSpeciesCountForGrids() {
+    return Promise.resolve(this.#data.speciesCounts)
   }
 }
 

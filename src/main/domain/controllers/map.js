@@ -119,6 +119,7 @@ class Map {
           res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
         }
       } catch (e) {
+        console.error(e)
         res.status(500).send(e.message)
       }
     }

@@ -50,6 +50,7 @@ class Grid {
    
         return res.json(toReturn)
       } catch (e) {
+        console.error(e)
         return res.status(500).send(e.message)
       }
     }
@@ -125,6 +126,7 @@ class Grid {
         })
         return res.json(toReturn[0])
       } catch (e) {
+        console.error(e)
         return res.status(500).send(e.message)
       }
     }
@@ -157,72 +159,73 @@ class Grid {
   getGridStatsActive() {
     return async (req, res) => {
       try {
-      const lang = req.query.language || 'fi'
-      const { gridId } = req.params
-      const grid = (await gridDao.getByIdAndAtlasGridForAtlas(`http://tun.fi/YKJ.${gridId}`, __latestAtlas))?.[0]
-      const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
+        const lang = req.query.language || 'fi'
+        const { gridId } = req.params
+        const grid = (await gridDao.getByIdAndAtlasGridForAtlas(`http://tun.fi/YKJ.${gridId}`, __latestAtlas))?.[0]
+        const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
 
-      if (!grid) {
-        return res.status(404).send()
-      }
-
-      const birdList = await apiDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
-      const results = []
-
-      const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
-      const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
-      const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
-      const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
-
-      for ( const result of birdList ) {
-        let speciesName
-
-        switch (req.query.language) {
-          case 'en':
-            speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameEnglish']
-            break
-          case 'sv':
-            speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameSwedish']
-            break
-          default:
-            speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameFinnish']
+        if (!grid) {
+          return res.status(404).send()
         }
 
-        const atlasCodeKey = urlRemover(result.atlasCodeMax)
-        const atlasClassKey = urlRemover(result.atlasClassMax)
-        results.push({
-          speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
-          speciesName: speciesName,
-          atlasCode: {
-            key: atlasCodeKey,
-            value: atlasCode[atlasCodeKey][lang]
-          },
-          atlasClass: {
-            key: atlasClassKey, 
-            value: atlasClass[atlasClassKey][lang]
-          }
-        })
-      }
-      grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
-      grid.atlasClassSum = grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
-      grid.speciesCount = gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
-      grid.activityCategory = grid.activityCategory !== null ?
-      {
-        key: grid.activityCategory,
-        value: activityCategory[grid.activityCategory][lang]
-      } :
-      {
-        key: 'MY.atlasActivityCategoryEnum0',
-        value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
-      },
-      grid.birdAssociationArea = {
-        key: grid.birdAssociationArea,
-        value: birdAssociationAreas[grid.birdAssociationArea]
-      }
-      grid.data = results
+        const birdList = await apiDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
+        const results = []
 
-      return res.json(grid)
+        const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
+        const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
+        const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
+        const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
+
+        for ( const result of birdList ) {
+          let speciesName
+
+          switch (req.query.language) {
+            case 'en':
+              speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameEnglish']
+              break
+            case 'sv':
+              speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameSwedish']
+              break
+            default:
+              speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameFinnish']
+          }
+
+          const atlasCodeKey = urlRemover(result.atlasCodeMax)
+          const atlasClassKey = urlRemover(result.atlasClassMax)
+          results.push({
+            speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
+            speciesName: speciesName,
+            atlasCode: {
+              key: atlasCodeKey,
+              value: atlasCode[atlasCodeKey][lang]
+            },
+            atlasClass: {
+              key: atlasClassKey, 
+              value: atlasClass[atlasClassKey][lang]
+            }
+          })
+        }
+        grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
+        grid.atlasClassSum = grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+        grid.speciesCount = gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
+        grid.activityCategory = grid.activityCategory !== null ?
+        {
+          key: grid.activityCategory,
+          value: activityCategory[grid.activityCategory][lang]
+        } :
+        {
+          key: 'MY.atlasActivityCategoryEnum0',
+          value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
+        },
+        grid.birdAssociationArea = {
+          key: grid.birdAssociationArea,
+          value: birdAssociationAreas[grid.birdAssociationArea]
+        }
+        grid.data = results
+
+        return res.json(grid)
       } catch (e) {
+        console.error(e)
         return res.status(500).send(e.message)
       }
     }

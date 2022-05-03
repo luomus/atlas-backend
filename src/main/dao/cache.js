@@ -1,12 +1,12 @@
 const NodeCache = require('node-cache')
 const cache = new NodeCache({
-  stdTTL: 60 * 15,
+  stdTTL: 60 * 10,
   checkPeriod: 120
 })
 let isQuerying = {}
 
 cache.on('expired', (key, data) => {
-  cache.set(`${key}_expired`, data, 0)
+  cache.set(`expired_${key}`, data, 0)
 })
 
 class Cache {
@@ -23,7 +23,8 @@ class Cache {
       isQuerying[key] = false
     }
   }
-  setCache(key, data, ttl) { return cache.set(key, data, ttl)}
+  flushAll() {return cache.flushAll()}
+  setCache(key, data, ttl) {return cache.set(key, data, ttl)}
   getCache(key) {return cache.get(key)}
   async wrapper(key, fn, ttl) {
     let data = this.getCache(key)
@@ -32,25 +33,38 @@ class Cache {
       return data
     }
 
-    data = this.getCache(`${key}_expired`)
+    const expired_data = this.getCache(`expired_${key}`)
 
-    if(data !== undefined) {
-      if (!isQuerying[key]) {
-        this.parallelAsyncUpdate(key, fn, ttl)
+    if (expired_data === undefined) {
+      try {
+        data = await fn()
+      } catch(err) {
+        console.error(err)
+        throw err
       }
+  
+      this.setCache(key, data, ttl)
+      return data  
+    }
 
-      return data
+    if (isQuerying[key]) {
+      return expired_data
     }
 
     try {
-      data = await fn()
+      data = await fn(10000)
+      
+      this.setCache(key, data, ttl)
+      return data
     } catch(err) {
       console.error(err)
-      throw err
     }
 
-    this.setCache(key, data, ttl)
-    return data
+    if (!isQuerying[key]) {
+      this.parallelAsyncUpdate(key, fn, ttl)
+    }
+
+    return expired_data
   }
 }
 

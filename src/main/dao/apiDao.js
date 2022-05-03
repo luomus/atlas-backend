@@ -17,6 +17,7 @@ class ApiDao {
    * @returns {Promise}
    */
   async getListOfDistinctBirdsForGridAndActiveAtlas(grid) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
       aggregateBy: 'unit.linkings.taxon.speciesId,unit.linkings.taxon.speciesNameEnglish,unit.linkings.taxon.speciesNameFinnish,unit.linkings.taxon.speciesNameSwedish,unit.linkings.taxon.speciesScientificName,unit.linkings.taxon.speciesTaxonomicOrder',
       orderBy: 'unit.linkings.taxon.speciesTaxonomicOrder',
@@ -30,10 +31,12 @@ class ApiDao {
       pageSize: 10000,
       cache: true,
     }
+    const key = url + JSON.stringify(params)
 
-    const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
-
-    return response.data.results
+    return await this.cache.wrapper(key, async (timout = 0) => { 
+      const response = await this.axios.get(url, { params, timout })
+      return response.data.results
+    })
   }
 
   /**
@@ -42,6 +45,7 @@ class ApiDao {
    * @returns {Promise}
    */
   async getListOfDistinctBirdsForActiveAtlasPaginated(page = 1) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
       aggregateBy: 'unit.linkings.taxon.speciesId,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
@@ -55,9 +59,12 @@ class ApiDao {
       page: page,
       cache: true,
     }
-    const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
+    const key = url + JSON.stringify(params)
 
-    return response.data
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      const response = await this.axios.get(url, { params, timeout })
+      return response.data
+    })
   }
 
   /**
@@ -66,6 +73,7 @@ class ApiDao {
    * @returns {Promise}
    */
   async getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
       aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
@@ -77,9 +85,12 @@ class ApiDao {
       pageSize: 10000,
       cache: true,
     }
-    const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
+    const key = url + JSON.stringify(params)
 
-    return response.data.results
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      const response = await this.axios.get(url, { params, timeout })
+      return response.data.results
+    })
   }
 
   /**
@@ -88,13 +99,25 @@ class ApiDao {
    * @returns {Promise}
    */
   async getSpecies(speciesId) {
-    return await this.cache.wrapper(speciesId, async () => {
-      const params = {
-        lang: 'multi',
-        selectedFields: 'scientificName,vernacularName'
+    const birdList = await this.getBirdList()
+    const species = birdList.find(elem => elem.id === speciesId)
+
+    if (species) {
+      return {
+        vernacularName: species.vernacularName,
+        scientificName: species.scientificName
       }
-    
-      const response = await this.axios.get(`${url_root}/taxa/${speciesId}`, { params })
+    }
+
+    const url = `${url_root}/taxa/${speciesId}`
+    const params = {
+      lang: 'multi',
+      selectedFields: 'scientificName,vernacularName'
+    }
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {    
+      const response = await this.axios.get(url, { params, timeout })
       return response.data
     })
   }
@@ -105,28 +128,32 @@ class ApiDao {
    * @returns {Promise}
    */
   async getEnumRange(range) {
-    return await this.cache.wrapper(range, async () => {
-      const params = {
-        lang: 'multi',
-        asLookupObject: true,
-        access_token: access_token
-      }
-  
-      const response = await this.axios.get(`${url_root}/metadata/ranges/${range}`, { params })
+    const url = `${url_root}/metadata/ranges/${range}`
+    const params = {
+      lang: 'multi',
+      asLookupObject: true,
+      access_token: access_token
+    }
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {  
+      const response = await this.axios.get(url, { params, timeout })
   
       return response.data  
     })
   }
 
   async getBirdAssociationAreas() {
-    return await this.cache.wrapper('MNP.birdAssociationArea', async () => {
-      const params = {
-        type: 'birdAssociationArea',
-        pageSize: 100,
-        access_token: access_token
-      }
+    const url = `${url_root}/areas`
+    const params = {
+      type: 'birdAssociationArea',
+      pageSize: 100,
+      access_token: access_token
+    }
+    const key = url + JSON.stringify(params)
 
-      const response = await this.axios.get(`${url_root}/areas`, { params })
+    return await this.cache.wrapper(key, async (timeout = 0) => {
+      const response = await this.axios.get(url, { params })
       const associationLookupTable = {}
         
       response.data.results.forEach(association => {
@@ -139,38 +166,42 @@ class ApiDao {
 
 
   async getBirdList() {
-    return await this.cache.wrapper('TaxonList', async () => {
-      const params = {
-        taxonRanks: 'MX.species',
-        lang: 'multi',
-        langFallback: true,
-        typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
-        selectedFields: 'id,scientificName,vernacularName',
-        onlyFinnish: true,
-        sortOrder: 'taxonomic',
-        pageSize: 1000
-      }
-      
-      const response = await this.axios.get(`${url_root}/taxa/MX.37580/species`, { params })
+    const url = `${url_root}/taxa/MX.37580/species`
+    const params = {
+      taxonRanks: 'MX.species',
+      lang: 'multi',
+      langFallback: true,
+      typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      selectedFields: 'id,scientificName,vernacularName',
+      onlyFinnish: true,
+      sortOrder: 'taxonomic',
+      pageSize: 1000
+    }
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {
+      const response = await this.axios.get(url, { params, timeout })
 
       return response.data.results
     })
   }
 
   async getSpeciesCountForGrids() {
-    return await this.cache.wrapper('SpeciesCountList', async () => {
-      const params = {
-        aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
-        taxonCounts: true,
-        atlasClass: 'MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
-        time: '2022/2025',
-        coordinateAccuracyMax: 10000,
-        taxonId: 'MX.37580',
-        recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
-        pageSize: 10000
-      }
-  
-      const response = await this.axios.get(`${url_root}/warehouse/query/unit/aggregate`, { params })
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      taxonCounts: true,
+      atlasClass: 'MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
+      time: '2022/2025',
+      coordinateAccuracyMax: 10000,
+      taxonId: 'MX.37580',
+      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+      pageSize: 10000
+    }
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {  
+      const response = await this.axios.get(url, { params, timeout })
 
       const toReturn = {}
       //for counts into lookup object to speed up grid list forming
