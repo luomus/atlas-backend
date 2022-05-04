@@ -21,7 +21,7 @@ class Grid {
     return async (req, res) => {
       try {
         const lang = req.query.language || 'fi'
-        const data = await gridDao.getAllAndAtlasGridForAtlas()
+        const data = await gridDao.getAllAndAtlasGridForAtlas(__latestAtlas)
         const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
@@ -54,6 +54,45 @@ class Grid {
         return res.status(500).send(e.message)
       }
     }
+  }
+
+  getAllForBirdAssociation() {
+    return async (req, res) => {
+      try {
+        const lang = req.query.language || 'fi'
+        const data = await gridDao.getAllAndAtlasGridForAtlasAndAssociation(req.params.birdAssociationId, __latestAtlas)
+        const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
+        const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
+        const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
+        
+        const toReturn = data.map(grid => {
+          return {
+            ...grid,
+            atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
+            atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+            speciesCount: gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
+            activityCategory: grid.activityCategory !== null ?
+              {
+                key: grid.activityCategory,
+                value: activityCategory[grid.activityCategory][lang]
+              } :
+              {
+                key: 'MY.atlasActivityCategoryEnum0',
+                value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
+              },
+            birdAssociationArea: {
+              key: grid.birdAssociationArea,
+              value: birdAssociationAreas[grid.birdAssociationArea]
+            },
+          }
+        })     
+   
+        return res.json(toReturn)
+      } catch (e) {
+        console.error(e)
+        return res.status(500).send(e.message)
+      }
+    } 
   }
 
   /**

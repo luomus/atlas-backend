@@ -31,6 +31,14 @@ parameters:
       type: string
     description: MX code of the species.
 
+  birdAssociationId:
+    in: path
+    name: birdAssociationId
+    required: true
+    schema:
+      type: string
+    description: ML-code for the bird association
+
 schemas:
   Atlas:
     type: object

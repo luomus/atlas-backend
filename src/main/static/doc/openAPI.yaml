@@ -41,7 +41,7 @@ paths:
               format: png or svg
   /grid:
     get:
-      summary: Get a array of all atlas grid squares.
+      summary: Get an array of all atlas grid squares.
       description: "Each square resource represents a square area in the atlas grid."
       tags: 
         - grid
@@ -58,7 +58,26 @@ paths:
               examples:
                 JSON:
                   $ref: 'components.yaml#/examples/grids'
-
+  /grid/birdAssociation/{birdAssociationId}:
+    get:
+      parameters:
+        - $ref: 'components.yaml#/parameters/birdAssociationId'
+      summary: Get an array of atlas grid squares belonging to a bird association
+      tags:
+        - grid
+      responses:
+        200:
+          description: An array of grid resources
+          content: 
+            application/json:
+              schema: 
+                type: array
+                items:
+                  type: object
+                  $ref: 'components.yaml#/schemas/GridData'
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/grids'
   /grid/{gridId}:
     get:
       parameters:
