@@ -64,7 +64,11 @@ class Grid {
         const birdAssociationAreas = await apiDao.getBirdAssociationAreas()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
-        
+
+        if (!data) {
+          return res.status(404).send()
+        }
+
         const toReturn = data.map(grid => {
           return {
             ...grid,
@@ -85,7 +89,7 @@ class Grid {
               value: birdAssociationAreas[grid.birdAssociationArea]
             },
           }
-        })     
+        })
    
         return res.json(toReturn)
       } catch (e) {
