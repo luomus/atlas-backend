@@ -16,6 +16,7 @@ const app = express()
 const gridRouter = require('./domain/routers/gridRouter')
 const mapRouter = require('./domain/routers/mapRouter')
 const taxonRouter = require('./domain/routers/taxonRouter')
+const birdAssociationRouter = require('./domain/routers/birdAssociationRouter')
 const path = __dirname + '/openAPI.yaml'
 
 try {
@@ -35,6 +36,7 @@ app.use(express.static(__rootdir + '/static'))
 app.use('/api/v1/grid', gridRouter)
 app.use('/api/v1/map', mapRouter)
 app.use('/api/v1/taxon/', taxonRouter)
+app.use('/api/v1/birdAssociation', birdAssociationRouter)
 
 cron.schedule('0 0 0 * * *', () => atlasGridUpdater.update())
 module.exports = app

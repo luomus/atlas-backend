@@ -10,8 +10,8 @@ module.exports = {
       const data = await fn()
 
       this.setCache(key, data, ttl)
-    } catch (err) {
-      console.error(err)
+    } catch (e) {
+      console.error(new Date().toString() + ' ' + e.message)
     } finally {
       isQuerying[key] = false
     }
@@ -30,10 +30,10 @@ module.exports = {
       
       this.setCache(key, data, ttl)
       return data
-    } catch(err) {
-      if (err.code !== 'ECONNABORTED') {
-        console.error(err)
-        throw err
+    } catch(e) {
+      if (e.code !== 'ECONNABORTED') {
+        console.error(new Date().toString() + ' ' + e.message)
+        throw e
       }
     }
 
@@ -49,9 +49,9 @@ module.exports = {
 
     try {
       data = await fn()
-    } catch(err) {
-      console.error(err)
-      throw err
+    } catch(e) {
+      console.error(new Date().toString() + ' ' + e.message)
+      throw e
     }
 
     this.setCache(key, data, ttl)

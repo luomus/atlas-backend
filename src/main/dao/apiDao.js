@@ -119,7 +119,7 @@ class ApiDao {
     return await this.cache.wrapper(key, async (timeout = 0) => {    
       const response = await this.axios.get(url, { params, timeout })
       return response.data
-    })
+    }, 3600)
   }
 
   /**
@@ -140,7 +140,7 @@ class ApiDao {
       const response = await this.axios.get(url, { params, timeout })
   
       return response.data  
-    })
+    }, 3600)
   }
 
   async getBirdAssociationAreas() {
@@ -154,6 +154,30 @@ class ApiDao {
 
     return await this.cache.wrapper(key, async (timeout = 0) => {
       const response = await this.axios.get(url, { params })
+
+      const toReturn = []
+      response.data.results.forEach(association => {
+        toReturn.push({
+          key: association.id,
+          value: association.name
+        })
+      })
+
+      return toReturn
+    }, 3600)
+  }
+
+  async getBirdAssociationAreasAsLookup() {
+    const url = `${url_root}/areas`
+    const params = {
+      type: 'birdAssociationArea',
+      pageSize: 100,
+      access_token: access_token
+    }
+    const key = url + JSON.stringify(params) + 'asLookup'
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {
+      const response = await this.axios.get(url, { params })
       const associationLookupTable = {}
         
       response.data.results.forEach(association => {
@@ -161,7 +185,7 @@ class ApiDao {
       })
   
       return associationLookupTable
-    })
+    }, 3600)
   }
 
 

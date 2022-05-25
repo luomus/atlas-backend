@@ -39,6 +39,25 @@ paths:
             image/*:
               type: string
               format: png or svg
+  /birdAssociation:
+    get:
+      summary: Get list of birdAssociation areas
+      description: Bird association area collection containing their ID:s and names, ordered by ID
+      tags:
+        - birdAssociation
+      responses:
+        '200':
+          description: An array of bird association areas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: 'components.yaml#schemas/BirdAssociationArea'
+              examples:
+                JSON: 
+                  $ref: 'components.yaml#/examples/birdAssociations'
   /grid:
     get:
       summary: Get an array of all atlas grid squares.
@@ -71,13 +90,11 @@ paths:
           content: 
             application/json:
               schema: 
-                type: array
-                items:
-                  type: object
-                  $ref: 'components.yaml#/schemas/GridData'
+                type: object
+                $ref: 'components.yaml#/schemas/BirdAssociationGridData'
               examples:
                 JSON:
-                  $ref: 'components.yaml#/examples/grids'
+                  $ref: 'components.yaml#/examples/associationGrids'
   /grid/{gridId}:
     get:
       parameters:

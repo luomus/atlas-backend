@@ -25,8 +25,8 @@ class Querier {
       if (connection)
         try {
           await connection.close()
-        } catch (err) {
-          console.error(err.message)
+        } catch (e) {
+          console.error(new Date().toString() + ' ' + e.message)
         }
     }
 

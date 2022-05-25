@@ -17,8 +17,8 @@ class Cache {
       const data = await fn()
 
       this.setCache(key, data, ttl)
-    } catch (err) {
-      console.error(err)
+    } catch (e) {
+      console.error(new Date().toString() + ' ' + e.message)
     } finally {
       isQuerying[key] = false
     }
@@ -38,9 +38,9 @@ class Cache {
     if (expired_data === undefined) {
       try {
         data = await fn()
-      } catch(err) {
-        console.error(err)
-        throw err
+      } catch(e) {
+        console.error(new Date().toString() + ' ' + e.message)
+        throw e
       }
   
       this.setCache(key, data, ttl)
@@ -56,8 +56,8 @@ class Cache {
       
       this.setCache(key, data, ttl)
       return data
-    } catch(err) {
-      console.error(err)
+    } catch(e) {
+      console.error(new Date().toString() + ' ' + e.message)
     }
 
     if (!isQuerying[key]) {

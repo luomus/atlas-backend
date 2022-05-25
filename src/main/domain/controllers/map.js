@@ -56,8 +56,8 @@ class Map {
         geoJson: JSON.parse(finnishBorders),
         id: 'borders',
       })
-    } catch (err) {
-      console.error(err)
+    } catch (e) {
+      console.error(new Date().toString() + ' ' + e.message)
     }
     return geoJsonArray
   }
@@ -119,7 +119,7 @@ class Map {
           res.send(mapService.getSpeciesMap(breedingData, atlasGrid, species, undefined, 'svg', req.query.scaling, req.query.language, __latestAtlas, req.query.showActivity === "true"))
         }
       } catch (e) {
-        console.error(e)
+        console.error(new Date().toString() + ' ' + e.message)
         res.status(500).send(e.message)
       }
     }

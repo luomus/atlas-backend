@@ -55,7 +55,15 @@ schemas:
       name:
         type: string
         desciption: Name of the atlas
-
+  BirdAssociationArea:
+    type: object
+    properties:
+      key:
+        type: string
+        description: Id key of the bird association
+      value:
+        type: string
+        description:  Name of the bird association
   GridData:
     type: object
     properties:
@@ -66,14 +74,7 @@ schemas:
         type: string
         description: Coordinates of the grid square in NNN:EEE-format
       birdAssociationArea:
-        type: object
-        properties:
-          key:
-            type: string
-            description: Id key of the bird association
-          value:
-            type: string
-            description:  Name of the bird association
+        $ref: '#/schemas/BirdAssociationArea'
       name:
         type: string
         description: Name of the grid square
@@ -110,7 +111,42 @@ schemas:
       speciesCount:
         type: number
         description: Number of species observed in this grid, not including species whit observations in the lowest atlasClass
-
+  ActivityCategoryLookup:
+    type: object
+    properties:
+      name: 
+        type: string
+        description: translation of the activity category enum name
+      squareSum:
+        type: number
+        description: number of squares with this activity category
+      squarePercentage:
+        type: number
+        description: percentage of bird associations squares belonging to this category
+  BirdAssociationGridData:
+    type: object
+    properties:
+      birdAssociationArea:
+        $ref: '#/schemas/BirdAssociationArea'
+      activityCategories:
+        type: object
+        properties:
+          MY.atlasActivityCategoryEnum0: 
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum1:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum2:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum3:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum4:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum5:
+            $ref: '#/schemas/ActivityCategoryLookup'
+      gridSquares:
+        type: array
+        items:
+          $ref: '#/schemas/GridData'
   AtlasData:
     type: object
     properties:
@@ -242,6 +278,96 @@ examples:
       speciesCount: 1
   grids:
     value:
+      - id: http://tun.fi/YKJ.667:337
+        coordinates: 667:337
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
+        name: Espoo, Espoon keskusta
+        level1: 1
+        level2: 110.9
+        level3: 222.8
+        level4: 270.4
+        level5: 319.1
+        atlas: 4
+        atlasClassSum: 3
+        activityCategory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
+        speciesCount: 4
+      - id: http://tun.fi/YKJ.667:338
+        coordinates: 667:338
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
+        name: Helsinki, Helsingin keskusta
+        level1: 1
+        level2: 102.4
+        level3: 205.8
+        level4: 250.2
+        level5: 295.6
+        atlas: 4
+        atlasClassSum: 3
+        activityCategory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
+        speciesCount: 1
+      - id: http://tun.fi/YKJ.667:339
+        coordinates: 667:339
+        birdAssociationArea:
+          key: ML.1091
+          value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
+        name: Helsinki, Santahamina
+        level1: 1
+        level2: 98.4
+        level3: 197.8
+        level4: 240.6
+        level5: 284.4
+        atlas: 4
+        atlasClassSum: 3
+        activityCategory:
+          key: MY.atlasActivityCategoryEnum1
+          value: Satunnaishavaintoja
+        speciesCount: 1
+  birdAssociations:
+    value:
+      - key: ML.1088
+        value: Ålands Fågelskyddsförening r.f.
+      - key: ML.1089,
+        value: Turun Lintutieteellinen Yhdistys r.y.
+      - key: ML.1090,
+        value: Porin Lintutieteellinen Yhdistys r.y.
+  associationGrids:
+    value:
+      birdAssociationArea:
+        key: ML.1091
+        value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.
+      activityCategories:
+        MY.atlasActivityCategoryEnum0: 
+          name: Ei havaintoja
+          squareSum: 65
+          squarePercentage: 86.66666666666667
+        MY.atlasActivityCategoryEnum1:
+          name: Satunnaishavaintoja
+          squareSum: 9
+          squarePercentage": 12
+        MY.atlasActivityCategoryEnum2:
+          name: Välttävä
+          squareSum: 1
+          squarePercentage: 1.3333333333333335
+        MY.atlasActivityCategoryEnum3:
+          name: Tyydyttävä,
+          squareSum: 0,
+          squarePercentage: 0
+        MY.atlasActivityCategoryEnum4:
+          name: Hyvä
+          squareSum: 0,
+          squarePercentage: 0
+        MY.atlasActivityCategoryEnum5:
+          name": Erinomainen
+          squareSum: 0
+          squarePercentage: 0
+      gridSquares:
       - id: http://tun.fi/YKJ.667:337
         coordinates: 667:337
         birdAssociationArea:
