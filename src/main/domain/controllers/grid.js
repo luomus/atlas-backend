@@ -107,7 +107,7 @@ class Grid {
           },
         }
 
-        const gridSqures = data.map(grid => {
+        const gridSquares = data.map(grid => {
           activityCategories[grid.activityCategory !== null ? grid.activityCategory : 'MY.atlasActivityCategoryEnum0'].squareSum += 1
 
           return {
@@ -128,7 +128,7 @@ class Grid {
           }
         })
 
-        const total = gridSqures.length
+        const total = gridSquares.length
 
         Object.keys(activityCategories).forEach(category => {
           activityCategories[category].squarePercentage = total === 0 ? 0.0 : activityCategories[category].squareSum / total * 100
@@ -137,7 +137,7 @@ class Grid {
         return res.json({
           birdAssociationArea,
           activityCategories,
-          gridSqures
+          gridSquares
         })
       } catch (e) {
         console.error(new Date().toString() + ' ' + e.message)
