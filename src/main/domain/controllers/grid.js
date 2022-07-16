@@ -10,6 +10,7 @@ const urlRemover = require('../../helpers/urlRemover')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
+const { getAtlasClassSum, getActivityCategory } = require('../../helpers/activityCategryHelpers')
 const apiDao = new ApiDao(axios, new Cache())
 
 class Grid {
@@ -194,7 +195,7 @@ class Grid {
         }
 
         const toReturn = data.map(grid => {
-          return {
+          const toReturn = {
             ...grid,
             atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
             atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
@@ -213,6 +214,9 @@ class Grid {
               value: birdAssociationAreas[grid.birdAssociationArea]
             }
           }
+
+          delete toReturn.atlasGridId
+          return toReturn
         })
         return res.json(toReturn[0])
       } catch (e) {
@@ -263,8 +267,12 @@ class Grid {
 
         const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
         const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
-        const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
+        const activityCategories = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
+
+        const originaAtlasClassSum = grid.atlasClassSum
+        const atlasClassSum = getAtlasClassSum(birdList)
+        const activityCategory = getActivityCategory(atlasClassSum, grid)
 
         for ( const result of birdList ) {
           let speciesName
@@ -282,6 +290,7 @@ class Grid {
 
           const atlasCodeKey = urlRemover(result.atlasCodeMax)
           const atlasClassKey = urlRemover(result.atlasClassMax)
+
           results.push({
             speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
             speciesName: speciesName,
@@ -296,16 +305,11 @@ class Grid {
           })
         }
         grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
-        grid.atlasClassSum = grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+        grid.atlasClassSum = atlasClassSum,
         grid.speciesCount = gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,
-        grid.activityCategory = grid.activityCategory !== null ?
-        {
-          key: grid.activityCategory,
-          value: activityCategory[grid.activityCategory][lang]
-        } :
-        {
-          key: 'MY.atlasActivityCategoryEnum0',
-          value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
+        grid.activityCategory = {
+          key: activityCategory,
+          value: activityCategories[activityCategory][lang]
         },
         grid.birdAssociationArea = {
           key: grid.birdAssociationArea,
@@ -313,7 +317,29 @@ class Grid {
         }
         grid.data = results
 
-        return res.json(grid)
+        const { atlasGridId, ...gridToReturn } = grid
+
+        res.json(gridToReturn)
+
+        //update grid atlasClassSum nad activityCategry in db if necessary
+        try {
+          if (atlasGridId && atlasClassSum !== originaAtlasClassSum) {
+            await atlasGridDao.updateAtlasGridData({
+              id: grid.atlasGridId,
+              atlasClassSum,
+              activityCategory
+            })
+          } else if (!atlasGridId) {
+            await atlasGridDao.addAtlasGridData({
+              atlas: 4,
+              grid: grid.id,
+              atlasClassSum,
+              activityCategory
+            })
+          }
+        } catch (e) {
+          console.error(new Date().toString() + ' ' + e.message)
+        }
       } catch (e) {
         console.error(new Date().toString() + ' ' + e.message)
         return res.status(500).send(e.message)
