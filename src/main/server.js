@@ -38,5 +38,5 @@ app.use('/api/v1/map', mapRouter)
 app.use('/api/v1/taxon/', taxonRouter)
 app.use('/api/v1/birdAssociation', birdAssociationRouter)
 
-cron.schedule('0 0 3 * * *', () => atlasGridUpdater.update())
+cron.schedule('0 0 0 * * *', () => atlasGridUpdater.update())
 module.exports = app
