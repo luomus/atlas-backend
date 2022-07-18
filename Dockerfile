@@ -16,9 +16,8 @@ RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantcli
     ldconfig
 
 COPY . .
-RUN npm install -g pm2
 RUN npm install --production --silent
 RUN chgrp -R 0 /opt/app/ && chmod -R g+rwX /opt/app/
 EXPOSE 3000
 USER node:root
-CMD ["pm2-runtime", "/opt/app/src/main/start.js"]
+CMD ["node", "/opt/app/src/main/start.js"]
