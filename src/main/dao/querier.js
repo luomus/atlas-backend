@@ -19,7 +19,7 @@ class Querier {
       connection = await oracledb.getConnection(config)
       result = await connection[method](query, params, { outFormat: oracledb.OBJECT, autoCommit: true })
     } catch (err) {
-      console.log(err)
+      console.error(new Date().toString() + ' ' + err)
       throw new Error(err.message)
     } finally {
       if (connection)
