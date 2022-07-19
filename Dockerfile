@@ -17,7 +17,11 @@ RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantcli
 
 COPY . .
 RUN npm install --production --silent
+RUN npm install -g pm2
+
+ENV PM2_HOME /opt/app/.pm2
+
 RUN chgrp -R 0 /opt/app/ && chmod -R g+rwX /opt/app/
 EXPOSE 3000
 USER node:root
-CMD ["node", "/opt/app/src/main/start.js"]
+CMD ["pm2-runtime", "/opt/app/src/main/start.js"]
