@@ -157,6 +157,7 @@ class GridDao {
         'SELECT Grid.id AS "id", ' +
         'Grid.coordinates AS "coordinates", ' +
         'AtlasGrid.atlas AS "atlas", ' +
+        'AtlasGrid.id AS "atlasGridId", ' +
         'GRid.name AS "name", ' +  
         'Grid.level1 AS "level1", ' +
         'Grid.level2 AS "level2", ' +
