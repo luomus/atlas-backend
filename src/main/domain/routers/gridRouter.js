@@ -3,7 +3,7 @@ const gridRouter = require('express').Router()
 const Grid = require('../controllers/grid')
 const grid = new Grid()
 
-gridRouter.get('/', grid.getAll() )
+gridRouter.get('/', grid.getAll())
 gridRouter.get('/birdAssociation/:birdAssociationId', grid.getAllForBirdAssociation())
 gridRouter.get('/:gridId', grid.getGridInfo())
 gridRouter.get('/:gridId/atlas', grid.getGridStatsActive())
