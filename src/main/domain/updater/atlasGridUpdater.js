@@ -72,11 +72,11 @@ class AtlasGridUpdater {
     }
 
     if (insertionTable.length) {
-      this.atlasGridDao.addAtlasGridDataMany(insertionTable)
+      await this.atlasGridDao.addAtlasGridDataMany(insertionTable)
     }
 
     if (updateTable.length) {
-      this.atlasGridDao.updateAtlasGridDataMany(updateTable)
+      await this.atlasGridDao.updateAtlasGridDataMany(updateTable)
     }
   }
 }

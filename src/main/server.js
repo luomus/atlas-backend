@@ -8,6 +8,8 @@ const YAML = require('yamljs')
 const cron = require('node-cron')
 const AtlasGridUpdater = require('./domain/updater/atlasGridUpdater')
 const atlasGridUpdater = new AtlasGridUpdater()
+const AssociationStatsUpdater = require('./domain/updater/associationStatsUpdater')
+const associationStatsUpdater = new AssociationStatsUpdater()
 const app = express()
 // global.db = new sqlite3.Database('./birds.db', (err) => {
 //   if (err) console.log('Could not connect to database', err)
@@ -40,5 +42,9 @@ app.use('/api/v1/taxon/', taxonRouter)
 app.use('/api/v1/birdAssociation', birdAssociationRouter)
 app.use('/api/v1/health', healthRouter)
 
-cron.schedule('0 0 3 * * *', () => atlasGridUpdater.update())
+cron.schedule('0 0 3 * * *', async () => {
+  await atlasGridUpdater.update()
+  await associationStatsUpdater.update()
+})
+
 module.exports = app
