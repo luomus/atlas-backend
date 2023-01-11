@@ -49,7 +49,7 @@ async function getAssociationStatistics(lang, gridDao, apiDao) {
 
   stats['totals'] = {
     targetPercentage: 0.0,
-    totalSqures: 0,
+    totalSquares: 0,
     activityCategories: {
       'MY.atlasActivityCategoryEnum0': {
         name: activityCategory['MY.atlasActivityCategoryEnum0'][lang],

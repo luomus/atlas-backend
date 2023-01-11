@@ -147,6 +147,30 @@ schemas:
         type: array
         items:
           $ref: '#/schemas/GridData'
+  BirdAssociationStats:
+    type: object
+    properties:
+      targetPercentage:
+        type: number
+      totalSquares:
+        type: number
+      birdAssociationArea:
+        $ref: '#/schemas/BirdAssociationArea'
+      activityCategories:
+        type: object
+        properties:
+          MY.atlasActivityCategoryEnum0: 
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum1:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum2:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum3:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum4:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum5:
+            $ref: '#/schemas/ActivityCategoryLookup'
   AtlasData:
     type: object
     properties:
