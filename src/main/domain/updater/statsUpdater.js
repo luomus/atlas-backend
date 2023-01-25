@@ -3,9 +3,9 @@ const GridDao = require('../../dao/gridDao')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
-const { updateCachedAssociationStatistics } = require('../../helpers/associationStatisticsHelpers')
+const { updateCachedStatistics } = require('../../helpers/statisticsHelpers')
 
-class AtlasGridUpdater {
+class StatsUpdater {
   constructor () {
     this.querier = new Querier()
     this.gridDao = new GridDao(this.querier)
@@ -14,8 +14,8 @@ class AtlasGridUpdater {
   }
 
   async update() {
-    await updateCachedAssociationStatistics(this.gridDao, this.apiDao, this.cache)
+    await updateCachedStatistics(this.gridDao, this.apiDao, this.cache)
   }
 }
 
-module.exports = AtlasGridUpdater
+module.exports = StatsUpdater

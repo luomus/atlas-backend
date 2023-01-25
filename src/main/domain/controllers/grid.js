@@ -9,9 +9,11 @@ const atlasGridSpeciesDataDao = new AtlasGridSpeciesDataDao(querier)
 const urlRemover = require('../../helpers/urlRemover')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
+const cache = new Cache()
 const ApiDao = require('../../dao/apiDao')
 const { getAtlasClassSum, getActivityCategory } = require('../../helpers/activityCategryHelpers')
 const apiDao = new ApiDao(axios, new Cache())
+const { getCachedFinlandStatistics } = require('../../helpers/statisticsHelpers') 
 
 class Grid {
   /**
@@ -26,8 +28,9 @@ class Grid {
         const birdAssociationAreas = await apiDao.getBirdAssociationAreasAsLookup()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
-        
-        const toReturn = data.map(grid => {
+        const gridStats = await getCachedFinlandStatistics(lang, gridDao, apiDao, cache)
+
+        const grids = data.map(grid => {
           return {
             ...grid,
             atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
@@ -47,9 +50,12 @@ class Grid {
               value: birdAssociationAreas[grid.birdAssociationArea]
             },
           }
-        })     
+        })
    
-        return res.json(toReturn)
+        return res.json({
+          stats: gridStats,
+          grid: grids
+        })
       } catch (e) {
         console.error(new Date().toString() + ' ' + e.message)
         return res.status(500).send(e.message)

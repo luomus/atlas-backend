@@ -7,7 +7,8 @@ const Querier = require('../../dao/querier')
 const querier = new Querier()
 const GridDao = require('../../dao/gridDao')
 const gridDao = new GridDao(querier)
-const { getCachedAssociationStatistics } = require('../../helpers/associationStatisticsHelpers') 
+const { getCachedAssociationStatistics } = require('../../helpers/statisticsHelpers') 
+
 class BirdAssociation {
   /**
    * Returns all area points of the grid.
