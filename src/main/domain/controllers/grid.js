@@ -13,7 +13,7 @@ const cache = new Cache()
 const ApiDao = require('../../dao/apiDao')
 const { getAtlasClassSum, getActivityCategory } = require('../../helpers/activityCategryHelpers')
 const apiDao = new ApiDao(axios, new Cache())
-const { getCachedFinlandStatistics } = require('../../helpers/statisticsHelpers') 
+const { getCachedFinlandStatistics, getCachedAssociationStatistics } = require('../../helpers/statisticsHelpers')
 
 class Grid {
   /**
@@ -53,8 +53,8 @@ class Grid {
         })
    
         return res.json({
-          stats: gridStats,
-          grid: grids
+          ...gridStats,
+          gridSquares: grids
         })
       } catch (e) {
         console.error(new Date().toString() + ' ' + e.message)
@@ -71,52 +71,15 @@ class Grid {
         const birdAssociationAreas = await apiDao.getBirdAssociationAreasAsLookup()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
+        const gridStats = await getCachedAssociationStatistics(req.params.birdAssociationId, lang, gridDao, apiDao, cache)
 
         if (!data) {
           return res.status(404).send()
         }
 
-        const birdAssociationArea = {
-          key: req.params.birdAssociationId,
-          value: birdAssociationAreas[req.params.birdAssociationId]
-        }
-
-        const activityCategories = {
-          'MY.atlasActivityCategoryEnum0': {
-            name: activityCategory['MY.atlasActivityCategoryEnum0'][lang],
-            squareSum: 0,
-            squarePercentage: 0.0 
-          },
-          'MY.atlasActivityCategoryEnum1': {
-            name: activityCategory['MY.atlasActivityCategoryEnum1'][lang],
-            squareSum: 0,
-            squarePercentage: 0.0 
-          },
-          'MY.atlasActivityCategoryEnum2':{
-            name: activityCategory['MY.atlasActivityCategoryEnum2'][lang],
-            squareSum: 0,
-            squarePercentage: 0.0 
-          },
-          'MY.atlasActivityCategoryEnum3':{
-            name: activityCategory['MY.atlasActivityCategoryEnum3'][lang],
-            squareSum: 0,
-            squarePercentage: 0.0 
-          },
-          'MY.atlasActivityCategoryEnum4':{
-            name: activityCategory['MY.atlasActivityCategoryEnum4'][lang],
-            squareSum: 0,
-            squarePercentage: 0.0 
-          },
-          'MY.atlasActivityCategoryEnum5':{
-            name: activityCategory['MY.atlasActivityCategoryEnum5'][lang],
-            squareSum: 0,
-            squarePercentage: 0.0 
-          },
-        }
+        const birdAssociationArea = gridStats.birdAssociationArea
 
         const gridSquares = data.map(grid => {
-          activityCategories[grid.activityCategory !== null ? grid.activityCategory : 'MY.atlasActivityCategoryEnum0'].squareSum += 1
-
           return {
             ...grid,
             atlas: grid.atlas !== null ? grid.atlas : __latestAtlas,
@@ -135,15 +98,8 @@ class Grid {
           }
         })
 
-        const total = gridSquares.length
-
-        Object.keys(activityCategories).forEach(category => {
-          activityCategories[category].squarePercentage = total === 0 ? 0.0 : activityCategories[category].squareSum / total * 100
-        })
-   
         return res.json({
-          birdAssociationArea,
-          activityCategories,
+          ...gridStats,
           gridSquares
         })
       } catch (e) {

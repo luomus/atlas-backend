@@ -157,10 +157,12 @@ class ApiDao {
 
       const toReturn = []
       response.data.results.forEach(association => {
-        toReturn.push({
-          key: association.id,
-          value: association.name
-        })
+        if (association.id !== 'ML.1127') {
+          toReturn.push({
+            key: association.id,
+            value: association.name
+          })
+        }
       })
 
       return toReturn
@@ -181,7 +183,7 @@ class ApiDao {
       const associationLookupTable = {}
         
       response.data.results.forEach(association => {
-        associationLookupTable[association.id] = association.name
+        if (association.id !== 'ML.1127') associationLookupTable[association.id] = association.name
       })
   
       return associationLookupTable

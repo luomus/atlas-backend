@@ -126,6 +126,12 @@ schemas:
   BirdAssociationGridData:
     type: object
     properties:
+      targetPercentage:
+        type: number
+      targetSquare:
+        type: number
+      totalSquares:
+        type: number
       birdAssociationArea:
         $ref: '#/schemas/BirdAssociationArea'
       activityCategories:
@@ -147,15 +153,52 @@ schemas:
         type: array
         items:
           $ref: '#/schemas/GridData'
+  LaplandStats:
+    type: object
+    properties:
+      targetMet:
+        type: boolean
+      targetSquares:
+        type: number
+      totalSquares:
+        type: number
+      grid:
+        type: string
   BirdAssociationStats:
     type: object
     properties:
       targetPercentage:
         type: number
+      targetSquares:
+        type:number
       totalSquares:
         type: number
       birdAssociationArea:
         $ref: '#/schemas/BirdAssociationArea'
+      activityCategories:
+        type: object
+        properties:
+          MY.atlasActivityCategoryEnum0: 
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum1:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum2:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum3:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum4:
+            $ref: '#/schemas/ActivityCategoryLookup'
+          MY.atlasActivityCategoryEnum5:
+            $ref: '#/schemas/ActivityCategoryLookup'
+  FinlandStats:
+    type: object
+    properties:
+      targetPercentage:
+        type: number
+      targetSquares:
+        type: number
+      totalSquares:
+        type: number
       activityCategories:
         type: object
         properties:
@@ -300,8 +343,49 @@ examples:
         key: MY.atlasActivityCategoryEnum1
         value: Satunnaishavaintoja
       speciesCount: 1
+  laplandStats:
+    value:
+      - targetMet: false
+        targetPercentage: 9.0909
+        targetSquares: 2
+        totalSquares: 22
+        grid: '740:335-744:339'
+      - targetMet: true
+        targetPercentage: 80
+        targetSquares: 20
+        totalSquares: 25
+        grid: '740:340-744:344'
   grids:
     value:
+      totalSquares: 3000
+      targetSquares: 0
+      targetPercentage: 0.0
+      activityCategories:
+        MY.atlasActivityCategoryEnum0: 
+          name: Ei havaintoja
+          squareSum: 65
+          squarePercentage: 86.66666666666667
+        MY.atlasActivityCategoryEnum1:
+          name: Satunnaishavaintoja
+          squareSum: 9
+          squarePercentage": 12
+        MY.atlasActivityCategoryEnum2:
+          name: Välttävä
+          squareSum: 1
+          squarePercentage: 1.3333333333333335
+        MY.atlasActivityCategoryEnum3:
+          name: Tyydyttävä,
+          squareSum: 0,
+          squarePercentage: 0
+        MY.atlasActivityCategoryEnum4:
+          name: Hyvä
+          squareSum: 0,
+          squarePercentage: 0
+        MY.atlasActivityCategoryEnum5:
+          name": Erinomainen
+          squareSum: 0
+          squarePercentage: 0
+      gridSquares:
       - id: http://tun.fi/YKJ.667:337
         coordinates: 667:337
         birdAssociationArea:
@@ -363,6 +447,9 @@ examples:
         value: Porin Lintutieteellinen Yhdistys r.y.
   associationGrids:
     value:
+      targetPercentage: 0.0
+      targetSquares: 0
+      totalSquares: 3
       birdAssociationArea:
         key: ML.1091
         value: Helsingin Seudun Lintutieteellinen Yhdistys - Tringa r.y.

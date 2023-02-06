@@ -60,13 +60,13 @@ paths:
                   $ref: 'components.yaml#/examples/birdAssociations'
   /birdAssociation/stats:
     get:
-      summary: Get stats for all bird association areas
+      summary: Get stats for all bird association areas, excluding norther Lapland
       description: Collection of bird association areas and their grid statistics.
       tags:
         - birdAssociation
       responses:
         '200':
-          description: An array of bird association areas and their grid stats, and a object with values for whole Finland excluding Lapland
+          description: An array of bird association areas and their grid stats for whole Finland excluding northern Lapland.
           content:
             application/json:
               schema:
@@ -74,22 +74,59 @@ paths:
                 items:
                   type: object
                   $ref: components.yaml#schemas/BirdAssociationStats
-  /grid:
+  /birdAssociation/stats/lappi:
     get:
-      summary: Get an array of all atlas grid squares.
-      description: "Each square resource represents a square area in the atlas grid."
-      tags: 
-        - grid
+      summary: Get stats for the 44 50km ykj grid squares for lapland higher that 740 ykj latitude
+      tags:
+        - birdAssociation
       responses:
-        200:
-          description: An array of grid resources.
+        '200':
+          description: An array of 50km grid squares for northern Lapland.
           content:
             application/json:
               schema:
                 type: array
                 items:
                   type: object
-                  $ref: 'components.yaml#/schemas/GridData'
+                  $ref: components.yaml#schemas/LaplandStats
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/laplandStats'
+  /birdAssociation/{birdAssociationId}/stats:
+    get:
+      parameters:
+        - $ref: 'components.yaml#/parameters/birdAssociationId'
+      summary: Get bird association and statistics of its grids.
+      tags:
+        - birdAssociation
+      responses:
+        200:
+          description: An object of bird association and its stats
+          content: 
+            application/json:
+              schema: 
+                type: object
+                $ref: 'components.yaml#/schemas/BirdAssociationStats'
+  /grid:
+    get:
+      summary: Get an object of grid stats (below ykj 740) and an array of all atlas grid squares.
+      tags: 
+        - grid
+      responses:
+        200:
+          description: An array of grid resources and statistics of the grids.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: 'components.yaml#/schemas/FinlandStats'
+                  - type: object
+                    properties:
+                      gridSquares:
+                        type: array
+                        items:
+                          type: object
+                          $ref: 'components.yaml#/schemas/GridData'
               examples:
                 JSON:
                   $ref: 'components.yaml#/examples/grids'
@@ -97,7 +134,7 @@ paths:
     get:
       parameters:
         - $ref: 'components.yaml#/parameters/birdAssociationId'
-      summary: Get an array of atlas grid squares belonging to a bird association
+      summary: Get an array of atlas grid squares belonging to a bird association and statistics of the grids.
       tags:
         - grid
       responses:

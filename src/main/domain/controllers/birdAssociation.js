@@ -7,7 +7,7 @@ const Querier = require('../../dao/querier')
 const querier = new Querier()
 const GridDao = require('../../dao/gridDao')
 const gridDao = new GridDao(querier)
-const { getCachedAssociationStatistics } = require('../../helpers/statisticsHelpers') 
+const { getCachedAssociationStatistics, getCachedAllAssociationStatistics, getCachedLaplandStatistics } = require('../../helpers/statisticsHelpers')
 
 class BirdAssociation {
   /**
@@ -31,7 +31,7 @@ class BirdAssociation {
     return async (req, res) => {
       const language = req.query.language || 'fi'
       try {
-        const stats =  await getCachedAssociationStatistics(language, gridDao, apiDao, cache)
+        const stats =  await getCachedAllAssociationStatistics(language, gridDao, apiDao, cache)
         
         return res.json(stats)
       } catch (e) {
@@ -40,6 +40,47 @@ class BirdAssociation {
         if (e.code === 404) {
           return res.status(404).send(e.message)
         }
+        return res.status(500).send(e.message)
+      }
+    }
+  }
+
+  getStatsLappi() {
+    return async (req, res) => {
+      const language = req.query.language || 'fi'
+      try {
+        const stats = await getCachedLaplandStatistics(language, gridDao, apiDao, cache)
+
+        return res.json(stats)
+      } catch (e) {
+        console.error(new Date().toString() + ' ' + e.message)
+
+        if (e.code === 404) {
+          return res.status(404).send(e.message)
+        }
+
+        return res.status(500).send(e.message)
+      }
+    } 
+  }
+
+  getStatsForId() {
+    return async (req, res) => {
+      const language = req.query.language || 'fi'
+      const birdAssociationId = req.params.birdAssociationId
+
+      const stats = await getCachedAssociationStatistics(birdAssociationId, language, gridDao, apiDao, cache)
+
+      res.json(stats)
+      try {
+
+      } catch (e) {
+        console.error(new Date().toString() + ' ' + e.message)
+
+        if (e.code === 404) {
+          return res.status(404).send(e.message)
+        }
+
         return res.status(500).send(e.message)
       }
     }
