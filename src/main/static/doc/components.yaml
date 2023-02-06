@@ -170,7 +170,7 @@ schemas:
       targetPercentage:
         type: number
       targetSquares:
-        type:number
+        type: number
       totalSquares:
         type: number
       birdAssociationArea:
