@@ -164,6 +164,36 @@ schemas:
         type: number
       grid:
         type: string
+      latMin:
+        type: number
+      lonMin:
+        type: number
+      latMax:
+        type: number
+      lonMax:
+        type: number
+      grids:
+        type: array
+        items:
+          type: object
+          properties:
+            id: 
+              type: string
+            name: 
+              type: string
+            coordinates:
+              type: string
+            atlasClassSum: 
+              type: number
+            activityCategory:
+              type: object
+              properties:
+                key:
+                  type: string
+                  description: Enum key of activityCategry/atlasActivityCategory
+                value:
+                  type: string
+                  description: Enum value of activityCategry/atlasActivityCategory
   BirdAssociationStats:
     type: object
     properties:
@@ -346,15 +376,29 @@ examples:
   laplandStats:
     value:
       - targetMet: false
-        targetPercentage: 9.0909
-        targetSquares: 2
-        totalSquares: 22
-        grid: '740:335-744:339'
-      - targetMet: true
-        targetPercentage: 80
-        targetSquares: 20
-        totalSquares: 25
-        grid: '740:340-744:344'
+        targetPercentage: 50.0
+        targetSquares: 1
+        totalSquares: 2
+        grid: 740:335-744:339
+        latMin: 740
+        lonMin: 335
+        latMax: 744
+        lonMax: 339
+        grids:
+          - id: http://tun.fi/YKJ.743:335
+            name: Kolari, Kallioniemi
+            coordinates: 743:335
+            atlasClassSum: 5
+            activityCategory:
+              key: MY.atlasActivityCategoryEnum1
+              value: Satunnaishavaintoja
+          - id: http://tun.fi/YKJ.741:336
+            name: Pello, Pellon kk
+            coordinates: 741:336
+            atlasClassSum: 194
+            activityCategory:
+              key: MY.atlasActivityCategoryEnum5
+              value: Erinomainen
   grids:
     value:
       totalSquares: 3000

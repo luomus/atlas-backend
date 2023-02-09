@@ -48,7 +48,7 @@ async function getCachedAllAssociationStatistics(language, gridDao, apiDao, cach
 }
 
 async function getCachedLaplandStatistics(language, gridDao, apiDao, cache) {
-  const lappiStats = await getCachedStatistics(cacheKey50km, gridDao, apiDao, cache)
+  const lappiStats = (await getCachedStatistics(cacheKey50km, gridDao, apiDao, cache))[language]
 
   return lappiStats
 }
@@ -135,7 +135,7 @@ async function getStatistics(gridDao, apiDao) {
   const sumStatsAll = lodash.cloneDeep(statsBlock)
   const allStats = {}
   const lappiSouthStats = lodash.cloneDeep(statsBlock)
-  const lappiTarget = {}
+  let lappiTarget = {}
   const toReturn = {
     lappiSouthStats: {},
     sumStatsAll: {},
@@ -187,7 +187,18 @@ async function getStatistics(gridDao, apiDao) {
 
 
       if (!lappiTarget[grid50km]) {
-        lappiTarget[grid50km] = { targetMet: false, targetPercentage: 0.0, targetSquares: 0, totalSquares: 0, grid: grid50km }
+        lappiTarget[grid50km] = {
+          targetMet: false,
+          targetPercentage: 0.0,
+          targetSquares: 0,
+          totalSquares: 0,
+          grid: grid50km,
+          latMin: northing,
+          lonMin: easting,
+          latMax: northing + 4,
+          lonMax: easting + 4,
+          grids: []
+        }
       }
 
       if (fulfilledCategories.includes(grid.activityCategory)) {
@@ -195,6 +206,21 @@ async function getStatistics(gridDao, apiDao) {
       }
 
       lappiTarget[grid50km].totalSquares += 1
+      lappiTarget[grid50km].grids.push({
+        id: grid.id,
+        name: grid.name,
+        coordinates: grid.coordinates,
+        atlasClassSum: grid.atlasClassSum !== null ? grid.atlasClassSum : 0,
+        activityCategory: grid.activityCategory !== null ?
+          {
+            key: grid.activityCategory,
+            value: grid.activityCategory + '_toReplace'
+          } :
+          {
+            key: 'MY.atlasActivityCategoryEnum0',
+            value: 'MY.atlasActivityCategoryEnum0_toReplace'
+          },
+      })
     }
   })
 
@@ -262,6 +288,16 @@ async function getStatistics(gridDao, apiDao) {
     }
   })
 
+  lappiTarget = Object.values(lappiTarget).sort((a,b) => {
+    if (a.grid < b.grid) {
+      return -1
+    } else if (a.grid > b.grid) {
+      return 1
+    } else {
+      return 0
+    }
+  })
+  
   langs.forEach(lang => {
     const categories = Object.keys(activityCategory)
 
@@ -298,16 +334,13 @@ async function getStatistics(gridDao, apiDao) {
         return activityCategory[value][lang]
       }
     }))
-  })
 
-  toReturn['lappi50kmStats'] = Object.values(lappiTarget).sort((a,b) => {
-    if (a.grid < b.grid) {
-      return -1
-    } else if (a.grid > b.grid) {
-      return 1
-    } else {
-      return 0
-    }
+
+    toReturn['lappi50kmStats'][lang] = lodash.cloneDeepWith(lappiTarget, (value) => {
+      if (typeof value === 'string' && value.includes('_toReplace')) {
+        return activityCategory[value.replace('_toReplace', '')][lang]
+      }
+    })
   })
   
   return toReturn
