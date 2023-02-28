@@ -13,7 +13,7 @@ const fulfilledCategories = [
   'MY.atlasActivityCategoryEnum3'
 ]
 const sumSouthTranslations = {
-  'fi': 'Suomi PL. Pohjois-Lappi',
+  'fi': 'Suomi paitsi Pohjois-Lappi',
   'en': 'Finland excluding northern Lapland',
   'sv': 'Finland utom norra Lappland'
 }
