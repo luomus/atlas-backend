@@ -5,5 +5,5 @@ const taxon = new Taxon()
 const taxonRouter = require('express').Router()
 taxonRouter.get('/', taxon.getTaxonList())
 taxonRouter.get('/:taxonId', taxon.getSpeciesFromList())
-taxonRouter.get('/completeList/:taxonSet', taxon.getCompleteList())
+taxonRouter.get('/biomon/:taxonSet/:grid', taxon.getCompleteList())
 module.exports = taxonRouter

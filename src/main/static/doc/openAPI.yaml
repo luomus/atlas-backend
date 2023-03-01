@@ -205,9 +205,9 @@ paths:
                 items:
                   type: object
                   $ref: 'components.yaml#/schemas/Taxon'
-                examples:
-                  JSON:
-                    $ref: 'components.yaml#/examples/taxa'
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/taxa'
   /taxon/{taxonId}:
     get:
       parameters:
@@ -226,3 +226,25 @@ paths:
               examples:
                 JSON:
                   $ref: 'components.yaml#/examples/taxon'
+  /taxon/biomon/{taxonSetId}/{grid}:
+    get:
+      parameters:
+        - $ref: "components.yaml#/parameters/taxonSetId"
+        - $ref: "components.yaml#/parameters/grid100km"
+      summary: Get a complete taxon list for specific taxonSet and grid.
+      description: Get a complete taxon list for specific taxonSet and grid, order calculated by number of complete list observations. Dependent on the date of query.
+      tags:
+        - taxon
+      responses:
+        '200':
+          description: taxon list ordered primarily by complete list observation count, secondarily by taxonomic count.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: 'components.yaml#/schemas/Taxon'
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/taxa'

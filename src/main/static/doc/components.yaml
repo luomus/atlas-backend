@@ -30,7 +30,20 @@ parameters:
     schema:
       type: string
     description: MX code of the species.
-
+  taxonSetId:
+    in: path
+    name: taxonSetId
+    required: true
+    schema:
+      type: string
+    description: MX code of the taxon set
+  grid100km:
+    in: path
+    name: grid
+    required: true
+    schema:
+      type: string
+    description: The coordinates for 100km ykj-grid square, in form of NN:EE
   birdAssociationId:
     in: path
     name: birdAssociationId
@@ -299,6 +312,9 @@ schemas:
           sv:
             type: string
             description: Species vernacular name in Swedish
+      taxonomicOrder:
+        type: number
+        description: Species taxonomic order number
       scientificName:
         type: string
         description: Scientific name of the species
@@ -617,6 +633,7 @@ examples:
           sv:	knölsvan
           fi:	kyhmyjoutsen
           en:	Mute Swan
+        taxonomicOrder: 1
         scientificName:	Cygnus olor
         intellectualRights:	MZ.intellectualRightsCC-BY-4.0
       - id:	MX.26280
@@ -624,6 +641,7 @@ examples:
           fi: laulujoutsen
           sv:	sångsvan
           en:	Whooper Swan
+        taxonomicOrder: 2
         scientificName:	Cygnus cygnus
         intellectualRights:	MZ.intellectualRightsCC-BY-4.0
       - id:	MX.26287
@@ -631,6 +649,7 @@ examples:
           fi: metsähanhi
           sv:	sädgås
           en: Bean Goose
+        taxonomicOrder: 9
         scientificName:	Anser fabalis
         intellectualRights:	MZ.intellectualRightsCC-BY-4.0
       - id:	MX.26290
@@ -638,6 +657,7 @@ examples:
           fi:	kiljuhanhi
           sv: fjällgås
           en:	Lesser White-fronted Goose
+        taxonomicOrder: 3
         scientificName:	Anser erythropus
         intellectualRights: MZ.intellectualRightsCC-BY-4.0
   taxon:
@@ -647,6 +667,7 @@ examples:
         fi:	kyhmyjoutsen
         sv:	knölsvan
         en:	Mute Swan
+      taxonomicOrder: 1
       scientificName:	Cygnus olor
       intellectualRights:	MZ.intellectualRightsCC-BY-4.0
       next:
@@ -655,6 +676,7 @@ examples:
           fi: laulujoutsen
           sv:	sångsvan
           en:	Whooper Swan
+        taxonomicOrder: 2
         scientificName:	Cygnus cygnus
         intellectualRights:	MZ.intellectualRightsCC-BY-4.0
       prev:
@@ -663,5 +685,6 @@ examples:
           fi:	kiljuhanhi
           sv: fjällgås
           en:	Lesser White-fronted Goose
+        taxonomicOrder: 9
         scientificName:	Anser erythropus
         intellectualRights: MZ.intellectualRightsCC-BY-4.0

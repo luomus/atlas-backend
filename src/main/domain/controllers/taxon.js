@@ -32,7 +32,7 @@ class Taxon {
     return async (req, res) => {
       try {
       const taxonSet = req.params.taxonSet
-      const grid = req.query.grid
+      const grid = req.params.grid
 
       if (!grid) {
         return res.status(400).send('Grid missing')
