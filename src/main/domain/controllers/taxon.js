@@ -3,8 +3,13 @@ const querier = new Querier()
 const urlRemover = require('../../helpers/urlRemover')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
+const cache = new Cache()
 const ApiDao = require('../../dao/apiDao')
 const apiDao = new ApiDao(axios, new Cache())
+const GridDao = require('../../dao/gridDao')
+const gridDao = new GridDao(querier)
+const CompleteListDao = require('../../dao/completeListDao')
+const completeListDao = new CompleteListDao(gridDao, apiDao, cache)
 
 class Taxon {
   /**
@@ -18,6 +23,29 @@ class Taxon {
         
         return res.json(taxonList)
       } catch (e) {
+        return res.status(500).send(e.message)
+      }
+    }
+  }
+
+  getCompleteList() {
+    return async (req, res) => {
+      try {
+      const taxonSet = req.params.taxonSet
+      const grid = req.query.grid
+
+      if (!grid) {
+        return res.status(400).send('Grid missing')
+      } else if (!completeListDao.isAcceptedTaxonSet(taxonSet)) {
+        return res.status(400).send('Unacceptable taxonSet')
+      }
+
+      const completeList = await completeListDao.getCompleteLists(taxonSet, grid)
+
+      return res.json(completeList)
+      } catch (e) {
+        console.log(e)
+
         return res.status(500).send(e.message)
       }
     }

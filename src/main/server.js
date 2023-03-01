@@ -10,6 +10,9 @@ const AtlasGridUpdater = require('./domain/updater/atlasGridUpdater')
 const atlasGridUpdater = new AtlasGridUpdater()
 const StatsUpdater = require('./domain/updater/statsUpdater')
 const statsUpdater = new StatsUpdater()
+const CompleteListUpdater = require('./domain/updater/completeListUpdater')
+const completeListUpdater = new CompleteListUpdater()
+
 const app = express()
 // global.db = new sqlite3.Database('./birds.db', (err) => {
 //   if (err) console.log('Could not connect to database', err)
@@ -42,9 +45,16 @@ app.use('/api/v1/taxon/', taxonRouter)
 app.use('/api/v1/birdAssociation', birdAssociationRouter)
 app.use('/api/v1/health', healthRouter)
 
-cron.schedule('0 0 3 * * *', async () => {
+async function update() {
   await atlasGridUpdater.update()
   await statsUpdater.update()
+  await completeListUpdater.update()
+}
+
+cron.schedule('0 0 3 * * *', async () => {
+  await update()
 })
+
+update()
 
 module.exports = app

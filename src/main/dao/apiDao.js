@@ -11,6 +11,116 @@ class ApiDao {
     this.cache = cache
   }
 
+  async getPaginatedAxios(url, params, timeout, page = 1) {
+    const res = await this.axios.get(url, { params: { ...params, page }, timeout})
+
+    const data = res.data.results
+
+    if (res.nextPage) {
+      const nextRes = await this.getPaginatedAxios(url, params, timeout, res.nextPage)
+
+      data.push(nextRes)
+    }
+
+    return data
+  }
+
+  async getTaxonSet(taxonSet) {
+    const url = `${url_root}/taxa`
+    const params = {
+      taxonSets: taxonSet,
+      lang: 'multi',
+      selectedFields: 'id,scientificName,vernacularName,taxonomicOrder',
+      sortOrder: 'taxonomic',
+      pageSize: 10000
+    }
+    
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {
+       const res = await this.axios.get(url, { params, timeout })
+
+       return res.data.results
+    })
+  }
+
+  async getCountsOfCompleteLists(time, taxonSetId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
+      taxonSetId: taxonSetId,
+      onlyCount: true,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+      completeListType: 'MY.completeListTypeComplete'
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+  async getObservationCountsByTaxonSet(time, taxonSetId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
+      taxonSetId: taxonSetId,
+      onlyCount: true,
+      taxonCounts: false,
+      gatheringCounts: false,
+      pairCounts: false,
+      atlasCounts: false,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+      completeListType: 'MY.completeListTypeComplete'
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+  async getObservationCountsByTaxonSetWholeFinland(time, taxonSetId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'unit.linkings.taxon.id',
+      taxonSetId: taxonSetId,
+      countryId: 'ML.206',
+      onlyCount: true,
+      taxonCounts: false,
+      gatheringCounts: false,
+      pairCounts: false,
+      atlasCounts: false,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
   /**
    * Gets the currently active atlas data for queried YKJ-square from laji.fi-api
    * @param {string} grid
@@ -33,8 +143,8 @@ class ApiDao {
     }
     const key = url + JSON.stringify(params)
 
-    return await this.cache.wrapper(key, async (timout = 0) => { 
-      const response = await this.axios.get(url, { params, timout })
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      const response = await this.axios.get(url, { params, timeout })
       return response.data.results
     })
   }
@@ -198,7 +308,7 @@ class ApiDao {
       lang: 'multi',
       langFallback: true,
       typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
-      selectedFields: 'id,scientificName,vernacularName',
+      selectedFields: 'id,scientificName,vernacularName,taxonomicOrder',
       onlyFinnish: true,
       sortOrder: 'taxonomic',
       pageSize: 1000

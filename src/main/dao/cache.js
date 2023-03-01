@@ -6,7 +6,9 @@ const cache = new NodeCache({
 let isQuerying = {}
 
 cache.on('expired', (key, data) => {
-  cache.set(`expired_${key}`, data, 0)
+  if (!key.includes('remove-expired-')) {
+    cache.set(`expired_${key}`, data, 0)
+  }
 })
 
 class Cache {
