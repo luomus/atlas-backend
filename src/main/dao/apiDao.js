@@ -308,7 +308,7 @@ class ApiDao {
       lang: 'multi',
       langFallback: true,
       typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
-      selectedFields: 'id,scientificName,vernacularName,taxonomicOrder',
+      selectedFields: 'id,scientificName,vernacularName,taxonomicOrder,sensitive',
       onlyFinnish: true,
       sortOrder: 'taxonomic',
       pageSize: 1000
