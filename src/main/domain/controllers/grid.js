@@ -68,10 +68,10 @@ class Grid {
       try {
         const lang = req.query.language || 'fi'
         const data = await gridDao.getAllAndAtlasGridForAtlasAndAssociation(req.params.birdAssociationId, __latestAtlas)
-        const birdAssociationAreas = await apiDao.getBirdAssociationAreasAsLookup()
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
         const gridStats = await getCachedAssociationStatistics(req.params.birdAssociationId, lang, gridDao, apiDao, cache)
+        const taxa = await apiDao.getBirdList()
 
         if (!data) {
           return res.status(404).send()
@@ -100,7 +100,8 @@ class Grid {
 
         return res.json({
           ...gridStats,
-          gridSquares
+          gridSquares,
+          taxa
         })
       } catch (e) {
         console.error(new Date().toString() + ' ' + e.message)
@@ -109,6 +110,52 @@ class Grid {
     } 
   }
 
+  getAllAtlasDataForBirdAtlasAndTaxon() {
+    return async (req, res) => {
+      const birdAssociationId = req.params.birdAssociationId
+      const taxonId = req.params.taxonId
+      const lang = req.query.language || 'fi'
+
+      const breedingData = await apiDao.getGridAndBreedingdataForSpeciesAssociationAndActiveAtlas(taxonId, birdAssociationId)
+      const grid = await gridDao.getAllAndAtlasGridForAtlasAndAssociation(birdAssociationId, __latestAtlas)
+      const activityCategoryEnum = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
+      const atlasClassEnum = await apiDao.getEnumRange('MY.atlasClassEnum')
+
+      const gridAtlasClassLookup = {}
+
+      const data = breedingData.map(data => {
+        const coordinates = `${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`
+        
+        const atlasClass = urlRemover(data.atlasClassMax) 
+
+        gridAtlasClassLookup[coordinates] = {
+          key: atlasClass,
+          value: atlasClassEnum[atlasClass][lang]
+        }
+      })
+
+      const associationGrid = grid.map(grid => {
+        const atlasClass = gridAtlasClassLookup[grid.coordinates]
+
+        return {
+          atlasClass: atlasClass,
+          coordinates: grid.coordinates,
+          atlasClassSum: grid.atlasClassSum,
+          activityCategory: grid.activityCategory !== null ?
+          {
+            key: grid.activityCategory,
+            value: activityCategoryEnum[grid.activityCategory][lang]
+          } :
+          {
+            key: 'MY.atlasActivityCategoryEnum0',
+            value: activityCategoryEnum['MY.atlasActivityCategoryEnum0'][lang]
+          },
+        }
+      })
+
+      res.json(associationGrid)
+    }
+  }
   /**
    * Returns the atlas species data for specific species and atlas
    * @returns {JSON}
