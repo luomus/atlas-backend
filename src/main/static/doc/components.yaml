@@ -166,38 +166,6 @@ schemas:
         type: array
         items:
           $ref: '#/schemas/GridData'
-      taxa:
-        type: array
-        items:
-          $ref: '#/schemas/Taxon'
-  AssociationAndTaxonGrid:
-    type: object
-    properties:
-      coordinates: 
-        type: string
-        description: YKJ10 coordinate of grid square
-      atlasClass:
-        type: object
-        description: Undefined if the species has no atlas class available for the square
-        properties:
-          key:
-            type: string
-            description: Enum key of the atlas class
-          value:
-            type: string
-            description: Enum value of the atlas class
-      atlasClassSum:
-        type: number
-        description: The atlasClass sum for the square for all taxa
-      activityCategory:
-        type: object
-        properties:
-          key:
-            type: string
-            description: Enum key of activityCategry/atlasActivityCategory
-          value:
-            type: string
-            description: Enum value of activityCategry/atlasActivityCategory
   LaplandStats:
     type: object
     properties:
@@ -622,31 +590,6 @@ examples:
           key: MY.atlasActivityCategoryEnum1
           value: Satunnaishavaintoja
         speciesCount: 1
-      taxa:
-      - id:	MX.26277
-        vernacularName:	
-          sv:	knölsvan
-          fi:	kyhmyjoutsen
-          en:	Mute Swan
-        taxonomicOrder: 1
-        scientificName:	Cygnus olor
-        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
-      - id:	MX.26280
-        vernacularName:
-          fi: laulujoutsen
-          sv:	sångsvan
-          en:	Whooper Swan
-        taxonomicOrder: 2
-        scientificName:	Cygnus cygnus
-        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
-      - id:	MX.26287
-        vernacularName:
-          fi: metsähanhi
-          sv:	sädgås
-          en: Bean Goose
-        taxonomicOrder: 9
-        scientificName:	Anser fabalis
-        intellectualRights:	MZ.intellectualRightsCC-BY-4.0
   atlasDataExample:
     value:
         id: http://tun.fi/YKJ.667:338

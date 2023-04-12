@@ -5,7 +5,7 @@ const urlRemover = require('../helpers/urlRemover')
 const cacheKeyBase = 'completeList_'
 const taxonSets = [
   'MX.taxonSetBiomonCompleteListOdonata',
-  'BirdAtlas'
+  'MX.taxonSetBirdAtlasCommon'
 ]
 
 class CompleteListDao {
@@ -74,49 +74,25 @@ class CompleteListDao {
     });
   
     
-    let taxonSetBase 
-    
-    if (taxonSet === 'BirdAtlas') {
-      taxonSetBase = await this.apiDao.getBirdList()
-    } else {
-      taxonSetBase = await this.apiDao.getTaxonSet(taxonSet)
-    }
-
+    const taxonSetBase = await this.apiDao.getTaxonSet(taxonSet)
+  
     const taxonSetIndexLookup = {}
     
     taxonSetBase.forEach((val, ind) => {
       taxonSetIndexLookup[val.id] = ind
     })
   
-    let shortCounts
-    let longCounts
+    const shortCounts = await this.apiDao.getCountsOfCompleteLists(dateShort, taxonSet)
+    const longCounts = await this.apiDao.getCountsOfCompleteLists(dateLong, taxonSet)
     const longCountsLookup = {}
   
   
-    let shortTaxaCounts
-    let longTaxaCounts
+    const shortTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateShort, taxonSet)
+    const longTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateLong, taxonSet)
     const longTaxaCountsLookup = {}
   
-    let wholeFinlandTaxonList
+    const wholeFinlandTaxonList = await this.apiDao.getObservationCountsByTaxonSetWholeFinland(dateLong, taxonSet)
     let wholeFinlandTaxa
-
-    if (taxonSet === 'BirdAtlas') {
-      shortCounts = await this.apiDao.getCountsOfCompleteListsForAtlas(dateShort) 
-      longCounts = await this.apiDao.getCountsOfCompleteListsForAtlas(dateLong)
-
-      shortTaxaCounts = await this.apiDao.getObservationCountsForAtlas(dateShort)
-      longTaxaCounts = await this.apiDao.getObservationCountsForAtlas(dateLong)
-
-      wholeFinlandTaxonList = await this.apiDao.getObservationCountsForAtlasWholeFinland(dateLong)
-    } else {
-      shortCounts = await this.apiDao.getCountsOfCompleteListsByTaxonSet(dateShort, taxonSet)
-      longCounts = await this.apiDao.getCountsOfCompleteListsByTaxonSet(dateLong, taxonSet)
-
-      shortTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateShort, taxonSet)
-      longTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateLong, taxonSet)
-    
-      wholeFinlandTaxonList = await this.apiDao.getObservationCountsByTaxonSetWholeFinland(dateLong, taxonSet)
-    }
   
     for (const grid of grid100km) {
       const gridIntCoords = [Number.parseInt(grid.slice(0,2)), Number.parseInt(grid.slice(3,5))]

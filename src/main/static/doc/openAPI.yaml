@@ -148,23 +148,6 @@ paths:
               examples:
                 JSON:
                   $ref: 'components.yaml#/examples/associationGrids'
-  /grid/birdAssociation/{birdAssociationId}/taxon/{taxonId}:
-    get:
-      parameters:
-        - $ref: 'components.yaml#/parameters/birdAssociationId'
-        - $ref: 'components.yaml#/parameters/taxonId'
-      summary: 'Get an array of grid squares belongin to the bird association and their activity categories, atlasClassSums, and the taxons atlasClass'
-      tags:
-        - grid
-      responses:
-        200:
-          description: An array of grid data
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: 'components.yaml#/schemas/AssociationAndTaxonGrid'
   /grid/{gridId}:
     get:
       parameters:
