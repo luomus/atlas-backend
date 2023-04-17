@@ -30,7 +30,7 @@ class ApiDao {
     const params = {
       taxonSets: taxonSet,
       lang: 'multi',
-      selectedFields: 'id,scientificName,vernacularName,taxonomicOrder',
+      selectedFields: 'id,scientificName,vernacularName,taxonomicOrder,informalTaxonGroups',
       sortOrder: 'taxonomic',
       pageSize: 10000
     }
