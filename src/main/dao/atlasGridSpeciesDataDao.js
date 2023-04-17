@@ -115,6 +115,20 @@ class AtlasGridSpeciesDataDao {
       'WHERE AtlasGridSpeciesData.grid = :gridId ' +
       'AND AtlasGridSpeciesData.atlas = :atlasId', [gridId, atlasId])
   }
+
+  getDataForSpeciesAssociationAndAtlas(taxonId, associationId, atlasId) {
+    return this.#querier.execute(
+      'SELECT AtlasGridSpeciesData.id AS "id", ' +
+      'AtlasGridSpeciesData.grid AS "grid", ' +
+      'AtlasGrid.atlasClass AS "atlasClass", ' +
+      'AtlasGridSpeciesData.atlasCode AS "atlasCode" ' +
+      'FROM AtlasGridSpeciesData LEFT JOIN Grid ' +
+      'ON AtlasGridSpeciesData.grid = Grid.id ' +
+      'AND AtlasGridSpeciesData.atlas = :1 ' +
+      'AND Grid.birdAssociationArea = :2 ' +
+      'AND AtlasGridSpeciesData.species = :3', [atlasId, associationId, taxonId]
+    )
+  }
 }
 
 module.exports = AtlasGridSpeciesDataDao;

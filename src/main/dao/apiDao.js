@@ -44,7 +44,87 @@ class ApiDao {
     })
   }
 
-  async getCountsOfCompleteLists(time, taxonSetId) {
+  async getCountsOfCompleteListsForAtlas(time) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
+      taxonId: 'MX.37580',
+      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      onlyCount: true,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+      completeListType: 'MY.completeListTypeComplete'
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+  async getObservationCountsForAtlas(time) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
+      taxonId: 'MX.37580',
+      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      onlyCount: true,
+      taxonCounts: false,
+      gatheringCounts: false,
+      pairCounts: false,
+      atlasCounts: false,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+      completeListType: 'MY.completeListTypeComplete'
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+  async getObservationCountsForAtlasWholeFinland(time, taxonSetId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'unit.linkings.taxon.id',
+      taxonId: 'MX.37580',
+      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      countryId: 'ML.206',
+      onlyCount: true,
+      taxonCounts: false,
+      gatheringCounts: false,
+      pairCounts: false,
+      atlasCounts: false,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+  async getCountsOfCompleteListsByTaxonSet(time, taxonSetId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
@@ -202,6 +282,33 @@ class ApiDao {
       return response.data.results
     })
   }
+
+  /**
+   * Returns the species atlas data for current bird atlas from laji.fi api
+   * @param {string} speciesId
+   * @returns {Promise}
+   */
+  async getGridAndBreedingdataForSpeciesAssociationAndActiveAtlas(speciesId, associationId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      atlasCounts: true,
+      excludeNulls: true,
+      taxonId: speciesId,
+      birdAssociationAreaId: associationId,
+      time: '2022/2025',
+      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+      hasValue: 'unit.atlasClass',
+      pageSize: 10000,
+      cache: true,
+    }
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      const response = await this.axios.get(url, { params, timeout })
+      return response.data.results
+    })
+    }
 
   /**
    * Returns the names for given speciesId
