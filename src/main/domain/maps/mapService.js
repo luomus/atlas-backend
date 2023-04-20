@@ -80,6 +80,10 @@ function MapService(atlasMap, config) {
     image.src = svg64(svg.serialize())
   }
 
+  function capitalizeFirst(name) {
+    return name.charAt(0).toUpperCase() + name.slice(1)
+  }
+
   function setLegend(gridOverlay, species, language, atlas, showActivity) {
     const lan = language.toUpperCase()
     const speciesName = 'species' + lan
@@ -87,7 +91,7 @@ function MapService(atlasMap, config) {
     const textName = 'text' + lan
     gridOverlay.setText('speciesSCI', species.scientificName)
       .setAttributesOfElement('speciesSCI', {display: 'block'})
-      .setText(speciesName, species.vernacularName[language])
+      .setText(speciesName, capitalizeFirst(species.vernacularName[language]))
       .setAttributesOfElement(speciesName, {display: 'block'})
       .setText('breedingColourTitle', config.legend.breedingColourTitle[textName])
       .setText('breedingColourTitle4', config.legend.breedingColourTitle4[textName])
