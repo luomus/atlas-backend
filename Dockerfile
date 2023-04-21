@@ -20,6 +20,7 @@ RUN npm install --production --silent
 RUN npm install -g pm2
 
 ENV PM2_HOME /opt/app/.pm2
+ENV UV_THREADPOOL_SIZE 16
 
 RUN chgrp -R 0 /opt/app/ && chmod -R g+rwX /opt/app/
 EXPOSE 3000
