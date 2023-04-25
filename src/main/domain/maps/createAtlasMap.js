@@ -89,16 +89,14 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
     svgImage.setBackgroundColour(config.mapBackground)
     const converterOptions = getConverterOptions(geoJsonArray)
     const converter = geojson2svg(converterOptions)
-    let color
     geoJsonArray.forEach((geoJsonObj) => {
+      let propertyMap
       const svgStringArray = converter.convert(geoJsonObj.geoJson)
       if (geoJsonObj.id === 'YKJ100km')
-        color = 'darkgrey'
+        propertyMap = {'id': geoJsonObj.id, 'class': 'baseMap', 'stroke': 'darkgrey', 'stroke-width': '0.15', 'fill-opacity': 0}
       else
-        color = 'black'
+        propertyMap = {'id': geoJsonObj.id, 'class': 'baseMap', 'stroke': 'black', 'stroke-width': '0.5', 'fill-opacity': 0}
 
-      const propertyMap =
-        {'id': geoJsonObj.id, 'class': 'baseMap', 'stroke': color, 'stroke-width': '0.15', 'fill-opacity': 0}
       svgImage.addElement('g', propertyMap)
       svgStringArray.forEach((str) => svgImage.addElementFromString(str, geoJsonObj.id))
     })
