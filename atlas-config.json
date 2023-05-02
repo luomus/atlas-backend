@@ -156,9 +156,9 @@
       "x": 4,
       "y": 29.5,
       "font-size": 2.2,
-      "textFI": "varma pesintä",
-      "textSV": "säker häckning",
-      "textEN": "sure breeding",
+      "textFI": "varma",
+      "textSV": "säker",
+      "textEN": "sure",
       "display": "block"
     },
     "breedingColourBox3": {
@@ -178,9 +178,9 @@
       "x": 4,
       "y": 32.5,
       "font-size": 2.2,
-      "textFI": "todennäköinen pesintä",
-      "textSV": "trolig häckning",
-      "textEN": "probable breeding",
+      "textFI": "todennäköinen",
+      "textSV": "trolig",
+      "textEN": "probable",
       "display": "block"
     },
     "breedingColourBox2": { 
@@ -200,9 +200,9 @@
       "x": 4,
       "y": 35.5,
       "font-size": 2.2,
-      "textFI": "mahdollinen pesintä",
-      "textSV": "eventuell häckning",
-      "textEN": "possible breeding",
+      "textFI": "mahdollinen",
+      "textSV": "eventuell",
+      "textEN": "possible",
       "display": "block"
     },
     "activityColourTitle": {
