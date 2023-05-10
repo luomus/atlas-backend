@@ -263,52 +263,61 @@ class ApiDao {
    * @returns {Promise}
    */
   async getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId) {
-    const url = `${url_root}/warehouse/query/unit/aggregate`
-    const params = {
-      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
-      atlasCounts: true,
-      excludeNulls: true,
-      taxonId: speciesId,
-      time: '2022/2025',
-      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
-      hasValue: 'unit.atlasClass',
-      pageSize: 10000,
-      cache: true,
-    }
-    const key = url + JSON.stringify(params)
-
-    return await this.cache.wrapper(key, async (timeout = 0) => { 
-      const response = await this.axios.get(url, { params, timeout })
-      return response.data.results
-    })
+    const data = await this.getBreedingDataForActiveAtlas()
+    const fullId = 'http://tun.fi/' + speciesId
+    return data.filter(data => data.aggregateBy['unit.linkings.taxon.speciesId'] === fullId)
   }
 
   /**
-   * Returns the species atlas data for current bird atlas from laji.fi api
-   * @param {string} speciesId
+   * Returns breeding data for all grids and species in a specific bird association
+   * @param {string} associationId 
    * @returns {Promise}
    */
-  async getGridAndBreedingdataForSpeciesAssociationAndActiveAtlas(speciesId, associationId) {
+  async getAssociationDataForActiveAtlas(associationId) {
+    const data = await this.getBreedingDataForActiveAtlas()
+    const fullId = 'http://tun.fi/' + associationId
+
+    return data.filter(data => data.aggregateBy['gathering.conversions.birdAssociationArea'] === fullId)
+  }
+
+  /**
+   * Returns the atlas data for all finnish species in current bird atlas from laji.fi api aggregated by ykj-squares, species id and association
+   * @returns {Promise}
+   */
+  async getBreedingDataForActiveAtlas() {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
-      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,gathering.conversions.birdAssociationArea,unit.linkings.taxon.speciesId',
+      orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      taxonRankId: 'MX.species',
       atlasCounts: true,
       excludeNulls: true,
-      taxonId: speciesId,
-      birdAssociationAreaId: associationId,
       time: '2022/2025',
+      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
-      hasValue: 'unit.atlasClass',
+      hasValue: 'unit.atlasClass,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       pageSize: 10000,
       cache: true,
     }
     const key = url + JSON.stringify(params)
 
     return await this.cache.wrapper(key, async (timeout = 0) => { 
-      const response = await this.axios.get(url, { params, timeout })
-      return response.data.results
-    })
-    }
+      return await this.getPaginatedAxios(url, params, timeout)
+    }) 
+  }
+
+  /**
+   * Returns the species atlas data for current bird atlas and association from laji.fi api
+   * @param {string} speciesId
+   * @param {string} associationId
+   * @returns {Promise}
+   */
+  async getGridAndBreedingdataForSpeciesAssociationAndActiveAtlas(speciesId, associationId) {
+    const data = await this.getBreedingDataForActiveAtlas()
+    const fullSpeciesId = 'http://tun.fi/' + speciesId
+    const fullAssociationId = 'http://tun.fi/' + associationId
+    return data.filter(data => data.aggregateBy['gathering.conversions.birdAssociationArea'] === fullAssociationId && data.aggregateBy['unit.linkings.taxon.speciesId'] === fullSpeciesId)
+  }
 
   /**
    * Returns the names for given speciesId

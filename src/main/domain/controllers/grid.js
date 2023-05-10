@@ -71,11 +71,33 @@ class Grid {
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
         const gridStats = await getCachedAssociationStatistics(req.params.birdAssociationId, lang, gridDao, apiDao, cache)
-        const taxa = await apiDao.getBirdList()
+        const breedingData = await apiDao.getAssociationDataForActiveAtlas(req.params.birdAssociationId)
+        let taxa = await apiDao.getBirdList()
 
         if (!data) {
           return res.status(404).send()
         }
+
+        const breedingCountLookup = {}
+
+        breedingData.forEach(data => {
+          const taxonId = urlRemover(data.aggregateBy['unit.linkings.taxon.speciesId'])
+          if (!breedingCountLookup[taxonId]) {
+            breedingCountLookup[taxonId] = {
+              'MY.atlasClassEnumB': 0,
+              'MY.atlasClassEnumC': 0,
+              'MY.atlasClassEnumD': 0,
+              'all': 0
+            }
+          }
+
+          const atlasClass = urlRemover(data.atlasClassMax)
+
+          if (atlasClass !== 'MY.atlasClassEnumA') {
+            breedingCountLookup[taxonId][atlasClass] += 1
+            breedingCountLookup[taxonId]['all'] += 1
+          }
+        })
 
         const birdAssociationArea = gridStats.birdAssociationArea
 
@@ -95,6 +117,19 @@ class Grid {
                 value: activityCategory['MY.atlasActivityCategoryEnum0'][lang]
               },
             birdAssociationArea
+          }
+        })
+
+        taxa = taxa.map(taxon => {
+          return {
+            ...taxon,
+            classCounts: breedingCountLookup[taxon.id] ?
+            breedingCountLookup[taxon.id] : {
+              'MY.atlasClassEnumB': 0,
+              'MY.atlasClassEnumC': 0,
+              'MY.atlasClassEnumD': 0,
+              'all': 0
+            }
           }
         })
 
