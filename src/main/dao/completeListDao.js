@@ -5,6 +5,14 @@ const urlRemover = require('../helpers/urlRemover')
 const cacheKeyBase = 'completeList_'
 const taxonSets = [
   'MX.taxonSetBiomonCompleteListOdonata',
+  'MX.taxonSetBiomonCompleteListButterflies',
+  'MX.taxonSetBiomonCompleteListMoths',
+  'MX.taxonSetBiomonCompleteListBombus',
+  'MX.taxonSetBiomonCompleteListAmphibiaReptilia',
+  'MX.taxonSetBiomonCompleteListLargeFlowers',
+  'MX.taxonSetBiomonCompleteListSubarcticPlants',
+  'MX.taxonSetBiomonCompleteListMacrolichens',
+  'MX.taxonSetBiomonCompleteListBracketFungi',
   'BirdAtlas'
 ]
 
@@ -23,12 +31,13 @@ class CompleteListDao {
     return taxonSets.includes(taxonSet)
   }
 
-  async update() {       
+  async update() {
     const date = new Date().toISOString().split('T')[0]
 
     for (const set of taxonSets) {
       const stats = await this.getCompleteListData(set, date)
       this.cache.setCache('remove-expired-' + cacheKeyBase + set + date, stats, 24 * 3600)
+      console.log(`Updated complete list for ${set}`)
     }
   }
 
