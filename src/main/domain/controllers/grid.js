@@ -71,7 +71,7 @@ class Grid {
         const activityCategory = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
         const gridStats = await getCachedAssociationStatistics(req.params.birdAssociationId, lang, gridDao, apiDao, cache)
-        const breedingData = await apiDao.getAssociationDataForActiveAtlas(req.params.birdAssociationId)
+        const breedingData = await apiDao.getBreedingDataForActiveAtlasAndAssociation(req.params.birdAssociationId)
         let taxa = await apiDao.getBirdList()
 
         if (!data) {

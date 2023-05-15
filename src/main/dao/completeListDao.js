@@ -126,9 +126,9 @@ class CompleteListDao {
         count.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1])
   
       if (shortCount.length > 15) {
-        let shortTaxaCount = shortTaxaCounts.filter(counts => 
-          counts.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
-          counts.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1])
+        let shortTaxaCount = shortTaxaCounts.filter(counts => {
+          return counts.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
+          counts.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1]})
         
         shortTaxaCount = shortTaxaCount.sort((a, b) => {
           if (b.individualCountSum !== a.individualCountSum) {

@@ -16,10 +16,12 @@ class ApiDao {
 
     const data = res.data.results
 
-    if (res.nextPage) {
-      const nextRes = await this.getPaginatedAxios(url, params, timeout, res.nextPage)
+    if (res.data.nextPage) {
+      for (let i = res.data.nextPage; i <= res.data.lastPage; i++) {
+        const nextRes = await this.axios.get(url, { params: { ...params, page: i }, timeout})
 
-      data.push(nextRes)
+        data.push(...nextRes.data.results)
+      }
     }
 
     return data
@@ -263,36 +265,41 @@ class ApiDao {
    * @returns {Promise}
    */
   async getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId) {
-    const data = await this.getBreedingDataForActiveAtlas()
-    const fullId = 'http://tun.fi/' + speciesId
-    return data.filter(data => data.aggregateBy['unit.linkings.taxon.speciesId'] === fullId)
-  }
-
-  /**
-   * Returns breeding data for all grids and species in a specific bird association
-   * @param {string} associationId 
-   * @returns {Promise}
-   */
-  async getAssociationDataForActiveAtlas(associationId) {
-    const data = await this.getBreedingDataForActiveAtlas()
-    const fullId = 'http://tun.fi/' + associationId
-
-    return data.filter(data => data.aggregateBy['gathering.conversions.birdAssociationArea'] === fullId)
-  }
-
-  /**
-   * Returns the atlas data for all finnish species in current bird atlas from laji.fi api aggregated by ykj-squares, species id and association
-   * @returns {Promise}
-   */
-  async getBreedingDataForActiveAtlas() {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
-      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,gathering.conversions.birdAssociationArea,unit.linkings.taxon.speciesId',
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      atlasCounts: true,
+      excludeNulls: true,
+      taxonId: speciesId,
+      time: '2022/2025',
+      recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+      hasValue: 'unit.atlasClass',
+      pageSize: 10000,
+      cache: true,
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      return  await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+
+  /**
+   * Returns the atlas data within a specific association area for all finnish species in current bird atlas from laji.fi api aggregated by ykj-squares, species id
+   * @returns {Promise}
+   */
+  async getBreedingDataForActiveAtlasAndAssociation(associationId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.speciesId',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       taxonRankId: 'MX.species',
       atlasCounts: true,
       excludeNulls: true,
       time: '2022/2025',
+      birdAssociationAreaId: associationId,
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
       hasValue: 'unit.atlasClass,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
@@ -313,10 +320,10 @@ class ApiDao {
    * @returns {Promise}
    */
   async getGridAndBreedingdataForSpeciesAssociationAndActiveAtlas(speciesId, associationId) {
-    const data = await this.getBreedingDataForActiveAtlas()
+    const data = await this.getBreedingDataForActiveAtlasAndAssociation(associationId)
     const fullSpeciesId = 'http://tun.fi/' + speciesId
-    const fullAssociationId = 'http://tun.fi/' + associationId
-    return data.filter(data => data.aggregateBy['gathering.conversions.birdAssociationArea'] === fullAssociationId && data.aggregateBy['unit.linkings.taxon.speciesId'] === fullSpeciesId)
+
+    return data.filter(data => data.aggregateBy['unit.linkings.taxon.speciesId'] === fullSpeciesId)
   }
 
   /**
