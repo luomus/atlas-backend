@@ -51,6 +51,9 @@ class CompleteListDao {
     }
   
     const gridData = stats.gridData[grid]
+
+    if(!gridData) return []
+
     const toReturn = Array(Object.keys(gridData).length)
     
     stats.taxonSet.forEach(taxa => {
@@ -134,14 +137,14 @@ class CompleteListDao {
         count.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
         count.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1])
   
-      if (shortCount.length > 15) {
+      if (shortCount.length > taxonSet === 'BirdAtlas' ? 5 : 15) {
         let shortTaxaCount = shortTaxaCounts.filter(counts => {
           return counts.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
           counts.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1]})
         
         shortTaxaCount = shortTaxaCount.sort((a, b) => {
-          if (b.individualCountSum !== a.individualCountSum) {
-            return b.individualCountSum - a.individualCountSum
+          if (b.count !== a.count) {
+            return b.count - a.count
           }
   
           return taxonSetBase[taxonSetIndexLookup[urlRemover(b.aggregateBy['unit.linkings.taxon.id'])]] 
@@ -200,7 +203,7 @@ class CompleteListDao {
             longTaxaCountsLookup[grid].forEach(taxa => {
               const id = urlRemover(taxa.aggregateBy['unit.linkings.taxon.id'])
               if (taxaLookup[id]) {
-                taxaLookup[id].individualCountSum += taxa.individualCountSum
+                taxaLookup[id].count += taxa.count
               } else {
                 taxaLookup[id] = lodash.cloneDeep(taxa)
               }
@@ -210,8 +213,8 @@ class CompleteListDao {
           const toReturn = {}
   
           Object.values(taxaLookup).sort((a, b) => {
-            if (b.individualCountSum !== a.individualCountSum) {
-              return b.individualCountSum - a.individualCountSum
+            if (b.count !== a.count) {
+              return b.count - a.count
             }
     
             return taxonSetBase[taxonSetIndexLookup[urlRemover(b.aggregateBy['unit.linkings.taxon.id'])]] 
@@ -228,8 +231,8 @@ class CompleteListDao {
             wholeFinlandTaxa = {}
             
             wholeFinlandTaxonList.sort((a, b) => {
-              if (b.individualCountSum !== a.individualCountSum) {
-                return b.individualCountSum - a.individualCountSum
+              if (b.count !== a.count) {
+                return b.count - a.count
               }
       
               return taxonSetBase[taxonSetIndexLookup[urlRemover(b.aggregateBy['unit.linkings.taxon.id'])]] 
