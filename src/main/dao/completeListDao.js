@@ -43,7 +43,7 @@ class CompleteListDao {
 
   async getCompleteLists(taxonSet, grid) {
     let date = new Date().toISOString().split('T')[0]
-    let stats = this.cache.getCache(cacheKeyBase + taxonSet + date)
+    let stats = this.cache.getCache('remove-expired-' + cacheKeyBase + taxonSet + date)
   
     if (!stats) {
       stats = await this.getCompleteListData(taxonSet, date)
