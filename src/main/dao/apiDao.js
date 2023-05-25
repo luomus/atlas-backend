@@ -98,7 +98,7 @@ class ApiDao {
     })
   }
 
-  async getObservationCountsForAtlasWholeFinland(time, taxonSetId) {
+  async getObservationCountsForAtlasWholeFinland(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
       aggregateBy: 'unit.linkings.taxon.id',

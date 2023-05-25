@@ -137,7 +137,7 @@ class CompleteListDao {
         count.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
         count.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1])
   
-      if (shortCount.length > taxonSet === 'BirdAtlas' ? 5 : 15) {
+      if (shortCount.length > (taxonSet === 'BirdAtlas' ? 5 : 15)) {
         let shortTaxaCount = shortTaxaCounts.filter(counts => {
           return counts.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
           counts.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1]})
