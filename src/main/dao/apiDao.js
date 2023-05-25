@@ -23,6 +23,7 @@ class ApiDao {
         data.push(...nextRes.data.results)
       }
     }
+
     return data
   }
 
@@ -97,7 +98,7 @@ class ApiDao {
     })
   }
 
-  async getObservationCountsForAtlasWholeFinland(time) {
+  async getObservationCountsForAtlasWholeFinland(time, taxonSetId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
       aggregateBy: 'unit.linkings.taxon.id',
@@ -197,7 +198,6 @@ class ApiDao {
 
     const key = url + JSON.stringify(params)
 
-    console.log(params)
     return await this.cache.wrapper(key, async (timeout = 0) => { 
       return await this.getPaginatedAxios(url, params, timeout)
     })

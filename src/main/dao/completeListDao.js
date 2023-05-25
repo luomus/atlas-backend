@@ -5,15 +5,15 @@ const urlRemover = require('../helpers/urlRemover')
 const cacheKeyBase = 'completeList_'
 const taxonSets = [
   'MX.taxonSetBiomonCompleteListOdonata',
-  //'MX.taxonSetBiomonCompleteListButterflies',
-  //'MX.taxonSetBiomonCompleteListMoths',
-  //'MX.taxonSetBiomonCompleteListBombus',
-  //'MX.taxonSetBiomonCompleteListAmphibiaReptilia',
-  //'MX.taxonSetBiomonCompleteListLargeFlowers',
-  //'MX.taxonSetBiomonCompleteListSubarcticPlants',
-  //'MX.taxonSetBiomonCompleteListMacrolichens',
-  //'MX.taxonSetBiomonCompleteListBracketFungi',
-  //'BirdAtlas'
+  'MX.taxonSetBiomonCompleteListButterflies',
+  'MX.taxonSetBiomonCompleteListMoths',
+  'MX.taxonSetBiomonCompleteListBombus',
+  'MX.taxonSetBiomonCompleteListAmphibiaReptilia',
+  'MX.taxonSetBiomonCompleteListLargeFlowers',
+  'MX.taxonSetBiomonCompleteListSubarcticPlants',
+  'MX.taxonSetBiomonCompleteListMacrolichens',
+  'MX.taxonSetBiomonCompleteListBracketFungi',
+  'BirdAtlas'
 ]
 
 class CompleteListDao {
@@ -55,9 +55,7 @@ class CompleteListDao {
     if(!gridData) return []
 
     const toReturn = Array(Object.keys(gridData).length)
-
-    console.log(gridData)
-  
+    
     stats.taxonSet.forEach(taxa => {
       if (gridData[taxa.id] !== undefined) {
         toReturn[gridData[taxa.id]] = taxa
@@ -66,7 +64,6 @@ class CompleteListDao {
       }
     })
   
-    console.log(toReturn)
     return toReturn
   }
 
@@ -131,8 +128,6 @@ class CompleteListDao {
       longTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateLong, taxonSet)
     
       wholeFinlandTaxonList = await this.apiDao.getObservationCountsByTaxonSetWholeFinland(dateLong, taxonSet)
-
-      console.log(wholeFinlandTaxonList)
     }
   
     for (const grid of grid100km) {
@@ -142,7 +137,7 @@ class CompleteListDao {
         count.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
         count.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1])
   
-      if (shortCount.length > (taxonSet === 'BirdAtlas' ? 5 : 15)) {
+      if (shortCount.length > taxonSet === 'BirdAtlas' ? 5 : 15) {
         let shortTaxaCount = shortTaxaCounts.filter(counts => {
           return counts.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
           counts.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1]})
@@ -246,7 +241,7 @@ class CompleteListDao {
               wholeFinlandTaxa[urlRemover(taxa.aggregateBy['unit.linkings.taxon.id'])] = ind
             })
           }
-  
+          
           grid100kmData[grid] = wholeFinlandTaxa
         }
       }
@@ -258,5 +253,8 @@ class CompleteListDao {
     }
   }
 }
+
+
+
 
 module.exports = CompleteListDao
