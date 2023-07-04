@@ -191,6 +191,7 @@ class Grid {
       res.json(associationGrid)
     }
   }
+
   /**
    * Returns the atlas species data for specific species and atlas
    * @returns {JSON}

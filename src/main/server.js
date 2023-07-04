@@ -51,7 +51,7 @@ async function update() {
   await completeListUpdater.update()
 }
 
-cron.schedule('0 0 3 * * *', async () => {
+cron.schedule('0 0 3,9 * * *', async () => {
   await update()
 })
 

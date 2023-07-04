@@ -295,14 +295,12 @@ class ApiDao {
     const params = {
       aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.speciesId',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
-      taxonRankId: 'MX.species',
       atlasCounts: true,
       excludeNulls: true,
       time: '2022/2025',
-      birdAssociationAreaId: associationId,
-      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
-      hasValue: 'unit.atlasClass,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      birdAssociationAreaId: associationId,
+      hasValue: 'unit.atlasClass',
       pageSize: 10000,
       cache: true,
     }
