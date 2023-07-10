@@ -15,7 +15,14 @@ class CompleteListUpdater {
   }
 
   async update () {
-    await this.completeListDao.update()
+    console.log(new Date().toISOString(), ' ', 'Starting complete list update')
+    try {
+      await this.completeListDao.update()
+      console.log(new Date().toISOString(), ' ', 'Finished complete list update')
+    } catch (err) {
+      console.err(new Date().toISOString(), ' ', 'Complete list update error: ', err)
+      throw err
+    }
   }
 }
 

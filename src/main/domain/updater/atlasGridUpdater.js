@@ -15,68 +15,76 @@ class AtlasGridUpdater {
   }
 
   async update () {
-    const grids = await this.gridDao.getAllAndAtlasGridForAtlas(4)
-    const atlasGrids = await this.atlasGridDao.getAllForAtlasId(4)
- 
-    let speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated()
-    const gridClassSumLookup = {}
+    console.log(new Date().toISOString(), ' ', 'Started atlas grid update')
+    try {
+      const grids = await this.gridDao.getAllAndAtlasGridForAtlas(4)
+      const atlasGrids = await this.atlasGridDao.getAllForAtlasId(4)
+  
+      let speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated()
+      const gridClassSumLookup = {}
 
-    for (let i = 1; i <= speciesData.lastPage; i++) {
-      if (i !== 1) {
-        speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated(i)
+      for (let i = 1; i <= speciesData.lastPage; i++) {
+        if (i !== 1) {
+          speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated(i)
+        }
+
+        for (const grid of grids) {
+          const gridSpeciesData = speciesData.results.filter(data => {
+            return grid.coordinates === `${data.aggregateBy['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data.aggregateBy['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`
+          })
+
+          if (!gridSpeciesData.length) {
+            continue
+          }
+
+          const atlasClassSum = getAtlasClassSum(gridSpeciesData)
+
+          gridClassSumLookup[grid.id] = gridClassSumLookup[grid.id] === undefined ? atlasClassSum : gridClassSumLookup[grid.id] + atlasClassSum
+        }
       }
 
-      for (const grid of grids) {
-        const gridSpeciesData = speciesData.results.filter(data => {
-          return grid.coordinates === `${data.aggregateBy['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data.aggregateBy['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`
-        })
+      const insertionTable = []
+      const updateTable = []
 
-        if (!gridSpeciesData.length) {
+      for (const grid of grids) {
+        const atlasClassSum = gridClassSumLookup[grid.id]
+
+        if (atlasClassSum === undefined) {
           continue
         }
 
-        const atlasClassSum = getAtlasClassSum(gridSpeciesData)
+        const activityCategory = getActivityCategory(atlasClassSum, grid)
 
-        gridClassSumLookup[grid.id] = gridClassSumLookup[grid.id] === undefined ? atlasClassSum : gridClassSumLookup[grid.id] + atlasClassSum
+        const atlasGrid = atlasGrids?.find(atlasGrid => atlasGrid.grid === grid.id)
+
+        if (!atlasGrid) {
+          insertionTable.push({
+            atlas: 4,
+            grid: grid.id,
+            atlasClassSum,
+            activityCategory
+          })
+        } else if (atlasClassSum !== atlasGrid.atlasClassSum) {
+          updateTable.push({
+            id: atlasGrid.id,
+            atlasClassSum,
+            activityCategory
+          })
+        }
       }
-    }
 
-    const insertionTable = []
-    const updateTable = []
-
-    for (const grid of grids) {
-      const atlasClassSum = gridClassSumLookup[grid.id]
-
-      if (atlasClassSum === undefined) {
-        continue
+      if (insertionTable.length) {
+        await this.atlasGridDao.addAtlasGridDataMany(insertionTable)
       }
 
-      const activityCategory = getActivityCategory(atlasClassSum, grid)
-
-      const atlasGrid = atlasGrids?.find(atlasGrid => atlasGrid.grid === grid.id)
-
-      if (!atlasGrid) {
-        insertionTable.push({
-          atlas: 4,
-          grid: grid.id,
-          atlasClassSum,
-          activityCategory
-        })
-      } else if (atlasClassSum !== atlasGrid.atlasClassSum) {
-        updateTable.push({
-          id: atlasGrid.id,
-          atlasClassSum,
-          activityCategory
-        })
+      if (updateTable.length) {
+        await this.atlasGridDao.updateAtlasGridDataMany(updateTable)
       }
-    }
 
-    if (insertionTable.length) {
-      await this.atlasGridDao.addAtlasGridDataMany(insertionTable)
-    }
-
-    if (updateTable.length) {
-      await this.atlasGridDao.updateAtlasGridDataMany(updateTable)
+      console.log(new Date().toISOString(), ' ', 'Finished atlas grid update')
+    } catch (err) {
+      console.err(new Date().toISOString(), ' ', 'Altas grid update error: ', err)
+      throw err
     }
   }
 }

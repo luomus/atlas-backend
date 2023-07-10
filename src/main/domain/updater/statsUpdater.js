@@ -14,7 +14,14 @@ class StatsUpdater {
   }
 
   async update() {
-    await updateCachedStatistics(this.gridDao, this.apiDao, this.cache)
+    console.log(new Date().toISOString(), ' ', 'Starting stats update')
+    try {
+      await updateCachedStatistics(this.gridDao, this.apiDao, this.cache)
+      console.log(new Date().toISOString(), ' ', 'Finished stats update')
+    } catch (err) {
+      console.err(new Date().toISOString(), ' ', 'Stats update error ', err)
+      throw err
+    }
   }
 }
 

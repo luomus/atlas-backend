@@ -37,7 +37,7 @@ class CompleteListDao {
     for (const set of taxonSets) {
       const stats = await this.getCompleteListData(set, date)
       this.cache.setCache('remove-expired-' + cacheKeyBase + set + date, stats, 24 * 3600)
-      console.log(`Updated complete list for ${set}`)
+      console.log(new Date().toISOString(), ` Updated complete list for ${set}`)
     }
   }
 
