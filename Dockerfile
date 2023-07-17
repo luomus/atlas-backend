@@ -5,15 +5,17 @@ WORKDIR /opt/app
 RUN apt-get update && \
     apt-get install -qq build-essential libcairo2-dev libpango1.0-dev libjpeg-dev librsvg2-dev
 
+ENV ORACLE_CLIENT_FILENAME oracle-instantclient-basiclite-21.1.0.0.0-1.x86_64.rpm
+
 RUN apt-get update && \
-    apt-get install -y libaio1 unzip wget
-RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip && \
-    unzip instantclient-basiclite-linuxx64.zip && \
-    rm -f instantclient-basiclite-linuxx64.zip && \
-    cd instantclient* && \
-    rm -f *jdbc* *occi* *mysql* *jar uidrvci genezi adrci && \
-    echo /opt/app/instantclient* > /etc/ld.so.conf.d/oracle-instantclient.conf && \
-    ldconfig
+    apt-get install -y alien libaio1 curl libaio1 libaio-dev libssl-dev musl-dev unzip wget
+RUN wget https://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient21/x86_64/getPackage/${ORACLE_CLIENT_FILENAME} \
+ && alien -i --scripts ${ORACLE_CLIENT_FILENAME} \
+ && rm -f ${ORACLE_CLIENT_FILENAME} \
+ && apt -y autoremove \
+ && apt -y clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && ldconfig
 
 COPY . .
 RUN npm install --production --silent
