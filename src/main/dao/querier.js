@@ -5,6 +5,10 @@ const config = require('./dbConfig.js');
  * Provides methods for accessing oracle database
  */
 class Querier {
+  static async initialize() {
+    await oracledb.createPool(config)
+  }
+
   async executeMany(query, params = []) {
     return await this.executeQuery('executeMany', query, params)
   }
@@ -16,7 +20,7 @@ class Querier {
     let connection
     
     try {
-      connection = await oracledb.getConnection(config)
+      connection = await oracledb.getConnection()
       result = await connection[method](query, params, { outFormat: oracledb.OBJECT, autoCommit: true })
     } catch (err) {
       console.error(new Date().toString() + ' ' + err)
