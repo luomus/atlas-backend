@@ -1,4 +1,4 @@
-FROM node:16-slim
+FROM node:14
 
 ENV NODE_ENV=production
 WORKDIR /opt/app
