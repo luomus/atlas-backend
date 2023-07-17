@@ -20,7 +20,7 @@ class CompleteListUpdater {
       await this.completeListDao.update()
       console.log(new Date().toISOString(), ' ', 'Finished complete list update')
     } catch (err) {
-      console.err(new Date().toISOString(), ' ', 'Complete list update error: ', err)
+      console.error(new Date().toISOString(), ' ', 'Complete list update error: ', err)
       throw err
     }
   }

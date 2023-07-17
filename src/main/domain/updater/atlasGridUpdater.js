@@ -83,7 +83,7 @@ class AtlasGridUpdater {
 
       console.log(new Date().toISOString(), ' ', 'Finished atlas grid update')
     } catch (err) {
-      console.err(new Date().toISOString(), ' ', 'Altas grid update error: ', err)
+      console.error(new Date().toISOString(), ' ', 'Altas grid update error: ', err)
       throw err
     }
   }
