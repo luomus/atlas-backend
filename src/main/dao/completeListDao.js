@@ -13,6 +13,7 @@ const taxonSets = [
   'MX.taxonSetBiomonCompleteListSubarcticPlants',
   'MX.taxonSetBiomonCompleteListMacrolichens',
   'MX.taxonSetBiomonCompleteListBracketFungi',
+  'MX.taxonSetBiomonCompleteListPracticalFungi',
   'BirdAtlas'
 ]
 
