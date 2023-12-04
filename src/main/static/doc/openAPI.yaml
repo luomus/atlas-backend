@@ -42,7 +42,7 @@ paths:
   /birdAssociation:
     get:
       summary: Get list of birdAssociation areas
-      description: Bird association area collection containing their ID:s and names, ordered by ID
+      description: Bird association area collection containing their ID:s and names, ordered by ID ascending
       tags:
         - birdAssociation
       responses:
@@ -61,7 +61,7 @@ paths:
   /birdAssociation/stats:
     get:
       summary: Get stats for all bird association areas, excluding norther Lapland
-      description: Collection of bird association areas and their grid statistics.
+      description: Get stats for all bird association areas, excluding norther Lapland
       tags:
         - birdAssociation
       responses:
@@ -77,6 +77,7 @@ paths:
   /birdAssociation/stats/lappi:
     get:
       summary: Get stats for the 44 50km ykj grid squares for lapland higher that 740 ykj latitude
+      description: Get stats for the 44 50km ykj grid squares for lapland higher that 740 ykj latitude
       tags:
         - birdAssociation
       responses:
@@ -97,6 +98,7 @@ paths:
       parameters:
         - $ref: 'components.yaml#/parameters/birdAssociationId'
       summary: Get bird association and statistics of its grids.
+      description: Get bird association and statistics of its grids.
       tags:
         - birdAssociation
       responses:
@@ -110,6 +112,7 @@ paths:
   /grid:
     get:
       summary: Get an object of grid stats (below ykj 740) and an array of all atlas grid squares.
+      description: Get an object of grid stats (below ykj 740) and an array of all atlas grid squares.
       tags: 
         - grid
       responses:
@@ -134,7 +137,8 @@ paths:
     get:
       parameters:
         - $ref: 'components.yaml#/parameters/birdAssociationId'
-      summary: Get an array of atlas grid squares belonging to a bird association and statistics of the grids.
+      summary: Get squares belonging to a bird association and statistics of the grids.
+      description: Get an array of atlas grid squares belonging to a bird association and statistics of the grids.
       tags:
         - grid
       responses:
@@ -153,7 +157,8 @@ paths:
       parameters:
         - $ref: 'components.yaml#/parameters/birdAssociationId'
         - $ref: 'components.yaml#/parameters/taxonId'
-      summary: 'Get an array of grid squares belongin to the bird association and their activity categories, atlasClassSums, and the taxons atlasClass'
+      summary: Get squares where the given species has been observed, in an area of the given bird association.
+      description: Get squares where the given species has been observed, in an area of the given bird association.
       tags:
         - grid
       responses:
@@ -169,8 +174,8 @@ paths:
     get:
       parameters:
         - $ref: 'components.yaml#/parameters/gridId'
-      summary: Get a single atlas grid square.
-      description: "Represents a square area in the atlas grid corresponding to the given gridId."
+      summary: Information about a single bird atlas square.
+      description: Information about a single bird atlas square.
       tags: 
         - grid
       responses:
@@ -192,8 +197,8 @@ paths:
           in: query
           type: string
           description: Language of the map, possible values fi, en, sv.
-      summary: Get atlas data collection for an area.
-      description: A collection of atlas data resources for an area.
+      summary: Information about a single bird atlas square, with a list of species observed.
+      description: Information about a single bird atlas square with a list of species observed.
       tags: 
         - grid
       responses:
@@ -208,8 +213,8 @@ paths:
                   $ref: 'components.yaml#/examples/atlasDataExample'
   /taxon:
     get:
-      summary: Get list of atlas species.
-      description: A collection of species having been observed in atlas.
+      summary: Get list of bird atlas species.
+      description: A collection of species belonging to the bird atlas.
       tags:
         - taxon
       responses:
@@ -234,7 +239,7 @@ paths:
         - taxon
       responses:
         '200':
-          description: Taxon and its taxonomic order neighbours in the atlas species
+          description: Atlas taxon with previous & next taxon, based on taxonomic order.
           content:
             application/json:
               schema:
@@ -248,13 +253,13 @@ paths:
       parameters:
         - $ref: "components.yaml#/parameters/taxonSetId"
         - $ref: "components.yaml#/parameters/grid100km"
-      summary: Get a complete taxon list for specific taxonSet and grid.
-      description: Get a complete taxon list for specific taxonSet and grid, order calculated by number of complete list observations. Dependent on the date of query.
+      summary: Get a species abundance list from a taxonSet and a square.
+      description: Get species for a specific taxonSet and square, ordered by descending abundance. Abundance is calculated by number of complete lists containing the taxon, from nearby squares during the last few weeks. If there are not enough complete lists, falls back to using data from whole Finland.
       tags:
         - taxon
       responses:
         '200':
-          description: taxon list ordered primarily by complete list observation count, secondarily by taxonomic count.
+          description: Taxon list ordered primarily by number for complete list observations (desc), secondarily by taxonomic order (asc).
           content:
             application/json:
               schema:
