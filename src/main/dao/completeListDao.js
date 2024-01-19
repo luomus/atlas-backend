@@ -14,7 +14,8 @@ const taxonSets = [
   'MX.taxonSetBiomonCompleteListMacrolichens',
   'MX.taxonSetBiomonCompleteListBracketFungi',
   'MX.taxonSetBiomonCompleteListPracticalFungi',
-  'BirdAtlas'
+  'BirdAtlas',
+  'Mappa'
 ]
 
 class CompleteListDao {
@@ -68,6 +69,37 @@ class CompleteListDao {
     return toReturn
   }
 
+  mergeTaxonCounts(firstCounts, secondCounts) {
+    const taxonCounts = []
+
+    const mergedTaxonCounts = firstCounts.concat(secondCounts)
+    const handled = []
+    mergedTaxonCounts.forEach((count, idx) => {
+      if (handled.includes(idx)) return
+
+      const duplicateInd = mergedTaxonCounts.slice(idx + 1).findIndex(mergeCount => {
+        return lodash.isEqual(mergeCount.aggregateBy, count.aggregateBy)
+      })
+
+      if (duplicateInd === -1) return taxonCounts.push(count)
+
+      const newCount = {}
+
+      Object.keys(count).forEach(key => {
+        if (key.toLowerCase().includes('count')) {
+          return newCount[key] = count[key] + mergedTaxonCounts[idx + 1 + duplicateInd][key]
+        }
+
+        return newCount[key] = count[key]
+      })
+
+      taxonCounts.push(newCount)
+      handled.push(idx + 1 + duplicateInd)
+    })
+
+    return taxonCounts
+  }
+
   async getCompleteListData(taxonSet, date) {
     const grids = await this.gridDao.getAll()
   
@@ -89,7 +121,7 @@ class CompleteListDao {
     
     let taxonSetBase 
     
-    if (taxonSet === 'BirdAtlas') {
+    if (taxonSet === 'BirdAtlas' || taxonSet === 'Mappa') {
       taxonSetBase = await this.apiDao.getBirdList()
     } else {
       taxonSetBase = await this.apiDao.getTaxonSet(taxonSet)
@@ -121,16 +153,34 @@ class CompleteListDao {
       longTaxaCounts = await this.apiDao.getObservationCountsForAtlas(dateLong)
 
       wholeFinlandTaxonList = await this.apiDao.getObservationCountsForAtlasWholeFinland(dateLong)
+    } else if (taxonSet === 'Mappa') {
+      const shortAtlasCounts = await this.apiDao.getCountsOfCompleteListsForAtlas(dateShort)
+      const shortWBCCounts = await this.apiDao.getCountsOfCompleteListsForWBC(dateShort)
+      const longAtlasCounts = await this.apiDao.getCountsOfCompleteListsForAtlas(dateLong)
+      const longWBCCounts = await this.apiDao.getCountsOfCompleteListsForWBC(dateShort)
+
+      const shortAtlasTaxaCounts = await this.apiDao.getObservationCountsForAtlas(dateShort)
+      const shortWBCTaxaCounts = await this.apiDao.getObservationCountsForWBC(dateShort)
+      const longAtlasTaxaCounts = await this.apiDao.getObservationCountsForAtlas(dateLong)
+      const longWBCTaxaCounts = await this.apiDao.getObservationCountsForWBC(dateLong)
+
+      shortCounts = shortAtlasCounts.concat(shortWBCCounts)
+      longCounts = longAtlasCounts.concat(longWBCCounts)
+
+      shortTaxaCounts = this.mergeTaxonCounts(shortAtlasTaxaCounts, shortWBCTaxaCounts)
+      longTaxaCounts = this.mergeTaxonCounts(longAtlasTaxaCounts, longWBCTaxaCounts)
+
+      wholeFinlandTaxonList = await this.apiDao.getObservationCountsForAtlasWholeFinland(dateLong)
     } else {
       shortCounts = await this.apiDao.getCountsOfCompleteListsByTaxonSet(dateShort, taxonSet)
       longCounts = await this.apiDao.getCountsOfCompleteListsByTaxonSet(dateLong, taxonSet)
 
       shortTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateShort, taxonSet)
       longTaxaCounts = await this.apiDao.getObservationCountsByTaxonSet(dateLong, taxonSet)
-    
+
       wholeFinlandTaxonList = await this.apiDao.getObservationCountsByTaxonSetWholeFinland(dateLong, taxonSet)
     }
-  
+
     for (const grid of grid100km) {
       const gridIntCoords = [Number.parseInt(grid.slice(0,2)), Number.parseInt(grid.slice(3,5))]
   
@@ -138,7 +188,7 @@ class CompleteListDao {
         count.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
         count.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1])
   
-      if (shortCount.length > (taxonSet === 'BirdAtlas' ? 5 : 15)) {
+      if (shortCount.length > ((taxonSet === 'BirdAtlas' || taxonSet === 'Mappa') ? 5 : 15)) {
         let shortTaxaCount = shortTaxaCounts.filter(counts => {
           return counts.aggregateBy['gathering.conversions.ykj100km.lat'] == gridIntCoords[0] &&
           counts.aggregateBy['gathering.conversions.ykj100km.lon'] == gridIntCoords[1]})
@@ -157,7 +207,7 @@ class CompleteListDao {
         shortTaxaCount.forEach((count, ind) => {
           toReturn[urlRemover(count.aggregateBy['unit.linkings.taxon.id'])] = ind
         })
-  
+
         grid100kmData[grid] = toReturn
   
       } else {

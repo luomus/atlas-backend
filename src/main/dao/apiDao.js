@@ -70,6 +70,31 @@ class ApiDao {
     })
   }
 
+  async getCountsOfCompleteListsForWBC(time) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
+      taxonId: 'MX.37580',
+      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      collectionId: 'HR.39',
+      time: '2000/',
+      onlyCount: true,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
   async getObservationCountsForAtlas(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
@@ -93,7 +118,36 @@ class ApiDao {
 
     const key = url + JSON.stringify(params)
 
-    return await this.cache.wrapper(key, async (timeout = 0) => { 
+    return await this.cache.wrapper(key, async (timeout = 0) => {
+      return await this.getPaginatedAxios(url, params, timeout)
+    })
+  }
+
+  async getObservationCountsForWBC(time) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
+      taxonId: 'MX.37580',
+      typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
+      collectionId: 'HR.39',
+      time: '2000/',
+      onlyCount: true,
+      taxonCounts: false,
+      gatheringCounts: false,
+      pairCounts: false,
+      atlasCounts: false,
+      excludeNulls: true,
+      pessimisticDateRangeHandling: false,
+      pageSize: 1000,
+      page: 1,
+      cache: true,
+      dayOfYear: time,
+      qualityIssues: 'NO_ISSUES',
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => {
       return await this.getPaginatedAxios(url, params, timeout)
     })
   }
