@@ -243,7 +243,7 @@ class CompleteListDao {
         }
     
         //get taxon counts for the max 9 squares and calculate
-        if (count > 15) {
+        if (count > ((taxonSet === 'BirdAtlas' || taxonSet === 'Mappa') ? 5 : 15)) {
           const taxaLookup = {}
   
           for (const grid of grids) {
