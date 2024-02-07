@@ -1,5 +1,6 @@
 const {createCanvas, Image} = require('canvas')
 const svg64 = require('svg64')
+const urlRemover = require('../../helpers/urlRemover')
 
 /**
  * Provides an interface for map-related functionalities. When a ready-made atlas map is given as an argument, it is
@@ -32,19 +33,35 @@ function MapService(atlasMap, config) {
      */
     getSpeciesMap: function(data, grid = [], species, callback, type = 'svg', scaleFactor = 4, language = 'fi', atlas, showActivity) {
       const speciesMap = atlasMap.copy()
+      const atlasClassLookup = {}
+      const counts = {
+        'MY.atlasClassEnumD': 0,
+        'MY.atlasClassEnumC': 0,
+        'MY.atlasClassEnumB': 0,
+        'total': 0
+      }
       for (let i = 0; i < data.length; i++) {
         const cssClass = getClassForAtlasClass(data[i].atlasClass)
         speciesMap.setAttributesOfElement(data[i].grid, {class: `cir ${cssClass}`})
+
+        atlasClassLookup[data[i].grid] = urlRemover(data[i].atlasClass)
       }
 
-      if (showActivity) {
-        for (let i = 0; i < grid.length; i++) {
+      for (let i = 0; i < grid.length; i++) {
+        const coords = grid[i].grid
+        const atlasClass = atlasClassLookup[coords]
+
+        if (atlasClass !== undefined && atlasClass.slice(-1) !== 'A') {
+          counts[atlasClass] += 1
+          counts['total'] += 1
+        }
+        if (showActivity) {
           const cssClass = getClassForActivityCategory(grid[i].activityCategory)
           const id = `${grid[i].grid}bg`
           speciesMap.setAttributesOfElement(id, {class: cssClass})
+        } else {
+          speciesMap.removeElementById('activityLegend')
         }
-      } else {
-        speciesMap.removeElementById('activityLegend')
       }
 
       let width = speciesMap.getWidth()
@@ -58,7 +75,7 @@ function MapService(atlasMap, config) {
         speciesMap.setDimensions('100%', '100%')
       }
   
-      setLegend(speciesMap, species, language, atlas, showActivity)
+      setLegend(speciesMap, species, language, atlas, showActivity, counts)
       if (type === 'png')
         convertToPng(speciesMap, callback, width, height)
       else
@@ -84,7 +101,7 @@ function MapService(atlasMap, config) {
     return name.charAt(0).toUpperCase() + name.slice(1)
   }
 
-  function setLegend(gridOverlay, species, language, atlas, showActivity) {
+  function setLegend(gridOverlay, species, language, atlas, showActivity, counts) {
     const lan = language.toUpperCase()
     const speciesName = 'species' + lan
     setLegendTitle(gridOverlay, lan, atlas)
@@ -97,6 +114,12 @@ function MapService(atlasMap, config) {
       .setText('breedingColourTitle4', config.legend.breedingColourTitle4[textName])
       .setText('breedingColourTitle3', config.legend.breedingColourTitle3[textName])
       .setText('breedingColourTitle2', config.legend.breedingColourTitle2[textName])
+      .setText('breedingCountTotalTitle', config.legend.breedingCountTotalTitle[textName])
+      .setText('breedingCountTitle', config.legend.breedingCountTitle[textName])
+      .setText('breedingCountClassD', counts['MY.atlasClassEnumD'])
+      .setText('breedingCountClassC', counts['MY.atlasClassEnumC'])
+      .setText('breedingCountClassB', counts['MY.atlasClassEnumB'])
+      .setText('breedingCountTotal', counts['total'])
 
     if (showActivity) {
       gridOverlay.setText('activityColourTitle', config.legend.activityColourTitle[textName])

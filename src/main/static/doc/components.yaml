@@ -362,7 +362,17 @@ schemas:
       - prev:
           type: object
           ref: '#/schemas/Taxon'
-
+  TaxonSquareCount:
+    type: object
+    properties:
+      MY.atlasClassEnumD:
+        type: number
+      MY.atlasClassEnumC:
+        type: number
+      MY.atlasClassEnumB:
+        type: number
+      total:
+        type: number
 examples:
   grid1:
     value:
@@ -745,3 +755,9 @@ examples:
         taxonomicOrder: 9
         scientificName:	Anser erythropus
         intellectualRights: MZ.intellectualRightsCC-BY-4.0
+  taxonSquares:
+    value:
+      MY.atlasClassEnumD: 20
+      MY.atlasClassEnumC: 11
+      MY.atlasClassEnumB: 5
+      total: 36
