@@ -55,13 +55,16 @@ function MapService(atlasMap, config) {
           counts[atlasClass] += 1
           counts['total'] += 1
         }
+
         if (showActivity) {
           const cssClass = getClassForActivityCategory(grid[i].activityCategory)
           const id = `${grid[i].grid}bg`
           speciesMap.setAttributesOfElement(id, {class: cssClass})
-        } else {
-          speciesMap.removeElementById('activityLegend')
         }
+      }
+
+      if (!showActivity) {
+        speciesMap.removeElementById('activityLegend')
       }
 
       let width = speciesMap.getWidth()
