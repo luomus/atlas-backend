@@ -248,6 +248,24 @@ paths:
               examples:
                 JSON:
                   $ref: 'components.yaml#/examples/taxon'
+  /taxon/{taxonId}/gridStats:
+    get:
+      parameters:
+        - $ref: "components.yaml#/parameters/taxonId"
+      summary: Get grid square counts for different atlas classes
+      tags:
+        - taxon
+      responses:
+        '200':
+          description: Count of grid squares in different atlas classes
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: 'components.yaml#/schemas/TaxonSquareCount'
+              examples:
+                JSON:
+                  $ref: 'components.yaml#/examples/taxonSquares'
   /taxon/biomon/{taxonSetId}/{grid}:
     get:
       parameters:

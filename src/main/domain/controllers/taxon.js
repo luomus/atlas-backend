@@ -87,6 +87,45 @@ class Taxon {
       }
     }
   }
+
+  /**
+   * Returns the grid counts for specific taxon
+   * @returns {JSON}
+   */
+  getSpeciesGridStats() {
+    return async (req, res) => {
+      try {
+        const { taxonId } = req.params
+        const breedingData = await apiDao.getGridAndBreedingdataForSpeciesAndActiveAtlas(taxonId)
+        const grid = await gridDao.getAll()
+
+        const stats = {
+          'MY.atlasClassEnumB': 0,
+          'MY.atlasClassEnumC': 0,
+          'MY.atlasClassEnumD': 0,
+          total: 0
+        }
+
+        const breedingDataLookup = {};
+        breedingData.forEach(data => {
+          breedingDataLookup[`${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data['aggregateBy']['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`] = urlRemover(data.atlasClassMax)
+        })
+
+        grid.forEach((square) => {
+          const atlasClass = breedingDataLookup[square.coordinates]
+
+          if (stats[atlasClass] !== undefined) {
+            stats[atlasClass] += 1
+            stats['total'] += 1
+          }
+        })
+
+        return res.json(stats)
+      } catch (e) {
+        return res.status(500).send(e.message)
+      }
+    }
+  }
 }
 
 module.exports = Taxon

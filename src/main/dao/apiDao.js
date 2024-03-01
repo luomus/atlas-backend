@@ -59,6 +59,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
       completeListType: 'MY.completeListTypeComplete'
     }
@@ -85,6 +86,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
     }
 
@@ -112,6 +114,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
       completeListType: 'MY.completeListTypeComplete'
     }
@@ -142,6 +145,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
     }
 
@@ -170,6 +174,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
     }
 
@@ -192,6 +197,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
       completeListType: 'MY.completeListTypeComplete'
     }
@@ -247,6 +253,7 @@ class ApiDao {
       page: 1,
       cache: true,
       dayOfYear: time,
+      needsCheck: false,
       qualityIssues: 'NO_ISSUES',
     }
 
@@ -274,6 +281,7 @@ class ApiDao {
       ykj10kmCenter: grid,
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
       hasValue: 'unit.atlasClass',
+      needsCheck: false,
       pageSize: 10000,
       cache: true,
     }
@@ -301,6 +309,7 @@ class ApiDao {
       coordinateAccuracyMax: 10000,
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
       hasValue: 'unit.atlasClass',
+      needsCheck: false,
       pageSize: 10000,
       page: page,
       cache: true,
@@ -328,6 +337,7 @@ class ApiDao {
       time: '2022/2025',
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
       hasValue: 'unit.atlasClass',
+      needsCheck: false,
       pageSize: 10000,
       cache: true,
     }
@@ -355,6 +365,7 @@ class ApiDao {
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
       birdAssociationAreaId: associationId,
       hasValue: 'unit.atlasClass',
+      needsCheck: false,
       pageSize: 10000,
       cache: true,
     }
@@ -507,6 +518,7 @@ class ApiDao {
       coordinateAccuracyMax: 10000,
       taxonId: 'MX.37580',
       recordQuality: 'EXPERT_VERIFIED,COMMUNITY_VERIFIED,NEUTRAL',
+      needsCheck: false,
       pageSize: 10000
     }
     const key = url + JSON.stringify(params)

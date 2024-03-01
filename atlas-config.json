@@ -52,7 +52,7 @@
       "x": 0.5,
       "y": 21,
       "width": 28,
-      "height": 18,
+      "height": 20,
       "fill": "#ebebeb",
       "fill-opacity": 1,
       "stroke": "black",
@@ -203,6 +203,64 @@
       "textFI": "mahdollinen",
       "textSV": "eventuell",
       "textEN": "possible",
+      "display": "block"
+    },
+    "breedingCountTitle": {
+      "id": "breedingCountTitle",
+      "class": "title",
+      "x": 22,
+      "y": 25,
+      "font-size": 2.7,
+      "textFI": "Lkm.",
+      "textSV": "Nr.",
+      "textEN": "No.",
+      "display": "block"
+    },
+    "breedingCountClassD": {
+      "id": "breedingCountClassD",
+      "class": "breedingColourTitle",
+      "x": 22,
+      "y": 29.5,
+      "font-size": 2.2,
+      "text": "0",
+      "display": "block"
+    },
+    "breedingCountClassC": {
+      "id": "breedingCountClassC",
+      "class": "breedingColourTitle",
+      "x": 22,
+      "y": 32.5,
+      "font-size": 2.2,
+      "text": "0",
+      "display": "block"
+    },
+    "breedingCountClassB": {
+      "id": "breedingCountClassB",
+      "class": "breedingColourTitle",
+      "x": 22,
+      "y": 35.5,
+      "font-size": 2.2,
+      "text": "0",
+      "display": "block"
+    },
+    "breedingCountTotalTitle": {
+      "id": "breedingCountTotalTitle",
+      "class": "breedingColourTitle",
+      "x": 2,
+      "y": 38.5,
+      "font-size": 2.2,
+      "textFI": "yhteensä",
+      "textSV": "sum",
+      "textEN": "total",
+      "display": "block"
+    },
+    "breedingCountTotal": {
+      "id": "breedingCountTotal",
+      "class": "breedingColourTitle",
+      "x": 22,
+      "y": 38.5,
+      "font-size": 2.2,
+      "text": "0",
       "display": "block"
     },
     "activityColourTitle": {

@@ -254,6 +254,13 @@ function createAtlasMap(gridArray, geoJsonArray, config) {
         .addElement('rect', config.legend.breedingColourBox2, 'breedingLegend')
         .setAttributesOfElement(config.legend.breedingColourBox2.id, {class: 'classB'})
         .addElement('text', config.legend.breedingColourTitle2, 'breedingLegend')
+        .addElement('text', config.legend.breedingCountTotalTitle, 'breedingLegend')
+        .addElement('text', config.legend.breedingCountTitle, 'breedingLegend')
+        .addElement('text', config.legend.breedingCountClassD, 'breedingLegend')
+        .addElement('text', config.legend.breedingCountClassC, 'breedingLegend')
+        .addElement('text', config.legend.breedingCountClassB, 'breedingLegend')
+        .addElement('text', config.legend.breedingCountTotal, 'breedingLegend')
+
     return svgImage
   }
 
