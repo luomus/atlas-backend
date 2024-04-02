@@ -208,40 +208,44 @@
     "breedingCountTitle": {
       "id": "breedingCountTitle",
       "class": "title",
-      "x": 22,
+      "x": 27.5,
       "y": 25,
       "font-size": 2.7,
-      "textFI": "Lkm.",
-      "textSV": "Nr.",
-      "textEN": "No.",
-      "display": "block"
+      "textFI": "Lkm",
+      "textSV": "Nr",
+      "textEN": "No",
+      "display": "block",
+      "text-anchor": "end"
     },
     "breedingCountClassD": {
       "id": "breedingCountClassD",
       "class": "breedingColourTitle",
-      "x": 22,
+      "x": 27.5,
       "y": 29.5,
       "font-size": 2.2,
       "text": "0",
-      "display": "block"
+      "display": "block",
+      "text-anchor": "end"
     },
     "breedingCountClassC": {
       "id": "breedingCountClassC",
       "class": "breedingColourTitle",
-      "x": 22,
+      "x": 27.5,
       "y": 32.5,
       "font-size": 2.2,
       "text": "0",
-      "display": "block"
+      "display": "block",
+      "text-anchor": "end"
     },
     "breedingCountClassB": {
       "id": "breedingCountClassB",
       "class": "breedingColourTitle",
-      "x": 22,
+      "x": 27.5,
       "y": 35.5,
       "font-size": 2.2,
       "text": "0",
-      "display": "block"
+      "display": "block",
+      "text-anchor": "end"
     },
     "breedingCountTotalTitle": {
       "id": "breedingCountTotalTitle",
@@ -249,19 +253,20 @@
       "x": 2,
       "y": 38.5,
       "font-size": 2.2,
-      "textFI": "yhteensä",
-      "textSV": "sum",
-      "textEN": "total",
+      "textFI": "Yhteensä",
+      "textSV": "Sum",
+      "textEN": "Total",
       "display": "block"
     },
     "breedingCountTotal": {
       "id": "breedingCountTotal",
       "class": "breedingColourTitle",
-      "x": 22,
+      "x": 27.5,
       "y": 38.5,
       "font-size": 2.2,
       "text": "0",
-      "display": "block"
+      "display": "block",
+      "text-anchor": "end"
     },
     "activityColourTitle": {
       "id": "activityColourTitle",
