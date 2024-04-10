@@ -119,11 +119,20 @@
       "font-size": 2.7,
       "display": "none"
     },
-    "speciesSCI": {
-      "id": "speciesSCI", 
+    "speciesSCIl1": {
+      "id": "speciesSCIl1",
       "class": "speciesName",
       "x": 1,
       "y": 13,
+      "font-size": 2.7,
+      "font-style": "italic",
+      "display": "none"
+    },
+    "speciesSCIl2": {
+      "id": "speciesSCIl2",
+      "class": "speciesName",
+      "x": 1,
+      "y": 17,
       "font-size": 2.7,
       "font-style": "italic",
       "display": "none"
