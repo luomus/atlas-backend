@@ -109,8 +109,12 @@ function MapService(atlasMap, config) {
     const speciesName = 'species' + lan
     setLegendTitle(gridOverlay, lan, atlas)
     const textName = 'text' + lan
-    gridOverlay.setText('speciesSCI', species.scientificName)
-      .setAttributesOfElement('speciesSCI', {display: 'block'})
+    const nameSplit = species.scientificName.indexOf(' ')
+
+    gridOverlay.setText('speciesSCIl1', species.scientificName.substring(0, nameSplit))
+      .setAttributesOfElement('speciesSCIl1', {display: 'block'})
+      .setText('speciesSCIl2', species.scientificName.substring(nameSplit + 1))
+      .setAttributesOfElement('speciesSCIl2', {display: 'block'})
       .setText(speciesName, capitalizeFirst(species.vernacularName[language]))
       .setAttributesOfElement(speciesName, {display: 'block'})
       .setText('breedingColourTitle', config.legend.breedingColourTitle[textName])
