@@ -1,5 +1,6 @@
 const access_token = process.env.LAJI_ACCESS_TOKEN
 const url_root = process.env.LAJI_API_URL
+const blocklist = process.env.USER_BLOCKLIST
 
 class ApiDao {
   axios
@@ -49,6 +50,7 @@ class ApiDao {
   async getCountsOfCompleteListsForAtlas(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -74,6 +76,7 @@ class ApiDao {
   async getCountsOfCompleteListsForWBC(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -100,6 +103,7 @@ class ApiDao {
   async getObservationCountsForAtlas(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -129,6 +133,7 @@ class ApiDao {
   async getObservationCountsForWBC(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -159,6 +164,7 @@ class ApiDao {
   async getObservationCountsForAtlasWholeFinland(time) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'unit.linkings.taxon.id',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -188,6 +194,7 @@ class ApiDao {
   async getCountsOfCompleteListsByTaxonSet(time, taxonSetId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,document.documentId',
       taxonSetId: taxonSetId,
       onlyCount: true,
@@ -212,6 +219,7 @@ class ApiDao {
   async getObservationCountsByTaxonSet(time, taxonSetId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
       taxonSetId: taxonSetId,
       onlyCount: true,
@@ -239,6 +247,7 @@ class ApiDao {
   async getObservationCountsByTaxonSetWholeFinland(time, taxonSetId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'unit.linkings.taxon.id',
       taxonSetId: taxonSetId,
       countryId: 'ML.206',
@@ -272,6 +281,7 @@ class ApiDao {
   async getListOfDistinctBirdsForGridAndActiveAtlas(grid) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'unit.linkings.taxon.speciesId,unit.linkings.taxon.speciesNameEnglish,unit.linkings.taxon.speciesNameFinnish,unit.linkings.taxon.speciesNameSwedish,unit.linkings.taxon.speciesScientificName,unit.linkings.taxon.speciesTaxonomicOrder',
       orderBy: 'unit.linkings.taxon.speciesTaxonomicOrder',
       atlasCounts: true,
@@ -301,6 +311,7 @@ class ApiDao {
   async getListOfDistinctBirdsForActiveAtlasPaginated(page = 1) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'unit.linkings.taxon.speciesId,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
@@ -330,6 +341,7 @@ class ApiDao {
   async getGridAndBreedingdataForSpeciesAndActiveAtlas(speciesId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
       excludeNulls: true,
@@ -357,6 +369,7 @@ class ApiDao {
   async getBreedingDataForActiveAtlasAndAssociation(associationId) {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.speciesId',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
@@ -511,6 +524,7 @@ class ApiDao {
   async getSpeciesCountForGrids() {
     const url = `${url_root}/warehouse/query/unit/aggregate`
     const params = {
+      editorOrObserverIdIsNot: blocklist,
       aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       taxonCounts: true,
       atlasClass: 'MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
