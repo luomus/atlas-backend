@@ -40,6 +40,7 @@ async function main() {
   const taxonRouter = require('./domain/routers/taxonRouter')
   const birdAssociationRouter = require('./domain/routers/birdAssociationRouter')
   const healthRouter = require('./domain/routers/healthRouter')
+  const observerRouter = require('./domain/routers/observerRouter')
 
   app.use(cors())
 
@@ -51,6 +52,7 @@ async function main() {
   app.use('/api/v1/map', mapRouter)
   app.use('/api/v1/taxon/', taxonRouter)
   app.use('/api/v1/birdAssociation', birdAssociationRouter)
+  app.use('/api/v1/observer', observerRouter)
   app.use('/api/v1/health', healthRouter)
 
   async function update() {

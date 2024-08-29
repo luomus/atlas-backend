@@ -1,6 +1,8 @@
+const urlRemover = require('../helpers/urlRemover')
 const access_token = process.env.LAJI_ACCESS_TOKEN
 const url_root = process.env.LAJI_API_URL
 const blocklist = process.env.USER_BLOCKLIST
+const name_blocklist = process.env.NAME_BLOCKLIST?.split(',') || []
 
 class ApiDao {
   axios
@@ -26,6 +28,83 @@ class ApiDao {
     }
 
     return data
+  }
+
+  async getObserverAggregate(birdAssociationId) {
+    const url = `${url_root}/warehouse/query/unit/aggregate`
+    const params = {
+      access_token: access_token,
+      editorOrObserverIdIsNot: blocklist,
+      birdAssociationAreaId: birdAssociationId,
+      informalTaxonGroupId: 'MVL.1',
+      countryId: 'ML.206',
+      time: '2022-01-01/2025-12-31',
+      collectionId: 'HR.1747,HR.3211,HR.48,HR.173',
+      recordQuality: 'COMMUNITY_VERIFIED,NEUTRAL,EXPERT_VERIFIED',
+      aggregateBy: 'gathering.team.memberName,unit.atlasClass',
+      atlasClass: 'MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
+      selected: 'gathering.team.memberName,unit.AtlasClass',
+      orderBy: 'gathering.team.memberName',
+      cache: true,
+      needsCheck: false,
+      pageSize: 10000
+    }
+
+    const key = url + JSON.stringify(params)
+
+    return await this.cache.wrapper(key, async (timeout = 0) => { 
+      const rawObserverStats = await this.getPaginatedAxios(url, params, timeout)
+
+      let observerStats = rawObserverStats.reduce((acc, stats) => {
+        let current = acc.length ? acc[acc.length - 1] : undefined
+        const memberName = stats['aggregateBy']['gathering.team.memberName']
+        const atlasClass = urlRemover(stats['aggregateBy']['unit.atlasClass'])
+        const count = stats.count
+
+        if (name_blocklist.includes(memberName?.toLowerCase())) {
+          return acc
+        }
+
+        if (!current || current.memberName !== memberName) {
+          current = {
+            memberName,
+            [atlasClass]: count,
+            total: count
+          }
+          
+          acc.push(current)
+        } else {
+          current[atlasClass] = count
+          current.total = current.total + count
+        }
+
+        return acc
+      }, [])
+
+      observerStats = observerStats.sort((a, b) => {
+        const aCount = a.total
+        const bCount = b.total
+
+        if (aCount !== bCount) {
+          return bCount - aCount
+        }
+
+        const aName = a.memberName
+        const bName = b.memberName
+
+        if (aName < bName) {
+          return -1
+        }
+
+        if (aName > bName) {
+          return 1
+        }
+
+        return 0
+      })
+
+      return observerStats
+    })
   }
 
   async getTaxonSet(taxonSet) {

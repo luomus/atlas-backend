@@ -102,13 +102,38 @@ paths:
       tags:
         - birdAssociation
       responses:
-        200:
+        '200':
           description: An object of bird association and its stats
           content: 
             application/json:
               schema: 
                 type: object
                 $ref: 'components.yaml#/schemas/BirdAssociationStats'
+  /observer/stats:
+    get:
+      parameters:
+        - name: limit
+          in: query
+          type: number
+          description: Number of top observes included in response
+        - name: birdAssociationId
+          in: query
+          type: string
+          description: Id for bird association area from which top observers are wanted, if missing list for whole finland is returned.
+      summary: Get list of top observers and their observation stats
+      description: Get list of top observers and their observation stats, ordered in descending total observation order
+      tags:
+        - observer
+      responses:
+        '200':
+          description: List of top observers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  $ref: components.yaml#schemas/ObserverStats
   /grid:
     get:
       summary: Get an object of grid stats (below ykj 740) and an array of all atlas grid squares.

@@ -265,6 +265,19 @@ schemas:
             $ref: '#/schemas/ActivityCategoryLookup'
           MY.atlasActivityCategoryEnum5:
             $ref: '#/schemas/ActivityCategoryLookup'
+  ObserverStats:
+    type: object
+    properties:
+      memberName:
+        type: string
+      total:
+        type: number
+      MY.atlasClassEnumB:
+        type: number
+      MY.atlasClassEnumC:
+        type: number
+      MY.atlasClassEnumD:
+        type: number
   FinlandStats:
     type: object
     properties:
