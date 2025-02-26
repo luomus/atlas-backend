@@ -35,6 +35,8 @@ async function main() {
   const statsUpdater = new StatsUpdater()
   const CompleteListUpdater = require('./domain/updater/completeListUpdater')
   const completeListUpdater = new CompleteListUpdater()
+  const PythonMapUpdater = require('./domain/updater/pythonMapUpdater')
+  const pythonMapUpdater = new PythonMapUpdater()
   const gridRouter = require('./domain/routers/gridRouter')
   const mapRouter = require('./domain/routers/mapRouter')
   const taxonRouter = require('./domain/routers/taxonRouter')
@@ -59,6 +61,7 @@ async function main() {
     await atlasGridUpdater.update()
     await statsUpdater.update()
     await completeListUpdater.update()
+    pythonMapUpdater.update()
   }
 
   cron.schedule('0 0 */3 * * *', async () => {

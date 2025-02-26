@@ -315,7 +315,7 @@ class Grid {
         const activityCategories = await apiDao.getEnumRange('MY.atlasActivityCategoryEnum')
         const gridSpeciesCounts = await apiDao.getSpeciesCountForGrids()
 
-        const originaAtlasClassSum = grid.atlasClassSum
+        const originalAtlasClassSum = grid.atlasClassSum
         const atlasClassSum = getAtlasClassSum(birdList)
         const activityCategory = getActivityCategory(atlasClassSum, grid)
 
@@ -368,7 +368,7 @@ class Grid {
 
         //update grid atlasClassSum nad activityCategry in db if necessary
         try {
-          if (atlasGridId && atlasClassSum !== originaAtlasClassSum) {
+          if (atlasGridId && atlasClassSum !== originalAtlasClassSum) {
             await atlasGridDao.updateAtlasGridData({
               id: grid.atlasGridId,
               atlasClassSum,

@@ -15,6 +15,8 @@ const querier = new Querier()
 const atlasGridSpeciesDataDao = new AtlasGridSPeciesDataDao(querier)
 const atlasGridDao = new AtlasGridDao(querier)
 const gridDao = new GridDao(querier)
+const InteractiveMapGenerator =  require('../../../python/interactiveMapGenerator')
+const interactiveMapGenerator = new InteractiveMapGenerator()
 
 let mapService
 
@@ -120,6 +122,26 @@ class Map {
         }
       } catch (e) {
         console.error(new Date().toString() + ' ' + e.message)
+        res.status(500).send(e.message)
+      }
+    }
+  }
+
+  /**
+   * Gets an HTLM text for the interactive map of Lappi squares
+   * @returns {HTMLString}
+   */
+  getInteractiveMap() {
+    return async (req, res) => {
+      try {
+        const mapHTML = interactiveMapGenerator.getInteractiveMap()
+
+        if (!mapHTML) {
+          res.status(500).send('Could note generate interactive map')
+        }
+        res.setHeader('Content-Type', 'text/html')
+        res.send(mapHTML)
+      } catch (e) {
         res.status(500).send(e.message)
       }
     }
