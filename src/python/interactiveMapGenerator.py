@@ -86,7 +86,10 @@ m = folium.Map(location=[68.5, 26], zoom_start=7, control_scale=True)
 folium.GeoJson(
     merged_data,
     name="10km YKJ Ruudukko",
-    tooltip=folium.GeoJsonTooltip(fields=["YKJ", "Kunta", "Ruutu", "Pesimävarmuussumma", "Selvitysaste", "Suurruutu", "Suurruutu saavutettu"]),
+    tooltip=folium.GeoJsonTooltip(
+      fields=["YKJ", "Kunta", "Ruutu", "Pesimävarmuussumma", "Selvitysaste", "Suurruutu", "Suurruutu saavutettu"],
+      style="font-size: 14px;"
+    ),
     style_function=lambda x: {
         "color": get_color(x["properties"]["Priorisoitu"] if x["properties"]["Suurruutu"] not in done_squares else "black"),
         "weight": 1 
