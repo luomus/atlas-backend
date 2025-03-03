@@ -132,8 +132,8 @@ for _, row in grid_50km_borders.iterrows():
 html_text = """
 <div style="
     position: fixed; 
-    bottom: 40px; right: 20px; width: 220px; height: 75px; 
-    background-color: white; z-index:9999; font-size:14px;
+    bottom: 20px; right: 10px; width: 150px; height: 50px;
+    background-color: white; z-index:9999; font-size:8px;
     padding: 10px; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);">
     YKJ-ruudukko: Luomus<br>
     Taustakartta: OpenStreetMap<br>
