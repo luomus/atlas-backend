@@ -134,7 +134,7 @@ class Map {
   getInteractiveMap() {
     return async (req, res) => {
       try {
-        const mapHTML = interactiveMapGenerator.getInteractiveMap()
+        const mapHTML = await interactiveMapGenerator.getInteractiveMap()
 
         if (!mapHTML) {
           res.status(500).send('Could note generate interactive map')

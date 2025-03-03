@@ -5,11 +5,10 @@ class PythonMapUpdater {
     this.interactiveMapGenerator = new InteractiveMapGenerator();
   }
 
-  update () {
+  async update () {
     console.log(new Date().toISOString(), ' ', 'Starting python map update');
     try {
-      const map = this.interactiveMapGenerator.getInteractiveMap();
-
+      const map = await this.interactiveMapGenerator.getInteractiveMap();
       if (!map) {
         console.error('No python map data found');
       }

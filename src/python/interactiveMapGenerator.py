@@ -4,7 +4,6 @@ import sys
 import geopandas as gpd
 import folium
 import pandas as pd
-import requests
 from tqdm import tqdm
 
 def find_grid(grid, ykj_n, ykj_e):
@@ -17,20 +16,18 @@ def get_bird_atlas_data(ykj_ns, ykj_es):
     # Loop over all ykj_n and ykj_e values and fetch data from API. Store "atlasClassSum" and "coordinates" to a table
     bird_api_data = pd.DataFrame()
     idx = 0
-    api_url = "https://atlas-api.2.rahtiapp.fi/api/v1/grid"
-    response = requests.get(api_url)
-    if response.status_code != 200:
-      return None
-    
-    data = response.json()["gridSquares"]
-    for ykj_n, ykj_e in tqdm(zip(ykj_ns, ykj_es)):
-        grid = list(filter(lambda x: find_grid(x, ykj_n, ykj_e), data))
 
-        if len(grid) == 1:
-          bird_api_data.at[idx, "Pesimävarmuussumma"] = int(grid[0]["atlasClassSum"])
-          bird_api_data.at[idx, "YKJ"] = grid[0]["coordinates"]
-          bird_api_data.at[idx, "Selvitysaste"] = grid[0]["activityCategory"]["value"]
-          idx += 1
+    with open('data/data.json') as jsonfile:
+      data = json.load(jsonfile)
+
+      for ykj_n, ykj_e in tqdm(zip(ykj_ns, ykj_es)):
+          grid = list(filter(lambda x: find_grid(x, ykj_n, ykj_e), data))
+
+          if len(grid) == 1:
+            bird_api_data.at[idx, "Pesimävarmuussumma"] = int(grid[0]["atlasClassSum"])
+            bird_api_data.at[idx, "YKJ"] = grid[0]["coordinates"]
+            bird_api_data.at[idx, "Selvitysaste"] = grid[0]["activityCategory"]
+            idx += 1
   
     return bird_api_data
 

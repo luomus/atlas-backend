@@ -61,7 +61,7 @@ async function main() {
     await atlasGridUpdater.update()
     await statsUpdater.update()
     await completeListUpdater.update()
-    pythonMapUpdater.update()
+    await pythonMapUpdater.update()
   }
 
   cron.schedule('0 0 */3 * * *', async () => {
