@@ -1,5 +1,4 @@
 import json
-import os
 import sys
 import geopandas as gpd
 import folium
@@ -32,14 +31,16 @@ def get_bird_atlas_data(ykj_ns, ykj_es):
     return bird_api_data
 
 def get_color(value):
-    if value == "valmis":
-        return "blue"
-    elif value == "kyllä":
-        return "red"
-    elif value == "ei":
-        return "gray"
+    selvitysaste = value["Selvitysaste"]
+    priorisoitu = value["Priorisoitu"]
+    if selvitysaste in ['Hyvä', 'Erinomainen', 'Tyydyttävä']:
+       return "blue"
+    elif selvitysaste in ['Välttävä', "Satunnaishavaintoja", "Ei havaintoja"] and priorisoitu == "kyllä":
+       return "red"
+    elif selvitysaste in ['Välttävä', "Satunnaishavaintoja", "Ei havaintoja"]:
+       return "gray"
     else:
-        return None
+       return None
 
 def is_done(group):
     # Return true if more than 75% of the group has "Selvitysaste" good enough
@@ -87,8 +88,7 @@ folium.GeoJson(
       fields=["YKJ", "Kunta", "Ruutu", "Pesimävarmuussumma", "Selvitysaste", "Suurruutu", "Suurruutu saavutettu"],
       style="font-size: 14px;"
     ),
-    style_function=lambda x: {
-        "color": get_color(x["properties"]["Priorisoitu"] if x["properties"]["Suurruutu"] not in done_squares else "black"),
+    style_function=lambda x: {"color": get_color(x["properties"] if x["properties"]["Suurruutu"] not in done_squares else "black"),
         "weight": 1 
     },
     highlight_function=lambda x: {
