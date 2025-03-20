@@ -137,7 +137,7 @@ class Map {
         const mapHTML = await interactiveMapGenerator.getInteractiveMap()
 
         if (!mapHTML) {
-          res.status(500).send('Could note generate interactive map')
+          return res.status(500).send('Could not generate interactive map')
         }
         res.setHeader('Content-Type', 'text/html')
         res.send(mapHTML)

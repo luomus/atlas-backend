@@ -34,13 +34,13 @@ def get_color(value):
     selvitysaste = value["Selvitysaste"]
     priorisoitu = value["Priorisoitu"]
     if selvitysaste in ['Hyvä', 'Erinomainen', 'Tyydyttävä']:
-       return "blue"
+      return "blue"
     elif selvitysaste in ['Välttävä', "Satunnaishavaintoja", "Ei havaintoja"] and priorisoitu == "kyllä":
-       return "red"
+      return "red"
     elif selvitysaste in ['Välttävä', "Satunnaishavaintoja", "Ei havaintoja"]:
-       return "gray"
+      return "gray"
     else:
-       return None
+      return None
 
 def is_done(group):
     # Return true if more than 75% of the group has "Selvitysaste" good enough
@@ -82,25 +82,26 @@ m = folium.Map(location=[68.5, 26], zoom_start=7, control_scale=True)
 
 # Add interactive grid with clickable urls and cool colours
 folium.GeoJson(
-    merged_data,
-    name="10km YKJ Ruudukko",
-    tooltip=folium.GeoJsonTooltip(
-      fields=["YKJ", "Kunta", "Ruutu", "Pesimävarmuussumma", "Selvitysaste", "Suurruutu", "Suurruutu saavutettu"],
-      style="font-size: 14px;"
-    ),
-    style_function=lambda x: {"color": get_color(x["properties"] if x["properties"]["Suurruutu"] not in done_squares else "black"),
-        "weight": 1 
-    },
-    highlight_function=lambda x: {
-        "weight": 5,
-        "color": "black"
-    },
-    popup=folium.GeoJsonPopup(
-        fields=["url"],
-        aliases=["Lue lisää:"],
-        parse_html=True,
-        max_width=900
-    )
+  merged_data,
+  name="10km YKJ Ruudukko",
+  tooltip=folium.GeoJsonTooltip(
+    fields=["YKJ", "Kunta", "Ruutu", "Pesimävarmuussumma", "Selvitysaste", "Suurruutu", "Suurruutu saavutettu"],
+    style="font-size: 14px;"
+  ),
+  style_function=lambda x: {
+    "color": get_color(x["properties"]) if x["properties"]["Suurruutu"] not in done_squares else "black",
+    "weight": 1 
+  },
+  highlight_function=lambda x: {
+      "weight": 5,
+      "color": "black"
+  },
+  popup=folium.GeoJsonPopup(
+      fields=["url"],
+      aliases=["Lue lisää:"],
+      parse_html=True,
+      max_width=900
+  )
 ).add_to(m)
 
 # Add grid_50km_borders to the map with bolder borders

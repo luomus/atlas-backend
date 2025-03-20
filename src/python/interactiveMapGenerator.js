@@ -29,9 +29,10 @@ class InteractiveMapGenerator {
         atlasClassSum: data.atlasClassSum,
         activityCategory: data.activityCategory !== null ? activityCategoryEnum[data.activityCategory]['fi'] : activityCategoryEnum['MY.atlasActivityCategoryEnum0']['fi']
       }))
-      fs.writeFileSync('/opt/app/src/python/data/data.json', JSON.stringify(gridData))
+      const cwd = process.cwd()
+      fs.writeFileSync(cwd + '/src/python/data/data.json', JSON.stringify(gridData))
 
-      const python = spawnSync('python3', ['interactiveMapGenerator.py'], { timeout: 120000, encoding: 'utf8', cwd: '/opt/app/src/python' })
+      const python = spawnSync('python3', ['interactiveMapGenerator.py'], { timeout: 600000, encoding: 'utf8', cwd: cwd + '/src/python' })
       data = python.stdout
 
       if (data !== '') {
