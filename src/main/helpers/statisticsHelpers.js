@@ -229,7 +229,7 @@ async function getStatistics(gridDao, apiDao) {
 
     grid.targetPercentage = targetPercentage * 100
 
-    if ( targetPercentage > 0.75) grid.targetMet = true
+    if ( targetPercentage >= 0.75) grid.targetMet = true
   })
 
   let fulfilled = 0
