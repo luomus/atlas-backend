@@ -45,7 +45,7 @@ def get_color(value):
 def is_done(group):
     # Return true if more than 75% of the group has "Selvitysaste" good enough
     count = group["Selvitysaste"].isin(["Erinomainen", "Hyvä", "Tyydyttävä"]).sum()
-    return count / len(group) > 0.75
+    return count / len(group) >= 0.75
 
 
 grid_10km = gpd.read_file("data/YKJ10000_polygons.gpkg").to_crs(4326)
