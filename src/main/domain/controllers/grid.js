@@ -324,20 +324,20 @@ class Grid {
 
           switch (req.query.language) {
             case 'en':
-              speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameEnglish']
+              speciesName = result.aggregateBy['unit.linkings.taxon.nameEnglish']
               break
             case 'sv':
-              speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameSwedish']
+              speciesName = result.aggregateBy['unit.linkings.taxon.nameSwedish']
               break
             default:
-              speciesName = result.aggregateBy['unit.linkings.taxon.speciesNameFinnish']
+              speciesName = result.aggregateBy['unit.linkings.taxon.nameFinnish']
           }
 
           const atlasCodeKey = urlRemover(result.atlasCodeMax)
           const atlasClassKey = urlRemover(result.atlasClassMax)
 
           results.push({
-            speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId']),
+            speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId'] || result.aggregateBy['unit.linkings.taxon.aggregateId']),
             speciesName: speciesName,
             atlasCode: {
               key: atlasCodeKey,

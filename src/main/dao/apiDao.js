@@ -370,8 +370,8 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
-      aggregateBy: 'unit.linkings.taxon.speciesId,unit.linkings.taxon.speciesNameEnglish,unit.linkings.taxon.speciesNameFinnish,unit.linkings.taxon.speciesNameSwedish,unit.linkings.taxon.speciesScientificName,unit.linkings.taxon.speciesTaxonomicOrder',
-      orderBy: 'unit.linkings.taxon.speciesTaxonomicOrder',
+      aggregateBy: 'unit.linkings.taxon.nameEnglish,unit.linkings.taxon.nameFinnish,unit.linkings.taxon.nameSwedish,unit.linkings.taxon.scientificName,unit.linkings.taxon.taxonomicOrder,unit.linkings.taxon.speciesId,unit.linkings.taxon.aggregateId',
+      orderBy: 'unit.linkings.taxon.taxonomicOrder',
       atlasCounts: true,
       taxonId: 'MX.37580',
       time: '2022/2025',
@@ -401,7 +401,7 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
-      aggregateBy: 'unit.linkings.taxon.speciesId,gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.speciesId,unit.linkings.taxon.aggregateId',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
       taxonId: 'MX.37580',
@@ -594,7 +594,7 @@ class ApiDao {
   async getBirdList() {
     const url = `${url_root}/taxa/MX.37580/species`
     const params = {
-      taxonRanks: 'MX.species',
+      taxonRanks: 'MX.species,MX.aggregate',
       lang: 'multi',
       langFallback: true,
       typesOfOccurrenceFilters: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
