@@ -81,7 +81,7 @@ class Grid {
         const breedingCountLookup = {}
 
         breedingData.forEach(data => {
-          const taxonId = urlRemover(data.aggregateBy['unit.linkings.taxon.speciesId'])
+          const taxonId = urlRemover(data.aggregateBy['unit.linkings.taxon.id'])
           if (!breedingCountLookup[taxonId]) {
             breedingCountLookup[taxonId] = {
               'MY.atlasClassEnumB': 0,
@@ -337,7 +337,7 @@ class Grid {
           const atlasClassKey = urlRemover(result.atlasClassMax)
 
           results.push({
-            speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.speciesId'] || result.aggregateBy['unit.linkings.taxon.aggregateId']),
+            speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.id']),
             speciesName: speciesName,
             atlasCode: {
               key: atlasCodeKey,

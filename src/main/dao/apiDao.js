@@ -186,6 +186,7 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
+      taxonRankId: 'MX.species,MX.aggregate',
       aggregateBy: 'gathering.conversions.ykj100km.lat,gathering.conversions.ykj100km.lon,unit.linkings.taxon.id',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -249,6 +250,7 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
+      taxonRankId: 'MX.species,MX.aggregate',
       aggregateBy: 'unit.linkings.taxon.id',
       taxonId: 'MX.37580',
       typeOfOccurrenceId: 'MX.typeOfOccurrenceRegularBreeder,MX.typeOfOccurrenceIrregularBreeder',
@@ -370,7 +372,8 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
-      aggregateBy: 'unit.linkings.taxon.nameEnglish,unit.linkings.taxon.nameFinnish,unit.linkings.taxon.nameSwedish,unit.linkings.taxon.scientificName,unit.linkings.taxon.taxonomicOrder,unit.linkings.taxon.speciesId,unit.linkings.taxon.aggregateId',
+      taxonRankId: 'MX.species,MX.aggregate',
+      aggregateBy: 'unit.linkings.taxon.nameEnglish,unit.linkings.taxon.nameFinnish,unit.linkings.taxon.nameSwedish,unit.linkings.taxon.scientificName,unit.linkings.taxon.taxonomicOrder,unit.linkings.taxon.id',
       orderBy: 'unit.linkings.taxon.taxonomicOrder',
       atlasCounts: true,
       taxonId: 'MX.37580',
@@ -401,7 +404,8 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
-      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.speciesId,unit.linkings.taxon.aggregateId',
+      taxonRankId: 'MX.species,MX.aggregate',
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.id',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
       taxonId: 'MX.37580',
@@ -461,7 +465,8 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
-      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.speciesId',
+      taxonRankId: 'MX.species,MX.aggregate',
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,,unit.linkings.taxon.id',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
       excludeNulls: true,
@@ -490,7 +495,7 @@ class ApiDao {
     const data = await this.getBreedingDataForActiveAtlasAndAssociation(associationId)
     const fullSpeciesId = 'http://tun.fi/' + speciesId
 
-    return data.filter(data => data.aggregateBy['unit.linkings.taxon.speciesId'] === fullSpeciesId)
+    return data.filter(data => data.aggregateBy['unit.linkings.taxon.id'] === fullSpeciesId)
   }
 
   /**
@@ -617,6 +622,7 @@ class ApiDao {
     const params = {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
+      taxonRankId: 'MX.species,MX.aggregate',
       aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       taxonCounts: true,
       atlasClass: 'MY.atlasClassEnumB,MY.atlasClassEnumC,MY.atlasClassEnumD',
