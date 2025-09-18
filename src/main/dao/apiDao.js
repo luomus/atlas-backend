@@ -466,7 +466,7 @@ class ApiDao {
       access_token: access_token,
       editorOrObserverIdIsNot: blocklist,
       taxonRankId: 'MX.species,MX.aggregate',
-      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,,unit.linkings.taxon.id',
+      aggregateBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon,unit.linkings.taxon.id',
       orderBy: 'gathering.conversions.ykj10kmCenter.lat,gathering.conversions.ykj10kmCenter.lon',
       atlasCounts: true,
       excludeNulls: true,
