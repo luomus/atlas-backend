@@ -14,6 +14,7 @@ const ApiDao = require('../../dao/apiDao')
 const { getAtlasClassSum, getActivityCategory } = require('../../helpers/activityCategryHelpers')
 const apiDao = new ApiDao(axios, new Cache())
 const { getCachedFinlandStatistics, getCachedAssociationStatistics } = require('../../helpers/statisticsHelpers')
+const { clearLesserTaxa } = require('../../helpers/activityCategryHelpers')
 
 class Grid {
   /**
@@ -307,8 +308,8 @@ class Grid {
           return res.status(404).send()
         }
 
-        const birdList = await apiDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId)
-        const results = []
+        const birdList = clearLesserTaxa(await apiDao.getListOfDistinctBirdsForGridAndActiveAtlas(gridId))
+        let results = []
 
         const atlasCode = await apiDao.getEnumRange('MY.atlasCodeEnum')
         const atlasClass = await apiDao.getEnumRange('MY.atlasClassEnum')
@@ -320,25 +321,17 @@ class Grid {
         const activityCategory = getActivityCategory(atlasClassSum, grid)
 
         for ( const result of birdList ) {
-          let speciesName
+          const taxonId = urlRemover(result.taxonId)
 
-          switch (req.query.language) {
-            case 'en':
-              speciesName = result.aggregateBy['unit.linkings.taxon.nameEnglish']
-              break
-            case 'sv':
-              speciesName = result.aggregateBy['unit.linkings.taxon.nameSwedish']
-              break
-            default:
-              speciesName = result.aggregateBy['unit.linkings.taxon.nameFinnish']
-          }
+          const taxon = await apiDao.getSpecies(taxonId)
 
           const atlasCodeKey = urlRemover(result.atlasCodeMax)
           const atlasClassKey = urlRemover(result.atlasClassMax)
 
           results.push({
-            speciesId: urlRemover(result.aggregateBy['unit.linkings.taxon.id']),
-            speciesName: speciesName,
+            speciesId: taxonId,
+            speciesName: taxon.vernacularName[req.query.lang || 'fi'],
+            taxonomicOrder: taxon.taxonomicOrder,
             atlasCode: {
               key: atlasCodeKey,
               value: atlasCode[atlasCodeKey][lang]
@@ -349,6 +342,8 @@ class Grid {
             }
           })
         }
+
+        results = results.sort((a, b) => b.taxonomicOrder - a.taxonomicOrder)
         grid.atlas = grid.atlas !== null ? grid.atlas : __latestAtlas,
         grid.atlasClassSum = atlasClassSum,
         grid.speciesCount = gridSpeciesCounts[grid.id] ? gridSpeciesCounts[grid.id] : 0,

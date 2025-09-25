@@ -4,7 +4,8 @@ const AtlasGridDao = require('../../dao/atlasGridDao')
 const axios = require('axios')
 const Cache = require('../../dao/cache')
 const ApiDao = require('../../dao/apiDao')
-const { getAtlasClassSum, getActivityCategory } = require('../../helpers/activityCategryHelpers')
+const { getAtlasClassSum, getActivityCategory, clearLesserTaxa } = require('../../helpers/activityCategryHelpers')
+const urlRemover = require('../../helpers/urlRemover')
 
 class AtlasGridUpdater {
   constructor () {
@@ -21,26 +22,33 @@ class AtlasGridUpdater {
       const atlasGrids = await this.atlasGridDao.getAllForAtlasId(4)
   
       let speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated()
+      let results = speciesData.results
+      for (let i = 2; i <= speciesData.lastPage; i++) {
+        results.push(...(await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated(i)).results)
+      }
       const gridClassSumLookup = {}
 
-      for (let i = 1; i <= speciesData.lastPage; i++) {
-        if (i !== 1) {
-          speciesData = await this.apiDao.getListOfDistinctBirdsForActiveAtlasPaginated(i)
+      for (const grid of grids) {
+        let gridSpeciesData = results.filter(data => {
+          return grid.coordinates === `${data.aggregateBy['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data.aggregateBy['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`
+        })
+
+
+        if (!gridSpeciesData.length) {
+          continue
         }
 
-        for (const grid of grids) {
-          const gridSpeciesData = speciesData.results.filter(data => {
-            return grid.coordinates === `${data.aggregateBy['gathering.conversions.ykj10kmCenter.lat'].slice(0,3)}:${data.aggregateBy['gathering.conversions.ykj10kmCenter.lon'].slice(0,3)}`
-          })
+        gridSpeciesData = clearLesserTaxa(gridSpeciesData)
 
-          if (!gridSpeciesData.length) {
-            continue
-          }
+        for ( const data of gridSpeciesData) {
+          const taxon = await this.apiDao.getSpecies(urlRemover(data.taxonId))
 
-          const atlasClassSum = getAtlasClassSum(gridSpeciesData)
-
-          gridClassSumLookup[grid.id] = gridClassSumLookup[grid.id] === undefined ? atlasClassSum : gridClassSumLookup[grid.id] + atlasClassSum
+          data.taxonomicOrder = taxon.taxonomicOrder
         }
+
+        const atlasClassSum = getAtlasClassSum(gridSpeciesData)
+
+        gridClassSumLookup[grid.id] = gridClassSumLookup[grid.id] === undefined ? atlasClassSum : gridClassSumLookup[grid.id] + atlasClassSum
       }
 
       const insertionTable = []
