@@ -64,9 +64,9 @@ async function main() {
     await pythonMapUpdater.update()
   }
 
-  //cron.schedule('0 0 */3 * * *', async () => {
-  //  await update()
-  //})
+  cron.schedule('0 0 * * 1', async () => {
+    await update()
+  })
 
   update()
 }
